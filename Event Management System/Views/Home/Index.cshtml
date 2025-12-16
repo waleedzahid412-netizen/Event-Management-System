@@ -1,8 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1 class="auth-main-title">Welcome To Eventora</h1>
+<div class="auth-container">
+    <div class="auth-box">
+        <h2 class="auth-title">Login into Continue</h2>
+        <div class="auth-buttons">
+            <a asp-action="Login" asp-controller="Auth" class="btn-auth btn-login">Login</a>
+            <a asp-action="Register" asp-controller="Auth" class="btn-auth btn-signup">Register</a>
+        </div>
+    </div>
 </div>

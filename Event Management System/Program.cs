@@ -1,4 +1,19 @@
+using EventManagement.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.ConfigureServices((context, services) =>
+{
+    // 1. Read the connection string from appsettings.json
+    var connectionString = context.Configuration.GetConnectionString("DefaultConnection");
+
+    // 2. Pass the connectionString variable to UseSqlServer
+    services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString));
+});
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
