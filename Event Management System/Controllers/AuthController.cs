@@ -1,17 +1,23 @@
-﻿using EventManagement.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Event_Management_System.DTOs;
+using Event_Management_System.Interfaces;
+using EventManagement.Configuration;
+using EventManagement.Data;
 using EventManagement.Models;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace Event_Management_System.Controllers
 {
     public class AuthController : Controller
     {
-        private ApplicationDbContext _context;
+    private readonly IAuthService _authService;
 
-        public AuthController(ApplicationDbContext context)
+        public AuthController(IAuthService service)
         {
-            _context = context;
+            _authService = service;
         }
         public IActionResult Index()
         {
@@ -21,53 +27,55 @@ namespace Event_Management_System.Controllers
         {
             return View();
         }
-      
+
         public IActionResult Register()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewDTO model)
         {
 
             if (!ModelState.IsValid) {
                 return View(model);
             }
-            if (_context.Users.Any(u => u.FullName.ToLower().Equals(model.UserName.ToLower()))) {
-                ViewBag.ErrorMessage = "Username already exist! pls try another username";
+            try { 
+            await _authService.RegisterAsync(model);
+            return RedirectToAction("Login");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
                 return View(model);
             }
-            var user = new User {
-                FullName = model.UserName,
-                Email = model.Email,
-                Password=BCrypt.Net.BCrypt.HashPassword(model.Password),
-                age=model.age
 
-
-
-            };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Login");
-                
         }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model) {
-            if (!ModelState.IsValid) {
-                return View();
+        public async Task<IActionResult> Login(LoginViewDTO dto) {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            try
+            {
+                var result = await _authService.LoginAsync(dto);
+
+                Response.Cookies.Append("jwt_token", result.Token);
+
+                return RedirectToAction("Index", "Home");
             }
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.FullName.ToLower().Equals(model.FullName));
-            if (user == null) {
-                ModelState.AddModelError("FullName", "Username not found");
-                return View(model);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(dto);
             }
-            if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password)) {
-                ModelState.AddModelError("Password", "Invalid password");
-                return View(model);
-            }
-            return RedirectToAction("Index", "Home");
 
         }
+        public IActionResult Logout() {
+            Response.Cookies.Delete("jwt_token");
+            return RedirectToAction("Login", "Auth");
+        }
+
+
 
 
     }

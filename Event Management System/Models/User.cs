@@ -26,9 +26,9 @@ namespace EventManagement.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation
-        public ICollection<UserRole>? UserRoles { get; set; }
-        public ICollection<Event>? OrganizedEvents { get; set; }
-        public ICollection<Registration>? Registrations { get; set; }
-        public ICollection<Notification>? Notifications { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public ICollection<Event> OrganizedEvents { get; set; } = new List<Event>();
+        public ICollection<Registration> Registrations { get; set; } = new List<Registration>();
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
     }
 }

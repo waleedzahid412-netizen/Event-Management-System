@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventManagement.Models
+namespace Event_Management_System.DTOs
 {
-    public class RegisterViewModel
+    public class RegisterViewDTO
     {
         [Required]
         public string UserName { get; set; }

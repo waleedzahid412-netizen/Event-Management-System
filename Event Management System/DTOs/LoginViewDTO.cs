@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventManagement.Models
+namespace Event_Management_System.DTOs
 {
-    public class LoginViewModel
+    public class LoginViewDTO
     {
         [Required(ErrorMessage = "Please enter your username")]
         public string FullName { get; set; }
