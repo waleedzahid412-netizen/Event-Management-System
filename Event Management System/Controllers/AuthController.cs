@@ -61,7 +61,21 @@ namespace Event_Management_System.Controllers
 
                 Response.Cookies.Append("jwt_token", result.Token);
 
-                return RedirectToAction("Index", "Home");
+                if (result.roles.Contains("Admin"))
+                {
+
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+                else if (result.roles.Contains("Organizer"))
+                {
+
+                    return RedirectToAction("Dashboard", "Organizer");
+                }
+                else
+                {
+
+                    return RedirectToAction("Dashboard", "Attendee");
+                }
             }
             catch (Exception ex)
             {
@@ -72,7 +86,7 @@ namespace Event_Management_System.Controllers
         }
         public IActionResult Logout() {
             Response.Cookies.Delete("jwt_token");
-            return RedirectToAction("Login", "Auth");
+            return RedirectToAction("Index", "Home");
         }
 
 

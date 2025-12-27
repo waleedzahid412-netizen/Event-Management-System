@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Event_Management_System.DTOs.EventParticipantDTO>
+@{
+    ViewData["Title"] = "Event Participants";
+}
+
+<h2 class="mb-4">Event Participants</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No participants have registered for this event yet.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Registered On</th>
+                <th>Payment Status</th>
+                <th>Check-In Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var participant in Model)
+            {
+                <tr>
+                    <td>@participant.UserName</td>
+                    <td>@participant.Email</td>
+                    <td>@participant.RegisteredOn.ToString("MMM dd, yyyy")</td>
+                    <td>@participant.PaymentStatus</td>
+                    <td>
+                        @if (participant.CheckInStatus)
+                        {
+                            <span class="text-success">✔ Checked In</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">❌ Not Checked In</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

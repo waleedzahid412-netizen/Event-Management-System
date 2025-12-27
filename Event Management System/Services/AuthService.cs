@@ -37,7 +37,9 @@ namespace Event_Management_System.Services
             {
                 Token = token,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(30),
-                Email= user.Email
+                Email = user.Email,
+                roles = role
+
             };
         }
 

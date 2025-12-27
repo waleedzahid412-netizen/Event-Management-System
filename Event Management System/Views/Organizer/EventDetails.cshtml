@@ -1,0 +1,178 @@
+﻿@model Event_Management_System.DTOs.OrganizerEventDetailsDTO
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f5f7fa, #e4ecf5);
+        font-family: "Segoe UI", sans-serif;
+    }
+
+    .page-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 30px;
+    }
+
+    .glass-card {
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .section-title {
+        font-weight: 600;
+        letter-spacing: 0.4px;
+    }
+
+    .event-badge {
+        font-size: 0.9rem;
+        padding: 6px 14px;
+        border-radius: 20px;
+    }
+
+    .cover-title {
+        position: absolute;
+        bottom: 20px;
+        left: 25px;
+        color: #fff;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.9);
+    }
+
+    .carousel img {
+        border-radius: 14px;
+    }
+
+    .btn-rounded {
+        border-radius: 30px;
+        padding: 8px 22px;
+    }
+</style>
+
+<div class="page-container">
+
+    <!-- HEADER -->
+    <div class="mb-5">
+        <h1 class="fw-bold">@Model.Title</h1>
+
+        <span class="badge bg-primary event-badge me-2">
+            @Model.CategoryName
+        </span>
+
+        <span class="badge bg-success event-badge">
+            @Model.AvailableSeats Seats Available
+        </span>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- LEFT: EVENT DETAILS -->
+        <div class="col-md-6">
+            <div class="glass-card h-100">
+
+                <div class="position-relative">
+                    <img src="@Model.CoverImageUrl"
+                         class="w-100"
+                         style="height:320px; object-fit:cover;" />
+
+                    <div class="cover-title">
+                        <h3 class="fw-bold">@Model.Title</h3>
+                        <p class="mb-0">@Model.Location</p>
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <h4 class="section-title mb-3">📌 Event Overview</h4>
+
+                    <p class="text-muted">@Model.Description</p>
+
+                    <div class="row mt-4">
+                        <div class="col-6 mb-2">
+                            <strong>Start Date:</strong><br />
+                            @Model.StartDate.ToString("MMM dd, yyyy")
+                        </div>
+
+                        <div class="col-6 mb-2">
+                            <strong>End Date:</strong><br />
+                            @Model.EndDate.ToString("MMM dd, yyyy")
+                        </div>
+
+                        <div class="col-6 mb-2">
+                            <strong>Total Seats:</strong><br />
+                            @Model.TotalSeats
+                        </div>
+
+                        <div class="col-6 mb-2">
+                            <strong>Available Seats:</strong><br />
+                            @Model.AvailableSeats
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="p-4 border-top d-flex justify-content-between">
+                    <a asp-controller="Organizer"
+                       asp-action="EditEvent"
+                       asp-route-id="@Model.EventId"
+                       class="btn btn-outline-warning btn-rounded">
+                        ✏️ Edit Event
+                    </a>
+
+                    <a asp-controller="Organizer"
+                       asp-action="ViewEventParticipants"
+                       asp-route-id="@Model.EventId"
+                       class="btn btn-outline-success btn-rounded">
+                        👥 View Participants
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RIGHT: VENUE IMAGES -->
+        <div class="col-md-6">
+            <div class="glass-card h-100 p-4">
+
+                <h4 class="section-title text-center mb-4">
+                    🏛 Venue Gallery
+                </h4>
+
+                @if (Model.VenueImages != null && Model.VenueImages.Any())
+                {
+                    <div id="venueCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < Model.VenueImages.Count; i++)
+                            {
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="@Model.VenueImages[i]"
+                                         class="d-block w-100"
+                                         style="height:420px; object-fit:cover;" />
+                                </div>
+                            }
+                        </div>
+
+                        <button class="carousel-control-prev" type="button"
+                                data-bs-target="#venueCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+
+                        <button class="carousel-control-next" type="button"
+                                data-bs-target="#venueCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-light text-center rounded-4 border">
+                        No venue images uploaded yet.
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

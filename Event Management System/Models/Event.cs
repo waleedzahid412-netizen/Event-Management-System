@@ -1,4 +1,5 @@
-﻿using EventManagement.Models;
+﻿using Event_Management_System.Models;
+using EventManagement.Models;
 
 using System;
 using System.Collections.Generic;
@@ -33,12 +34,15 @@ namespace EventManagement.Models
         public string Status { get; set; } = "Upcoming";
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string? CoverImageUrl { get; set; }
 
         // Navigation
         public EventCategory Category { get; set; }
         public User Organizer { get; set; }
 
-        public ICollection<Registration>? Registrations { get; set; }
-        public ICollection<Notification>? Notifications { get; set; }
+        // Remove '?' and initialize with '= new List<Registration>();'
+        public ICollection<Registration> Registrations { get; set; } = new List<Registration>();
+        public ICollection<Notification> Notifications { get; set; } =new List<Notification>();
+        public ICollection<EventImage> EventImages { get; set; }=new List<EventImage>();
     }
 }

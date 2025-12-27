@@ -1,0 +1,65 @@
+﻿@using Event_Management_System.DTOs
+@model OrganizerDashboardDTO
+@{
+    ViewData["Title"] = "Organizer Dashboard";
+}
+
+
+
+<!-- Stats Section -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5>Total Events</h5>
+                <h3>@Model.TotalEvents</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5>Upcoming Events</h5>
+                <h3>@Model.UpcomingEvents</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5>Total Registrations</h5>
+                <h3>@Model.TotalRegistrations</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5>Active Events</h5>
+                <h3>@Model.ActiveEvents</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="dashboard-actions d-flex flex-wrap gap-3">
+    <a asp-controller="Organizer" asp-action="CreateEvent" class="btn btn-primary btn-lg">
+        ➕ Create New Event
+    </a>
+
+    <a asp-controller="Organizer" asp-action="MyEvents" class="btn btn-secondary btn-lg">
+        📋 My Events
+    </a>
+
+    <a asp-controller="Organizer" asp-action="EventRegistrations" class="btn btn-success btn-lg">
+        👥 View Registrations
+    </a>
+
+    <a asp-controller="Profile" asp-action="Edit" class="btn btn-info btn-lg">
+        ⚙️ Edit Profile
+    </a>
+</div>

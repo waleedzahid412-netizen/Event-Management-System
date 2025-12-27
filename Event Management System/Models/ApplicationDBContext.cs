@@ -21,6 +21,7 @@ namespace EventManagement.Data
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<EventImage> eventimage { get;set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -106,6 +107,11 @@ namespace EventManagement.Data
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Event>()
+                 .HasMany(e => e.EventImages)
+                 .WithOne(img => img.Event)
+                 .HasForeignKey(img => img.EventId)
+                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

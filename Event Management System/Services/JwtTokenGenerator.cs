@@ -31,10 +31,11 @@ namespace Event_Management_System.Services
 
             var Claim = new[]
                 {
+            new System.Security.Claims.Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
             new System.Security.Claims.Claim(ClaimTypes.Name,user.FullName),
             new System.Security.Claims.Claim(ClaimTypes.Role,assignedrole ?? "Customer")
             };
-            var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_jwt.Key));
+            var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF32.GetBytes(_jwt.Key));
             var creds = new Microsoft.IdentityModel
             .Tokens.
             SigningCredentials(key, Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256);

@@ -68,12 +68,24 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Faq">FAQ</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Careers">Careers</a></li>
-                        <li class="nav-item"><a class="nav-link" Auth-controller="Home" asp-action="Logout">logout</a></li>
-                        <li class="nav-item"><a class="nav-link btn btn-primary text-white ms-2" asp-controller="Auth" asp-action="Login">Login</a></li>
+
+                        @if (User?.Identity?.IsAuthenticated == true)
+                        {
+
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Faq">FAQ</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Careers">Careers</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Logout">logout</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Faq">FAQ</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Careers">Careers</a></li>
+                        }
+
                     </ul>
                 </div>
             </div>

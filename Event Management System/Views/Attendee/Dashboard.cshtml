@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Attendee Dashboard";
+}
+
+<div class="container mt-4">
+
+    <!-- Welcome Section -->
+    <div class="dashboard-header mb-4 p-4 rounded shadow-sm">
+        <h2 class="fw-bold mb-1">Welcome, @User.Identity.Name 👋</h2>
+        <p class="text-muted mb-0">Discover events, manage registrations, and stay updated.</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card stat-card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Upcoming Events</h6>
+                    <h3 class="fw-bold text-primary">5</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card stat-card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Events Attended</h6>
+                    <h3 class="fw-bold text-success">12</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Section -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card action-card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="icon-circle bg-primary mb-3">
+                        📅
+                    </div>
+                    <h5 class="fw-bold">Browse Events</h5>
+                    <p class="text-muted">Explore upcoming events and register easily.</p>
+                    <a asp-controller="Attendee"
+                       asp-action="BrowseEvents"
+                       class="btn btn-primary w-100">
+                        Browse Events
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card action-card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="icon-circle bg-success mb-3">
+                        🎟️
+                    </div>
+                    <h5 class="fw-bold">My Registrations</h5>
+                    <p class="text-muted">View and manage your registered events.</p>
+                    <a asp-controller="Attendee"
+                       asp-action="MyRegistrations"
+                       class="btn btn-success w-100">
+                        My Registrations
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card action-card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="icon-circle bg-info mb-3">
+                        ⚙️
+                    </div>
+                    <h5 class="fw-bold">Edit Profile</h5>
+                    <p class="text-muted">Update your personal information.</p>
+                    <a asp-controller="Profile"
+                       asp-action="Edit"
+                       class="btn btn-info w-100 text-white">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f5f7fb;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        color: white;
+    }
+
+    .stat-card {
+        border-radius: 12px;
+    }
+
+    .action-card {
+        border-radius: 15px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: white;
+        margin: auto;
+    }
+</style>

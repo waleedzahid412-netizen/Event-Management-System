@@ -1,0 +1,83 @@
+﻿@model Event_Management_System.DTOs.EventRegistrationDTO
+@{
+    ViewData["Title"] = "Register for Event";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Event Info Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <img src="@ViewBag.CoverImageUrl" class="card-img-top" alt="@ViewBag.EventTitle" style="height:300px; object-fit:cover;" />
+                <div class="card-body">
+                    <h3 class="card-title">@ViewBag.EventTitle</h3>
+                    <p class="card-text">Please confirm your registration below. You will receive a ticket number after successful registration.</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Payment Status:</strong> Pending</li>
+                        <li class="list-group-item"><strong>Ticket:</strong> Will be generated after registration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form Card -->
+        <div class="col-md-6">
+            <div class="card shadow-sm p-4">
+                <h4 class="mb-3">Registration Form</h4>
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success">@TempData["Success"]</div>
+                }
+
+                <form asp-action="RegisterEvent" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="EventId" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Payment Status</label>
+                        <input class="form-control" asp-for="PaymentStatus" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ticket Number</label>
+                        <input class="form-control" asp-for="TicketNumber" placeholder="Will be generated" readonly />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">✅ Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional Styling -->
+<style>
+    .card {
+        border-radius: 12px;
+    }
+
+    .card-title {
+        font-weight: bold;
+        font-size: 1.8rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .list-group-item {
+        font-size: 0.95rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+</style>

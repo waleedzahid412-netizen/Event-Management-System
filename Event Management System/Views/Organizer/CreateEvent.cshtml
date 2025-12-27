@@ -1,0 +1,65 @@
+﻿@using Event_Management_System.DTOs
+@model CreateEventDTO
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<h2 class="mb-4">Create New Event</h2>
+
+<form asp-action="CreateEvent" method="post" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label>Start Date</label>
+            <input asp-for="StartDate" type="datetime-local" class="form-control" />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label>End Date</label>
+            <input asp-for="EndDate" type="datetime-local" class="form-control" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Location</label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Total Seats</label>
+        <input asp-for="TotalSeats" type="number" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select asp-for="CategoryId" class="form-select" asp-items="@(new SelectList(ViewBag.Categories, "CategoryId", "CategoryName"))">
+            <option value="">-- Select Category --</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+    <hr />
+
+    <div class="mb-3">
+        <label class="form-label">Cover Image</label>
+        <input asp-for="CoverImage" type="file" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Venue Images</label>
+        <input asp-for="VenueImages" type="file" multiple class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg">
+        🚀 Create Event
+    </button>
+
+</form>
