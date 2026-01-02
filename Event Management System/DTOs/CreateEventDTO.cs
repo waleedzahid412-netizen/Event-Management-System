@@ -24,6 +24,8 @@ namespace Event_Management_System.DTOs
 
         [Required]
         public int TotalSeats { get; set; }
+        [Required]
+        public int TicketPrice { get; set; }
 
         // Images
         [Required]

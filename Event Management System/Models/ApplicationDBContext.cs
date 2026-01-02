@@ -1,4 +1,4 @@
-﻿using EventManagement.Models;
+﻿using Event_Management_System.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -22,7 +22,8 @@ namespace EventManagement.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<EventImage> eventimage { get;set; }
-
+        public DbSet<PaymentReciept> PaymentReceipts { get; set; }
+        public DbSet<OrganizerApplication> OrganizerApplications { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -112,6 +113,25 @@ namespace EventManagement.Data
                  .WithOne(img => img.Event)
                  .HasForeignKey(img => img.EventId)
                  .OnDelete(DeleteBehavior.Cascade);
+
+            // ORGANIZERAPPLICATION → USER (Applicant) (many to 1)
+            modelBuilder.Entity<OrganizerApplication>()
+                .HasOne(app => app.User)
+                .WithMany(u => u.OrganizerApplications)
+                .HasForeignKey(app => app.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ================================
+            // ORGANIZERAPPLICATION → USER (Reviewed By Admin) (many to 1, optional)
+            // ================================
+            modelBuilder.Entity<OrganizerApplication>()
+                .HasOne(app => app.ReviewedByAdmin)
+                .WithMany() // no collection needed
+                .HasForeignKey(app => app.ReviewedByAdminId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
         }
     }
 }

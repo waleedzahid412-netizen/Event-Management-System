@@ -22,7 +22,7 @@ namespace Event_Management_System.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EventManagement.Models.Event", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Event", b =>
                 {
                     b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
@@ -65,6 +65,9 @@ namespace Event_Management_System.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<decimal>("TicketPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -82,7 +85,7 @@ namespace Event_Management_System.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.EventCategory", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.EventCategory", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -100,7 +103,7 @@ namespace Event_Management_System.Migrations
                     b.ToTable("EventCategories");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.EventImage", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.EventImage", b =>
                 {
                     b.Property<int>("EventImageId")
                         .ValueGeneratedOnAdd()
@@ -122,7 +125,7 @@ namespace Event_Management_System.Migrations
                     b.ToTable("eventimage");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Notification", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Notification", b =>
                 {
                     b.Property<int>("NotificationId")
                         .ValueGeneratedOnAdd()
@@ -152,7 +155,63 @@ namespace Event_Management_System.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Payment", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.OrganizerApplication", b =>
+                {
+                    b.Property<int>("OrganizerApplicationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrganizerApplicationId"));
+
+                    b.Property<string>("AdminComments")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("AppliedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ContactEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExperienceDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrganizationName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("ReviewedByAdminId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReviewedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WebsiteUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("OrganizerApplicationId");
+
+                    b.HasIndex("ReviewedByAdminId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("OrganizerApplications");
+                });
+
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Payment", b =>
                 {
                     b.Property<int>("PaymentId")
                         .ValueGeneratedOnAdd()
@@ -185,7 +244,49 @@ namespace Event_Management_System.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Registration", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.PaymentReciept", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberOfTickets")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReceiptNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ReceiptPdf")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<decimal>("TicketPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PaymentReceipts");
+                });
+
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Registration", b =>
                 {
                     b.Property<int>("RegistrationId")
                         .ValueGeneratedOnAdd()
@@ -224,7 +325,7 @@ namespace Event_Management_System.Migrations
                     b.ToTable("Registrations");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Role", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Role", b =>
                 {
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
@@ -242,7 +343,7 @@ namespace Event_Management_System.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.User", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -278,7 +379,7 @@ namespace Event_Management_System.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.UserRole", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.UserRole", b =>
                 {
                     b.Property<int>("UserRoleId")
                         .ValueGeneratedOnAdd()
@@ -301,15 +402,15 @@ namespace Event_Management_System.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Event", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Event", b =>
                 {
-                    b.HasOne("EventManagement.Models.EventCategory", "Category")
+                    b.HasOne("Event_Management_System.Models.Entities.EventCategory", "Category")
                         .WithMany("Events")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EventManagement.Models.User", "Organizer")
+                    b.HasOne("Event_Management_System.Models.Entities.User", "Organizer")
                         .WithMany("OrganizedEvents")
                         .HasForeignKey("OrganizerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -320,9 +421,9 @@ namespace Event_Management_System.Migrations
                     b.Navigation("Organizer");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.EventImage", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.EventImage", b =>
                 {
-                    b.HasOne("EventManagement.Models.Event", "Event")
+                    b.HasOne("Event_Management_System.Models.Entities.Event", "Event")
                         .WithMany("EventImages")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -331,15 +432,15 @@ namespace Event_Management_System.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Notification", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Notification", b =>
                 {
-                    b.HasOne("EventManagement.Models.Event", "Event")
+                    b.HasOne("Event_Management_System.Models.Entities.Event", "Event")
                         .WithMany("Notifications")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EventManagement.Models.User", "User")
+                    b.HasOne("Event_Management_System.Models.Entities.User", "User")
                         .WithMany("Notifications")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -350,26 +451,63 @@ namespace Event_Management_System.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Payment", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.OrganizerApplication", b =>
                 {
-                    b.HasOne("EventManagement.Models.Registration", "Registration")
+                    b.HasOne("Event_Management_System.Models.Entities.User", "ReviewedByAdmin")
+                        .WithMany()
+                        .HasForeignKey("ReviewedByAdminId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Event_Management_System.Models.Entities.User", "User")
+                        .WithMany("OrganizerApplications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReviewedByAdmin");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Payment", b =>
+                {
+                    b.HasOne("Event_Management_System.Models.Entities.Registration", "Registration")
                         .WithOne("Payment")
-                        .HasForeignKey("EventManagement.Models.Payment", "RegistrationId")
+                        .HasForeignKey("Event_Management_System.Models.Entities.Payment", "RegistrationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Registration");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Registration", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.PaymentReciept", b =>
                 {
-                    b.HasOne("EventManagement.Models.Event", "Event")
+                    b.HasOne("Event_Management_System.Models.Entities.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Event_Management_System.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Registration", b =>
+                {
+                    b.HasOne("Event_Management_System.Models.Entities.Event", "Event")
                         .WithMany("Registrations")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EventManagement.Models.User", "User")
+                    b.HasOne("Event_Management_System.Models.Entities.User", "User")
                         .WithMany("Registrations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -380,15 +518,15 @@ namespace Event_Management_System.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.UserRole", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.UserRole", b =>
                 {
-                    b.HasOne("EventManagement.Models.Role", "Role")
+                    b.HasOne("Event_Management_System.Models.Entities.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EventManagement.Models.User", "User")
+                    b.HasOne("Event_Management_System.Models.Entities.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -399,7 +537,7 @@ namespace Event_Management_System.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Event", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Event", b =>
                 {
                     b.Navigation("EventImages");
 
@@ -408,26 +546,28 @@ namespace Event_Management_System.Migrations
                     b.Navigation("Registrations");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.EventCategory", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.EventCategory", b =>
                 {
                     b.Navigation("Events");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Registration", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Registration", b =>
                 {
                     b.Navigation("Payment");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.Role", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.Role", b =>
                 {
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("EventManagement.Models.User", b =>
+            modelBuilder.Entity("Event_Management_System.Models.Entities.User", b =>
                 {
                     b.Navigation("Notifications");
 
                     b.Navigation("OrganizedEvents");
+
+                    b.Navigation("OrganizerApplications");
 
                     b.Navigation("Registrations");
 

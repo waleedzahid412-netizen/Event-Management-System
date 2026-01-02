@@ -1,10 +1,11 @@
-﻿@model IEnumerable<EventManagement.Models.Event>
+﻿@using Event_Management_System.Models.Entities
+@model IEnumerable<Event>
 
 @{
     ViewData["Title"] = "My Events";
 
-    var upcomingEvents = (ViewBag.SelectedTab == "upcoming") ? Model.ToList() : new List<EventManagement.Models.Event>();
-    var completedEvents = (ViewBag.SelectedTab == "completed") ? Model.ToList() : new List<EventManagement.Models.Event>();
+    var upcomingEvents = (ViewBag.SelectedTab == "upcoming") ? Model.ToList() : new List<Event>();
+    var completedEvents = (ViewBag.SelectedTab == "completed") ? Model.ToList() : new List<Event>();
 }
 
 <h2 class="mb-4">🎤 My Events</h2>

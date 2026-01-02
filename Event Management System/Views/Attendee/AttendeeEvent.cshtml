@@ -1,0 +1,215 @@
+﻿@using Event_Management_System.Models.Entities
+@model IEnumerable<Event>
+@{
+    ViewData["Title"] = "Browse Events";
+
+    var categories = ViewBag.Categories as List<EventCategory> ?? new();
+    var recommended = (ViewBag.RecommendedEvents as List<Event>) ?? new();
+    bool showRecommended = ViewBag.ShowRecommended == true;
+}
+
+<!-- Hero Header -->
+<!-- Filter Bar -->
+<div class="card border-0 shadow-sm rounded-4 p-3 mb-5 filter-bar">
+    <div class="d-flex flex-wrap gap-3 align-items-center">
+        <form method="get" asp-action="BrowseEvents" class="d-flex gap-2 align-items-center">
+            <label for="categoryFilter" class="fw-semibold">Category</label>
+            <select name="categoryId" id="categoryFilter" class="form-select form-select-sm">
+                <option value="">All Categories</option>
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat.CategoryId">@cat.CategoryName</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm px-4 custom-btn">
+                Apply
+            </button>
+        </form>
+
+        <form method="get" asp-action="BrowseEvents">
+            <input type="hidden" name="showRecommended" value="true" />
+            <button type="submit" class="btn btn-warning btn-sm px-4 custom-btn">
+                🌟 Recommended
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Recommended Section -->
+@if (showRecommended)
+{
+    <h4 class="fw-bold mb-4">🌟 Recommended for You</h4>
+
+    @if (!recommended.Any())
+    {
+        <div class="alert alert-info rounded-4 shadow-sm">
+            ℹ️ No recommended events at the moment.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            @foreach (var ev in recommended)
+            {
+                <div class="col">
+                    <div class="card event-card h-100 border-0 rounded-4 shadow-sm">
+                        <div class="position-relative">
+                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" />
+                            <span class="badge bg-primary position-absolute top-0 start-0 m-3">
+                                @ev.Category?.CategoryName ?? "N/A"
+                            </span>
+                            <span class="badge bg-success position-absolute top-0 end-0 m-3">
+                                🎟 @ev.AvailableSeats
+                            </span>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="fw-bold">@ev.Title</h5>
+                            <p class="text-muted small mb-3">
+                                📅 @ev.StartDate:MMM dd, yyyy – @ev.EndDate:MMM dd, yyyy <br />
+                                📍 @ev.Location
+                            </p>
+                            <div class="mt-auto d-flex gap-2">
+                                <a asp-controller="Attendee" asp-action="EventDetail"
+                                   asp-route-id="@ev.EventId"
+                                   class="btn btn-outline-primary btn-sm w-50">
+                                    Details
+                                </a>
+                                <a asp-controller="Attendee" asp-action="RegisterEvent"
+                                   asp-route-id="@ev.EventId"
+                                   class="btn btn-success btn-sm w-50">
+                                    Register
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+<!-- All Events -->
+@if (!showRecommended)
+{
+    <h4 class="fw-bold mb-4">All Events</h4>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning rounded-4 shadow-sm">
+            ⚠️ No events found for this category.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var ev in Model)
+            {
+                <div class="col">
+                    <div class="card event-card h-100 border-0 rounded-4 shadow-sm">
+                        <div class="position-relative">
+                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" />
+                            <span class="badge bg-primary position-absolute top-0 start-0 m-3">
+                                @ev.Category?.CategoryName ?? "N/A"
+                            </span>
+                            <span class="badge bg-success position-absolute top-0 end-0 m-3">
+                                🎟 @ev.AvailableSeats
+                            </span>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="fw-bold">@ev.Title</h5>
+                            <p class="text-muted small mb-3">
+                                📅 @ev.StartDate @ev.EndDate<br />
+                                📍 @ev.Location
+                            </p>
+                            <div class="mt-auto d-flex gap-2">
+                                <a asp-controller="Attendee" asp-action="EventDetail"
+                                   asp-route-id="@ev.EventId"
+                                   class="btn btn-outline-primary btn-sm w-50">
+                                    Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+<style>
+    /* Hero Header */
+    .hero-header {
+        background: linear-gradient(135deg, #1d2671, #0f9b8e);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    /* Event Card Images */
+    .event-img {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: .5rem;
+        border-top-right-radius: .5rem;
+    }
+
+    /* Event Card Hover Effect */
+    .event-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .event-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(0,0,0,.15);
+        }
+
+    /* Badges */
+    .badge {
+        font-size: .75rem;
+        padding: .45em .7em;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    /* Buttons */
+    .custom-btn {
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+        .custom-btn.btn-primary {
+            background-color: #0f9b8e;
+            border-color: #0f9b8e;
+            color: #fff;
+        }
+
+            .custom-btn.btn-primary:hover {
+                background-color: #0d826f;
+                border-color: #0d826f;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            }
+
+        .custom-btn.btn-warning {
+            background-color: #f9c74f;
+            border-color: #f9c74f;
+            color: #1d2671;
+        }
+
+            .custom-btn.btn-warning:hover {
+                background-color: #f7b900;
+                border-color: #f7b900;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            }
+
+    /* Filter Bar */
+    .filter-bar {
+        background-color: #ffffff;
+        transition: box-shadow 0.3s ease;
+    }
+
+        .filter-bar:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+</style>

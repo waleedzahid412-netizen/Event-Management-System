@@ -9,6 +9,7 @@
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int TotalSeats { get; set; }
+        public decimal TicketPrice { get; set; }
         public int AvailableSeats { get; set; }
         public string CategoryName { get; set; }
         public string CoverImageUrl { get; set; }

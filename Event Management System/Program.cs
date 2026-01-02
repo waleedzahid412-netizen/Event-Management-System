@@ -1,7 +1,8 @@
 using Event_Management_System.Configuration;
-using Event_Management_System.Interfaces;
-using Event_Management_System.Repository;
-using Event_Management_System.Services;
+using Event_Management_System.Repositories.Implementations;
+using Event_Management_System.Repositories.Interfaces;
+using Event_Management_System.Services.Implementations;
+using Event_Management_System.Services.Interfaces;
 using EventManagement.Configuration;
 using EventManagement.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,7 +36,16 @@ builder.Services.AddScoped<IAttendeeService, AttendeeService>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<ICloudinaryService, CloudnaryService>();
 builder.Services.AddScoped<IEventImageRepository, EventImageRepository>();
+builder.Services.AddScoped<IOrganizerApplicationRepository, OrganizerApplicationRepository>();
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
+builder.Services.AddTransient<IPaymentReceiptService, PaymentReceiptService>(); 
+    builder.Services.AddTransient<IPaymentRecieptRepository, PaymentRecieptRepository>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+
+builder.Services.AddTransient<IEmailService, EmailService>();
+
+
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt"));
 // Startup.cs or Program.cs

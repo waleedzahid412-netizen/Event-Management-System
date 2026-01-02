@@ -1,6 +1,8 @@
 ﻿@model Event_Management_System.DTOs.EventRegistrationDTO
 @{
     ViewData["Title"] = "Register for Event";
+    // Optional: set ticket price if you want to display total amount
+  // example price per ticket
 }
 
 <div class="container my-5">
@@ -11,10 +13,25 @@
                 <img src="@ViewBag.CoverImageUrl" class="card-img-top" alt="@ViewBag.EventTitle" style="height:300px; object-fit:cover;" />
                 <div class="card-body">
                     <h3 class="card-title">@ViewBag.EventTitle</h3>
-                    <p class="card-text">Please confirm your registration below. You will receive a ticket number after successful registration.</p>
+                    <p class="card-text">Please confirm your registration below. You will receive your ticket numbers after successful registration.</p>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Payment Status:</strong> Pending</li>
-                        <li class="list-group-item"><strong>Ticket:</strong> Will be generated after registration</li>
+                        <li class="list-group-item"><strong>Payment Status:</strong> @Model.PaymentStatus</li>
+                        <li class="list-group-item">
+                            <strong>Ticket Numbers:</strong>
+                            @if (Model.TicketNumbers != null && Model.TicketNumbers.Any())
+                            {
+                                <ul class="list-group mt-2">
+                                    @foreach (var ticket in Model.TicketNumbers)
+                                    {
+                                        <li class="list-group-item">@ticket</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span>Will be generated after registration</span>
+                            }
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -35,13 +52,19 @@
                     <input type="hidden" asp-for="EventId" />
 
                     <div class="mb-3">
+                        <label class="form-label">Number of Tickets</label>
+                        <input class="form-control" asp-for="NumberOfTickets" type="number" min="1" max="10" />
+                        <span class="text-muted">You can book up to 10 tickets.</span>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Payment Status</label>
                         <input class="form-control" asp-for="PaymentStatus" readonly />
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Ticket Number</label>
-                        <input class="form-control" asp-for="TicketNumber" placeholder="Will be generated" readonly />
+                        <label class="form-label">Total Amount</label>
+                        <input class="form-control" value="@(@Model.NumberOfTickets* @ViewBag.TicketPrice)" readonly />
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg w-100">✅ Register</button>
@@ -69,6 +92,7 @@
 
     .list-group-item {
         font-size: 0.95rem;
+        word-break: break-all;
     }
 
     .btn-primary {

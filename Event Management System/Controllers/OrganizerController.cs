@@ -1,7 +1,7 @@
 ﻿using Event_Management_System.DTOs;
-using Event_Management_System.Interfaces;
+using Event_Management_System.Models.Entities;
 using Event_Management_System.Services;
-using EventManagement.Models;
+using Event_Management_System.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

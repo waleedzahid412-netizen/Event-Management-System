@@ -1,13 +1,9 @@
 ﻿using Event_Management_System.DTOs;
-using Event_Management_System.Interfaces;
-using EventManagement.Configuration;
-using EventManagement.Data;
-using EventManagement.Models;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Event_Management_System.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Query;
+
 
 namespace Event_Management_System.Controllers
 {
@@ -19,6 +15,7 @@ namespace Event_Management_System.Controllers
         {
             _authService = service;
         }
+   
         public IActionResult Index()
         {
             return View();

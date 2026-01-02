@@ -1,36 +1,46 @@
-﻿@model IEnumerable<EventManagement.Models.Event>
+﻿@using Event_Management_System.Models.Entities
+@model IEnumerable<Event>
 @{
     ViewData["Title"] = "Browse Events";
 
-    var categories = ViewBag.Categories as List<EventManagement.Models.EventCategory> ?? new();
-    var recommended = ViewBag.RecommendedEvents as List<EventManagement.Models.Event> ?? new();
+    var categories = ViewBag.Categories as List<EventCategory> ?? new();
+    var recommended = (ViewBag.RecommendedEvents as List<Event>) ?? new();
     bool showRecommended = ViewBag.ShowRecommended == true;
 }
 
 <!-- Hero Header -->
-
+<div class="hero-header text-white text-center py-5 mb-5 rounded-4 shadow-lg">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">🎉 Discover Amazing Events</h1>
+        <p class="lead mb-0">Find and register for the best events in your area</p>
+    </div>
+</div>
 
 <!-- Filter Bar -->
-<div class="card border-0 shadow-sm rounded-4 p-3 mb-5 filter-bar">
-    <div class="d-flex flex-wrap gap-3 align-items-center">
-        <form method="get" asp-action="BrowseEvents" class="d-flex gap-2 align-items-center">
-            <label for="categoryFilter" class="fw-semibold">Category</label>
-            <select name="categoryId" id="categoryFilter" class="form-select form-select-sm">
-                <option value="">All Categories</option>
-                @foreach (var cat in categories)
-                {
-                    <option value="@cat.CategoryId">@cat.CategoryName</option>
-                }
-            </select>
-            <button type="submit" class="btn btn-primary btn-sm px-4 custom-btn">
-                Apply
+<div class="card border-0 shadow-sm rounded-4 p-4 mb-5 filter-bar">
+    <div class="d-flex flex-wrap gap-3 align-items-center justify-content-between">
+        <form method="get" asp-action="BrowseEvents" class="d-flex gap-3 align-items-center flex-wrap">
+            <div class="filter-group">
+                <label for="categoryFilter" class="fw-semibold text-muted mb-2 d-block">
+                    <i class="bi bi-funnel"></i> Filter by Category
+                </label>
+                <select name="categoryId" id="categoryFilter" class="form-select form-select-lg custom-select">
+                    <option value="">All Categories</option>
+                    @foreach (var cat in categories)
+                    {
+                        <option value="@cat.CategoryId">@cat.CategoryName</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg px-5 custom-btn mt-auto">
+                <i class="bi bi-search"></i> Apply Filter
             </button>
         </form>
 
         <form method="get" asp-action="BrowseEvents">
             <input type="hidden" name="showRecommended" value="true" />
-            <button type="submit" class="btn btn-warning btn-sm px-4 custom-btn">
-                🌟 Recommended
+            <button type="submit" class="btn btn-warning btn-lg px-5 custom-btn">
+                <i class="bi bi-star-fill"></i> Show Recommended
             </button>
         </form>
     </div>
@@ -39,46 +49,64 @@
 <!-- Recommended Section -->
 @if (showRecommended)
 {
-    <h4 class="fw-bold mb-4">🌟 Recommended for You</h4>
+    <div class="section-header mb-4">
+        <h2 class="fw-bold d-inline-flex align-items-center gap-2">
+            <span class="icon-badge">🌟</span> Recommended for You
+        </h2>
+        <p class="text-muted">Handpicked events based on your interests</p>
+    </div>
 
     @if (!recommended.Any())
     {
-        <div class="alert alert-info rounded-4 shadow-sm">
-            ℹ️ No recommended events at the moment.
+        <div class="alert alert-info rounded-4 shadow-sm border-0 p-4">
+            <div class="d-flex align-items-center gap-3">
+                <span class="fs-2">ℹ️</span>
+                <div>
+                    <h5 class="mb-1">No Recommendations Yet</h5>
+                    <p class="mb-0">Check back later for personalized event suggestions!</p>
+                </div>
+            </div>
         </div>
     }
     else
     {
-        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
             @foreach (var ev in recommended)
             {
                 <div class="col">
-                    <div class="card event-card h-100 border-0 rounded-4 shadow-sm">
-                        <div class="position-relative">
-                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" />
-                            <span class="badge bg-primary position-absolute top-0 start-0 m-3">
+                    <div class="card event-card h-100 border-0 rounded-4 shadow-hover">
+                        <div class="position-relative overflow-hidden">
+                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" alt="@ev.Title" />
+                            <div class="image-overlay"></div>
+                            <span class="badge badge-category position-absolute top-0 start-0 m-3">
                                 @ev.Category?.CategoryName ?? "N/A"
                             </span>
-                            <span class="badge bg-success position-absolute top-0 end-0 m-3">
-                                🎟 @ev.AvailableSeats
+                            <span class="badge badge-seats position-absolute top-0 end-0 m-3">
+                                <i class="bi bi-ticket-perforated"></i> @ev.AvailableSeats seats
                             </span>
                         </div>
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="fw-bold">@ev.Title</h5>
-                            <p class="text-muted small mb-3">
-                                📅 @ev.StartDate:MMM dd, yyyy – @ev.EndDate:MMM dd, yyyy <br />
-                                📍 @ev.Location
-                            </p>
+                        <div class="card-body d-flex flex-column p-4">
+                            <h5 class="fw-bold mb-3 event-title">@ev.Title</h5>
+                            <div class="event-meta mb-3">
+                                <p class="text-muted small mb-2">
+                                    <i class="bi bi-calendar-event text-primary"></i>
+                                    @ev.StartDate.ToString("MMM dd, yyyy") – @ev.EndDate.ToString("MMM dd, yyyy")
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    <i class="bi bi-geo-alt-fill text-danger"></i>
+                                    @ev.Location
+                                </p>
+                            </div>
                             <div class="mt-auto d-flex gap-2">
                                 <a asp-controller="Attendee" asp-action="EventDetail"
                                    asp-route-id="@ev.EventId"
-                                   class="btn btn-outline-primary btn-sm w-50">
-                                    Details
+                                   class="btn btn-outline-primary btn-action w-50">
+                                    <i class="bi bi-info-circle"></i> Details
                                 </a>
                                 <a asp-controller="Attendee" asp-action="RegisterEvent"
                                    asp-route-id="@ev.EventId"
-                                   class="btn btn-success btn-sm w-50">
-                                    Register
+                                   class="btn btn-success btn-action w-50">
+                                    <i class="bi bi-check-circle"></i> Register
                                 </a>
                             </div>
                         </div>
@@ -92,46 +120,64 @@
 <!-- All Events -->
 @if (!showRecommended)
 {
-    <h4 class="fw-bold mb-4">All Events</h4>
+    <div class="section-header mb-4">
+        <h2 class="fw-bold d-inline-flex align-items-center gap-2">
+            <span class="icon-badge">🎪</span> All Events
+        </h2>
+        <p class="text-muted">Browse our complete collection of upcoming events</p>
+    </div>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-warning rounded-4 shadow-sm">
-            ⚠️ No events found for this category.
+        <div class="alert alert-warning rounded-4 shadow-sm border-0 p-4">
+            <div class="d-flex align-items-center gap-3">
+                <span class="fs-2">⚠️</span>
+                <div>
+                    <h5 class="mb-1">No Events Found</h5>
+                    <p class="mb-0">Try adjusting your filter or check back later for new events.</p>
+                </div>
+            </div>
         </div>
     }
     else
     {
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             @foreach (var ev in Model)
             {
                 <div class="col">
-                    <div class="card event-card h-100 border-0 rounded-4 shadow-sm">
-                        <div class="position-relative">
-                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" />
-                            <span class="badge bg-primary position-absolute top-0 start-0 m-3">
-                                @ev.Category?.CategoryName ?? "N/A"
+                    <div class="card event-card h-100 border-0 rounded-4 shadow-hover">
+                        <div class="position-relative overflow-hidden">
+                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" alt="@ev.Title" />
+                            <div class="image-overlay"></div>
+                            <span class="badge badge-category position-absolute top-0 start-0 m-3">
+                                @ev.Category?.CategoryName
                             </span>
-                            <span class="badge bg-success position-absolute top-0 end-0 m-3">
-                                🎟 @ev.AvailableSeats
+                            <span class="badge badge-seats position-absolute top-0 end-0 m-3">
+                                <i class="bi bi-ticket-perforated"></i> @ev.AvailableSeats seats
                             </span>
                         </div>
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="fw-bold">@ev.Title</h5>
-                            <p class="text-muted small mb-3">
-                                📅 @ev.StartDate:MMM dd, yyyy – @ev.EndDate:MMM dd, yyyy <br />
-                                📍 @ev.Location
-                            </p>
+                        <div class="card-body d-flex flex-column p-4">
+                            <h5 class="fw-bold mb-3 event-title">@ev.Title</h5>
+                            <div class="event-meta mb-3">
+                                <p class="text-muted small mb-2">
+                                    <i class="bi bi-calendar-event text-primary"></i>
+                                    @ev.StartDate.ToString("MMM dd, yyyy") – @ev.EndDate.ToString("MMM dd, yyyy")
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    <i class="bi bi-geo-alt-fill text-danger"></i>
+                                    @ev.Location
+                                </p>
+                            </div>
                             <div class="mt-auto d-flex gap-2">
                                 <a asp-controller="Attendee" asp-action="EventDetail"
                                    asp-route-id="@ev.EventId"
-                                   class="btn btn-outline-primary btn-sm w-50">
-                                    Details
+                                   class="btn btn-outline-primary btn-action w-50">
+                                    <i class="bi bi-info-circle"></i> Details
                                 </a>
                                 <a asp-controller="Attendee" asp-action="RegisterEvent"
                                    asp-route-id="@ev.EventId"
-                                   class="btn btn-success btn-sm w-50">
-                                    Register
+                                   class="btn btn-success btn-action w-50">
+                                    <i class="bi bi-check-circle"></i> Register
                                 </a>
                             </div>
                         </div>
@@ -145,77 +191,271 @@
 <style>
     /* Hero Header */
     .hero-header {
-        background: linear-gradient(135deg, #1d2671, #0f9b8e);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .hero-header .container {
+            position: relative;
+            z-index: 1;
+        }
+
+    /* Section Headers */
+    .section-header {
+        border-left: 5px solid #667eea;
+        padding-left: 20px;
+        margin-bottom: 30px;
+    }
+
+        .section-header h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .section-header .icon-badge {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+    /* Filter Bar */
+    .filter-bar {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+        .filter-bar:hover {
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+    .filter-group label {
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .custom-select {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 12px 16px;
+        transition: all 0.3s ease;
+        min-width: 250px;
+    }
+
+        .custom-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+    /* Event Card */
+    .event-card {
+        background: #fff;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+        }
+
+    .shadow-hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
     /* Event Card Images */
     .event-img {
-        height: 200px;
+        height: 220px;
         object-fit: cover;
-        border-top-left-radius: .5rem;
-        border-top-right-radius: .5rem;
+        transition: transform 0.5s ease;
     }
 
-    /* Event Card Hover Effect */
-    .event-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .event-card:hover .event-img {
+        transform: scale(1.08);
     }
 
-        .event-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(0,0,0,.15);
-        }
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .event-card:hover .image-overlay {
+        opacity: 1;
+    }
+
+    /* Event Title */
+    .event-title {
+        color: #2c3e50;
+        font-size: 1.25rem;
+        line-height: 1.4;
+        transition: color 0.3s ease;
+    }
+
+    .event-card:hover .event-title {
+        color: #667eea;
+    }
+
+    /* Event Meta */
+    .event-meta i {
+        margin-right: 6px;
+        font-size: 1rem;
+    }
 
     /* Badges */
     .badge {
-        font-size: .75rem;
-        padding: .45em .7em;
-        border-radius: 20px;
-        font-weight: 500;
+        font-size: 0.75rem;
+        padding: 0.5em 0.85em;
+        border-radius: 25px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .badge-category {
+        background: rgba(102, 126, 234, 0.95);
+        color: white;
+    }
+
+    .badge-seats {
+        background: rgba(40, 167, 69, 0.95);
+        color: white;
     }
 
     /* Buttons */
     .custom-btn {
         border-radius: 50px;
-        font-weight: 500;
+        font-weight: 600;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.875rem;
     }
 
         .custom-btn.btn-primary {
-            background-color: #0f9b8e;
-            border-color: #0f9b8e;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
         }
 
             .custom-btn.btn-primary:hover {
-                background-color: #0d826f;
-                border-color: #0d826f;
                 transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
             }
 
         .custom-btn.btn-warning {
-            background-color: #f9c74f;
-            border-color: #f9c74f;
-            color: #1d2671;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
         }
 
             .custom-btn.btn-warning:hover {
-                background-color: #f7b900;
-                border-color: #f7b900;
                 transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+                box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
             }
 
-    /* Filter Bar */
-    .filter-bar {
-        background-color: #ffffff;
-        transition: box-shadow 0.3s ease;
+    .btn-action {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 10px;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
     }
 
-        .filter-bar:hover {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
+
+    .btn-outline-primary {
+        border: 2px solid #667eea;
+        color: #667eea;
+    }
+
+        .btn-outline-primary:hover {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+    .btn-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        color: white;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+        }
+
+    /* Alerts */
+    .alert {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .hero-header h1 {
+            font-size: 2rem;
+        }
+
+        .hero-header p {
+            font-size: 1rem;
+        }
+
+        .filter-bar {
+            padding: 1.5rem !important;
+        }
+
+        .custom-select {
+            min-width: 100%;
+        }
+
+        .filter-bar .d-flex {
+            flex-direction: column;
+            align-items: stretch !important;
+        }
+
+        .filter-bar form {
+            width: 100%;
+        }
+
+        .filter-group {
+            width: 100%;
+        }
+    }
 </style>

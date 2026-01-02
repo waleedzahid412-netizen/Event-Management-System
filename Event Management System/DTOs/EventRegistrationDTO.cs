@@ -11,7 +11,9 @@ namespace Event_Management_System.DTOs
         [MaxLength(20)]
         public string PaymentStatus { get; set; } = "Pending";
 
+        [Range(1, 10, ErrorMessage = "You can register between 1 and 10 tickets.")]
+        public int NumberOfTickets { get; set; } = 1;
         [MaxLength(50)] 
-        public string? TicketNumber { get; set; }
+        public List<string>? TicketNumbers { get; set; }
     }
 }

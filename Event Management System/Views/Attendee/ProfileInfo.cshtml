@@ -1,0 +1,139 @@
+﻿@model Event_Management_System.DTOs.UserProfileDTO
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<style>
+    /* Center the container */
+    .profile-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 25px;
+        margin-top: 80px;
+        min-height: 70vh;
+    }
+
+    /* User info card styling */
+    .profile-card {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        padding: 30px;
+        text-align: center;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: #ffffff;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+
+
+    .card-title {
+        font-weight: 700;
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+        white-space: normal; /* allow wrapping */
+        word-wrap: break-word; /* break long words if needed */
+        overflow: visible;
+        text-overflow: unset;
+    }
+
+
+    .profile-info .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+
+        .profile-info .info-item:last-child {
+            border-bottom: none;
+        }
+
+    /* Actions card styling */
+    .profile-actions {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        padding: 25px;
+        text-align: center;
+        background-color: #f8f9fa;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .profile-actions:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+
+        .profile-actions .btn {
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 500;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        .profile-actions .btn-primary {
+            background-color: #2575fc;
+            border: none;
+            color: #fff;
+        }
+
+            .profile-actions .btn-primary:hover {
+                background-color: #1450c9;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            }
+
+        .profile-actions .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            color: #fff;
+        }
+
+            .profile-actions .btn-secondary:hover {
+                background-color: #495057;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            }
+</style>
+
+<div class="profile-container">
+
+    <!-- User Info Card -->
+    <div class="profile-card">
+        <div class="card-body profile-info">
+            <h4 class="card-title" title="@Model.UserName">@Model.UserName</h4>
+
+            <div class="info-item">
+                <span>Email:</span>
+                <span>@Model.Email</span>
+            </div>
+            <div class="info-item">
+                <span>Age:</span>
+                <span>@Model.Age</span>
+            </div>
+            <div class="info-item">
+                <span>Role:</span>
+                <span>@Model.Role</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Card -->
+    <div class="profile-actions">
+        <a asp-controller="Attendee" asp-action="EditProfile" class="btn btn-primary">Edit Profile</a>
+        <a asp-controller="Attendee" asp-action="ChangePassword" class="btn btn-secondary">Change Password</a>
+    </div>
+
+</div>

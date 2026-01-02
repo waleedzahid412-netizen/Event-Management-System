@@ -1,0 +1,207 @@
+﻿@using Event_Management_System.DTOs
+@model OrganizerApplicationCreateDTO
+
+@{
+    ViewData["Title"] = "Organizer Registration";
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="text-danger">
+        @Html.ValidationSummary()
+    </div>
+}
+
+<style>
+    .registration-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .registration-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 600px;
+        width: 100%;
+        padding: 50px;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .registration-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+        .registration-header h1 {
+            color: #333;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .registration-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+            .form-group input:focus,
+            .form-group textarea:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group span {
+            display: block;
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 6px;
+            min-height: 18px;
+        }
+
+    .submit-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 10px;
+    }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+    .icon {
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    @@media (max-width: 768px) {
+        .registration-card {
+            padding: 30px 25px;
+        }
+
+        .registration-header h1 {
+            font-size: 26px;
+        }
+    }
+</style>
+
+<div class="registration-container">
+    <div class="registration-card">
+        <div class="registration-header">
+            <h1>Become an Organizer</h1>
+            <p>Join our community and start hosting amazing events</p>
+        </div>
+
+        <form asp-action="OrganizerRegistration" method="post">
+            <div class="form-group">
+                <label for="OrganizationName">
+                    <span class="icon">🏢</span> Organization Name
+                </label>
+                <input asp-for="OrganizationName" placeholder="Enter your organization name" />
+                <span asp-validation-for="OrganizationName"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="ContactEmail">
+                    <span class="icon">📧</span> Email Address
+                </label>
+                <input asp-for="ContactEmail" type="email" placeholder="your@email.com" />
+                <span asp-validation-for="ContactEmail"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="ContactPhone">
+                    <span class="icon">📱</span> Phone Number
+                </label>
+                <input asp-for="ContactPhone" type="tel" placeholder="+1 (555) 123-4567" />
+                <span asp-validation-for="ContactPhone"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="ExperienceDescription">
+                    <span class="icon">✨</span> Experience Description
+                </label>
+                <textarea asp-for="ExperienceDescription" placeholder="Tell us about your experience in organizing events..."></textarea>
+                <span asp-validation-for="ExperienceDescription"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="WebsiteUrl">
+                    <span class="icon">🌐</span> Website URL
+                </label>
+                <input asp-for="WebsiteUrl" type="url" placeholder="https://www.yourwebsite.com" />
+                <span asp-validation-for="WebsiteUrl"></span>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Submit Application
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

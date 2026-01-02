@@ -60,31 +60,60 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/logo.png" alt="Event Management Logo" height="50" />
-                </a>
+                @if (User?.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole("Customer"))
+                    {
+                        <a class="navbar-brand" asp-controller="Attendee" asp-action="Dashboard">
+                            <img src="~/images/logo.png" alt="Event Management Logo" height="50" />
+                        </a>
+                    }
+                    @if (User.IsInRole("Organizer"))
+                    {
+                        <a class="navbar-brand" asp-controller="Organizer" asp-action="Dashboard">
+                            <img src="~/images/logo.png" alt="Event Management Logo" height="50" />
+                        </a>
+                        
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="navbar-brand" asp-controller="Admin" asp-action="Dashboard">
+                            <img src="~/images/logo.png" alt="Event Management Logo" height="50" />
+                        </a>
+
+                    }
+
+
+                }
+                @if (User?.Identity?.IsAuthenticated == false)
+                {
+                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                        <img src="~/images/logo.png" alt="Event Management Logo" height="50" />
+                    </a>
+                }
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Faq">FAQ</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Careers">Careers</a></li>
+
 
                         @if (User?.Identity?.IsAuthenticated == true)
                         {
-
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Faq">FAQ</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Careers">Careers</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Attendee" asp-action="ProfileInfo">MyProfile</a></li>
+                            @if (User.IsInRole("Customer"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Attendee" asp-action="OrganizerRegistration">Host An Event</a></li>
+                                
+                            }
                             <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Logout">logout</a></li>
                         }
-                        else
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Faq">FAQ</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Careers">Careers</a></li>
-                        }
+
 
                     </ul>
                 </div>
