@@ -12,15 +12,16 @@ namespace Event_Management_System.Services.Implementations
         public readonly ICloudinaryService _cloudinary;
         public readonly IEventRepository _eventrepo;
         public readonly IEventImageRepository _eventimagerepo;
+        public readonly IRegistrationRepository _registrationrepo;
         public OrganizerService(IOrganizerRepository organizer,ICloudinaryService cloud
-            , IEventRepository evrep, IEventImageRepository eventimage)
+            , IEventRepository evrep, IEventImageRepository eventimage,IRegistrationRepository regrep)
         {
             
-                _organizerRepo = organizer;
-                _cloudinary = cloud;
-                _eventrepo = evrep;
-                _eventimagerepo = eventimage;
-
+            _organizerRepo = organizer;
+            _cloudinary = cloud;
+            _eventrepo = evrep;
+            _eventimagerepo = eventimage;
+            _registrationrepo = regrep;
             
 
             
@@ -101,7 +102,8 @@ namespace Event_Management_System.Services.Implementations
         }
         public async Task<List<EventParticipantDTO>> GetEventParticipantsAsync(int eventId)
         {
-            var registrations = await _eventrepo.GetEventParticipantsbyEventIdAsync(eventId);
+            var registrations = await _registrationrepo.GetEventParticipantsbyEventIdAsync(eventId);
+            Console.WriteLine($"Found {registrations.Count} registrations for EventId {eventId}");
 
             if (registrations == null || !registrations.Any())
                 return new List<EventParticipantDTO>();

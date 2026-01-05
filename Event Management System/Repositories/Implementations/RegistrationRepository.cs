@@ -41,5 +41,12 @@ namespace Event_Management_System.Repositories.Implementations
                 .Select(u => u.Email)
                 .FirstOrDefaultAsync();
         }
+        public async Task<List<Registration>> GetEventParticipantsbyEventIdAsync(int eventid)
+        {
+            return await _context.Registrations
+               .Include(r => r.User)
+               .Where(r => r.EventId == eventid)
+               .ToListAsync();
+        }
     }
 }

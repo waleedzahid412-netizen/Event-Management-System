@@ -44,5 +44,7 @@ namespace Event_Management_System.Models.Entities
         public ICollection<Registration> Registrations { get; set; } = new List<Registration>();
         public ICollection<Notification> Notifications { get; set; } =new List<Notification>();
         public ICollection<EventImage> EventImages { get; set; }=new List<EventImage>();
+        public ICollection<EventReview>? Reviews { get; set; }=new List<EventReview>();
+
     }
 }

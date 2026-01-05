@@ -6,5 +6,6 @@ namespace Event_Management_System.Services.Interfaces
     public interface IPaymentReceiptService
     {
         public byte[] GenerateReceiptPdf(PaymentReceiptDTO receipt);
+        public byte[] GenerateOrganizerReceiptPdf(OrganizerPaymentReceiptDTO receipt);
     }
 }

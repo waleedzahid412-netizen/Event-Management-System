@@ -14,7 +14,6 @@ namespace Event_Management_System.Repositories.Interfaces
         public Task<List<EventCategory>> GetEventCategoryAsync();
         public Task<Event?> GetEventDetailsByIdAsync(int eventid);
 
-        public Task<List<Registration>> GetEventParticipantsbyEventIdAsync(int eventid);
         public Task<List<Event>> GetCompletedEventByOrganizerIdAsync(int organizerid);
         public Task<Event?> GetEventDetailsForCustomerByIdAsync(int eventid);
         public Task<List<Event>> GetEventsByAttendeeId(int userid);
@@ -26,6 +25,7 @@ namespace Event_Management_System.Repositories.Interfaces
         public Task<IDbContextTransaction> BeginTransactionAsync();
         public Task CommitTransactionAsync(IDbContextTransaction transaction);
         public Task RollBackTransactionAsync(IDbContextTransaction transaction);
+        public Task<bool> CheckIfEventExists(int eventid);
 
     }
 }

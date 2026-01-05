@@ -19,9 +19,30 @@ namespace Event_Management_System.Repositories.Implementations
            await  _context.OrganizerApplications.AddAsync(obj);
         }
 
+        public async Task<bool> checkIfApplicationExistButPaymentPending(int userid)
+        {
+            return await _context.OrganizerApplications
+                .AnyAsync(oa => oa.UserId == userid && !oa.IsPaymentCompleted);
+
+            
+        }
+
         public async Task<bool> CheckIfOrganizerApplicationExistAsync(int userid)
         {
             return await _context.OrganizerApplications.AnyAsync(o => o.UserId == userid && o.Status==ApplicationStatus.Pending);
+        }
+
+        public async Task<int> GetApplicationIdOfUser(int userid)
+        {
+            return await _context.OrganizerApplications
+            .Where(u => u.UserId == userid)
+            .Select(u => u.OrganizerApplicationId)
+            .FirstAsync();
+        }
+
+        public async Task<OrganizerApplication?> GetOrganizerApplicationByIdAsync(int applicationid)
+        {
+            return await _context.OrganizerApplications.FirstOrDefaultAsync(og => og.OrganizerApplicationId == applicationid);
         }
 
         public async Task SaveChangesAsync()

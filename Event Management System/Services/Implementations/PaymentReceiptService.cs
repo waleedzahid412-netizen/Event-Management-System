@@ -116,5 +116,125 @@ namespace Event_Management_System.Services.Implementations
                 });
             }).GeneratePdf();
         }
+        public byte[] GenerateOrganizerReceiptPdf(OrganizerPaymentReceiptDTO receipt)
+        {
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            var receiptNumber = $"ORG-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString()[..6].ToUpper()}";
+
+            return Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Margin(40);
+                    page.Size(PageSizes.A4);
+
+                    // ===== HEADER =====
+                    page.Header().Row(row =>
+                    {
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().Text("EVENT MANAGEMENT SYSTEM")
+                                .FontSize(18)
+                                .Bold();
+
+                            col.Item().Text("Organizer Application Payment Receipt")
+                                .FontSize(11)
+                                .FontColor(Colors.Grey.Darken1);
+                        });
+
+                        row.ConstantItem(200).AlignRight().Column(col =>
+                        {
+                            col.Item().Text($"Receipt No: {receiptNumber}")
+                                .FontSize(10);
+
+                            col.Item().Text($"Date: {DateTime.UtcNow:dd MMM yyyy}")
+                                .FontSize(10);
+                        });
+                    });
+
+                    // ===== CONTENT =====
+                    page.Content().PaddingVertical(20).Column(col =>
+                    {
+                        col.Spacing(15);
+
+                        // ===== APPLICANT DETAILS =====
+                        col.Item().Text("Applicant Information")
+                            .Bold()
+                            .FontSize(12);
+
+                        col.Item()
+                            .Border(1)
+                            .BorderColor(Colors.Grey.Lighten2)
+                            .Padding(10)
+                            .Column(c =>
+                            {
+                                c.Spacing(5);
+                                c.Item().Text($"Email Address: {receipt.UserEmail}");
+                                c.Item().Text($"Organization Name: {receipt.OrganizationName}");
+                                c.Item().Text($"Application ID: {receipt.ApplicationId}");
+                                c.Item().Text($"Payment Date: {receipt.PaymentDate:dd MMM yyyy, HH:mm} UTC");
+                            });
+
+                        // ===== PAYMENT SUMMARY =====
+                        col.Item().Text("Payment Summary")
+                            .Bold()
+                            .FontSize(12);
+
+                        col.Item()
+                            .Border(1)
+                            .BorderColor(Colors.Grey.Lighten2)
+                            .Padding(10)
+                            .Table(table =>
+                            {
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.RelativeColumn();
+                                    columns.ConstantColumn(120);
+                                });
+
+                                table.Cell().Text("Payment Purpose");
+                                table.Cell().AlignRight().Text("Organizer Registration Fee");
+
+                                table.Cell().Text("Amount Paid");
+                                table.Cell().AlignRight().Text($"${receipt.AmountPaid:F2}");
+
+                                table.Cell().ColumnSpan(2).PaddingVertical(5).LineHorizontal(1);
+
+                                table.Cell().Text("Total Amount").Bold();
+                                table.Cell().AlignRight().Text($"${receipt.AmountPaid:F2}").Bold();
+                            });
+
+                        // ===== STATUS =====
+                        col.Item().Text("Payment Status")
+                            .Bold()
+                            .FontSize(12);
+
+                        col.Item()
+                            .Border(1)
+                            .BorderColor(Colors.Green.Darken1)
+                            .Padding(10)
+                            .Text("✔ Payment Completed Successfully")
+                            .FontColor(Colors.Green.Darken2)
+                            .Bold();
+                    });
+
+                    // ===== FOOTER =====
+                    page.Footer().AlignCenter().Column(col =>
+                    {
+                        col.Item().LineHorizontal(1);
+                        col.Item().PaddingTop(5)
+                            .Text("This receipt confirms successful payment for organizer application.")
+                            .FontSize(9)
+                            .FontColor(Colors.Grey.Darken1);
+
+                        col.Item().Text("© 2025 Event Management System. All rights reserved.")
+                            .FontSize(9)
+                            .FontColor(Colors.Grey.Darken1);
+                    });
+                });
+            }).GeneratePdf();
+        }
     }
 }
+

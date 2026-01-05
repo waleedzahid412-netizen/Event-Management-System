@@ -4,6 +4,7 @@ using EventManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Event_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260104122157_addedreviewfeaturetable")]
+    partial class addedreviewfeaturetable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,9 +218,6 @@ namespace Event_Management_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsPaymentCompleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("OrganizationName")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -245,38 +245,6 @@ namespace Event_Management_System.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("OrganizerApplications");
-                });
-
-            modelBuilder.Entity("Event_Management_System.Models.Entities.OrganizerPayment", b =>
-                {
-                    b.Property<int>("PaymentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrganizerApplicationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StripePaymentIntentId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("PaymentId");
-
-                    b.HasIndex("OrganizerApplicationId");
-
-                    b.ToTable("organizerPayments");
                 });
 
             modelBuilder.Entity("Event_Management_System.Models.Entities.Payment", b =>
@@ -554,17 +522,6 @@ namespace Event_Management_System.Migrations
                     b.Navigation("ReviewedByAdmin");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Event_Management_System.Models.Entities.OrganizerPayment", b =>
-                {
-                    b.HasOne("Event_Management_System.Models.Entities.OrganizerApplication", "OrganizerApplication")
-                        .WithMany()
-                        .HasForeignKey("OrganizerApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrganizerApplication");
                 });
 
             modelBuilder.Entity("Event_Management_System.Models.Entities.Payment", b =>

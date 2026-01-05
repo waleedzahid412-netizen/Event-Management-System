@@ -38,9 +38,11 @@ namespace Event_Management_System.Models.Entities
         public User ReviewedByAdmin { get; set; } // <-- navigation property
         [StringLength(500)]
         public string? AdminComments { get; set; }
-
+        public bool IsPaymentCompleted { get; set; } = false;
         // Timestamps
         public DateTime AppliedOn { get; set; } = DateTime.UtcNow;
         public DateTime? ReviewedOn { get; set; }
+
+        public ICollection<OrganizerPayment> organizerpayment { get; set; } = new List<OrganizerPayment>();
     }
 }

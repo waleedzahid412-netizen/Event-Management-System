@@ -70,5 +70,55 @@ Thank you for registering!
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
+        public async Task SendOrganizerApplicationEmailAsync(
+    string toEmail,
+    OrganizerApplication application,
+    byte[] receiptPdf)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_emailSettings.FromName, _emailSettings.SmtpUser));
+            message.To.Add(new MailboxAddress("", toEmail));
+            message.Subject = "Organizer Application Submitted Successfully";
+
+            var body = new TextPart("plain")
+            {
+                Text = $@"
+Hello,
+
+Your organizer application has been submitted successfully.
+
+Organization Name: {application.OrganizationName}
+Application ID: {application.OrganizerApplicationId}
+
+Your payment has been received. Please find the receipt attached.
+
+Our admin team will review your application shortly.
+
+Thank you,
+Event Management System
+"
+            };
+
+            var multipart = new Multipart("mixed");
+            multipart.Add(body);
+
+            var attachment = new MimePart("application", "pdf")
+            {
+                Content = new MimeContent(new MemoryStream(receiptPdf)),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                ContentTransferEncoding = ContentEncoding.Base64,
+                FileName = "OrganizerPaymentReceipt.pdf"
+            };
+
+            multipart.Add(attachment);
+            message.Body = multipart;
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(_emailSettings.SmtpUser, _emailSettings.SmtpPass);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
+
     }
 }

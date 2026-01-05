@@ -64,13 +64,7 @@ namespace Event_Management_System.Repositories.Implementations
         }
 
 
-        public async Task<List<Registration>> GetEventParticipantsbyEventIdAsync(int eventid)
-        {
-            return await _context.Registrations
-               .Include(r => r.User)
-               .Where(r => r.EventId == eventid)
-               .ToListAsync();
-        }
+
 
         public async Task SaveChangesAsync()
         {
@@ -94,12 +88,12 @@ namespace Event_Management_System.Repositories.Implementations
 
         public async Task<int> CountofEventAttendedByUserid(int id)
         {
-            return await _context.Events.CountAsync(e => e.Registrations.Any(r => r.UserId == id && e.EndDate < DateTime.UtcNow));    
+            return await _context.Events.CountAsync(e => e.Registrations.Any(r => r.UserId == id && e.EndDate < DateTime.Now));    
         }
 
         public async Task<int> CountofUpcomingEventByUserid(int id)
         {
-            return await _context.Events.CountAsync(e => e.Registrations.Any(r => r.UserId == id && e.StartDate > DateTime.UtcNow));
+            return await _context.Events.CountAsync(e => e.Registrations.Any(r => r.UserId == id && e.StartDate > DateTime.Now));
         }
 
         public async Task<int> GetAvailableSeatsAsync(int eventid)
@@ -123,6 +117,10 @@ namespace Event_Management_System.Repositories.Implementations
         public async Task RollBackTransactionAsync(IDbContextTransaction transaction)
         {
             await transaction.RollbackAsync();
+        }
+        public async Task<bool> CheckIfEventExists(int eventid)
+        {
+            return await _context.Events.AnyAsync(e => e.EventId == eventid);
         }
     }
 }

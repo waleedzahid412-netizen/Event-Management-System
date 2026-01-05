@@ -5,6 +5,8 @@ using Event_Management_System.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using System;
 using System.Net.Mail;
 using System.Security.Claims;
 using static System.Net.Mime.MediaTypeNames;
@@ -32,27 +34,22 @@ namespace Event_Management_System.Controllers
             return View();
         }
 
-        public async Task<IActionResult> BrowseEvents(int? categoryId, bool showRecommended = false)
+
+        public async Task<IActionResult> BrowseEvents(int? categoryId, bool showRecommended = false, string status = "upcoming")
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-
             ViewBag.Categories = await _attendeeService.GetAllCategoriesAsync();
             ViewBag.ShowRecommended = showRecommended;
+            ViewBag.SelectedTab = status; // Pass the current status to the view
 
             if (showRecommended)
             {
-
-                return View(new List<Event>());
-            }
-            var events = await _attendeeService.GetAllEventsAsync();
-
-
-            if (categoryId.HasValue)
-            {
-                events = events.Where(e => e.CategoryId == categoryId.Value).ToList();
+                // Load recommended events (you might want to implement actual recommendation logic)
+                ViewBag.RecommendedEvents = new List<Event_Management_System.Models.Entities.Event>(); // Or load actual recommended events
+                return View(new List<Event_Management_System.Models.Entities.Event>());
             }
 
+            var events = await _attendeeService.BrowseEventAsync(categoryId, status);
             return View(events);
         }
 
@@ -123,14 +120,27 @@ namespace Event_Management_System.Controllers
             return RedirectToAction("BrowseEvents");
         }
         [HttpGet]
-        public async Task<IActionResult> AttendeeEvent(int? categoryid, bool showrecommended = false)
+        public async Task<IActionResult> AttendeeEvent(
+           int? categoryId,
+           bool showRecommended = false,
+           string status = "upcoming")
         {
-            var userid = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            ViewBag.Categories = await _attendeeService.GetAllCategoriesAsync();
-            ViewBag.ShowRecommended = showrecommended;
-            var allEvents = await _attendeeService.GetEventByAttendeeId(userid, categoryid, showrecommended);
-            return View(allEvents);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
+            ViewBag.Categories = await _attendeeService.GetAllCategoriesAsync();
+            ViewBag.ShowRecommended = showRecommended;
+            ViewBag.status = status;
+
+            var events = await _attendeeService
+                .GetEventByAttendeeId(userId, categoryId, showRecommended);
+
+            var today = DateTime.Now;
+
+            events = status == "completed"
+                ? events.Where(e => e.EndDate < today).ToList()
+                : events.Where(e => e.EndDate >= today).ToList();
+
+            return View(events);
         }
 
         [HttpGet]
@@ -146,8 +156,13 @@ namespace Event_Management_System.Controllers
             return View(profile); // pass DTO to view
         }
         [HttpGet]
-        public IActionResult OrganizerRegistration()
+        public async Task<IActionResult> OrganizerRegistration()
         {
+            int userid=int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (await _attendeeService.checkIfApplicationExistButPaymentPending(userid)) {
+            var applicationid=await _attendeeService.GetApplicationIdOfUser(userid);
+             return RedirectToAction("Pay", "OrganizerPayment", new { applicationid });
+            }
             return View();
         }
         [HttpPost]
@@ -161,9 +176,9 @@ namespace Event_Management_System.Controllers
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             try
             {
-                await _attendeeService.SubmitOrganizerApplication(dto, userId);
+                var applicationId =await _attendeeService.SubmitOrganizerApplication(dto, userId);
                 TempData["Success"] = "Your application has been submitted successfully!";
-                return RedirectToAction("Dashboard", "Attendee");
+                return RedirectToAction("Pay", "OrganizerPayment", new { applicationId });
             }
             catch (Exception ex)
             {
@@ -174,11 +189,49 @@ namespace Event_Management_System.Controllers
 
             }
 
-
-
-
-
-
         }
+        [HttpGet]
+        public async Task<IActionResult> RateEvent(int eventId)
+        {
+            var ev = await _attendeeService.checkIfEventExists(eventId);
+            if (!ev) return NotFound();
+
+            // Optional: check if already rated
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            bool alreadyRated = await _attendeeService.CheckIfUserReviewExist(eventId,userId);
+
+            if (alreadyRated)
+            {
+                TempData["Error"] = "You have already rated this event.";
+                return RedirectToAction("AttendeeEvent");
+            }
+
+            var model = new EventReviewCreateDTO
+            {
+                EventId = eventId
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RateEvent(EventReviewCreateDTO dto)
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            try
+            {
+                await _attendeeService.AddEventReviewAsync(dto, userId);
+            }
+            catch (Exception ex)
+            {
+                // Instead of returning raw exception, set TempData and redirect
+                TempData["Error"] = ex.InnerException?.Message ?? ex.Message;
+                return RedirectToAction("AttendeeEvent");
+            }
+
+            TempData["Success"] = "Your review has been submitted successfully!";
+            return RedirectToAction("AttendeeEvent");
+        }
+
     }
 }

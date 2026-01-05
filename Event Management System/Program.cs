@@ -37,9 +37,14 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<ICloudinaryService, CloudnaryService>();
 builder.Services.AddScoped<IEventImageRepository, EventImageRepository>();
 builder.Services.AddScoped<IOrganizerApplicationRepository, OrganizerApplicationRepository>();
+builder.Services.AddScoped<IEventReviewRepository, EventReviewRepository>();
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
 builder.Services.AddTransient<IPaymentReceiptService, PaymentReceiptService>(); 
     builder.Services.AddTransient<IPaymentRecieptRepository, PaymentRecieptRepository>();
+builder.Services.Configure<StripeSettings>( builder.Configuration.GetSection("Stripe"));
+builder.Services.AddScoped<IOrganizerPaymentRepository, OrganizerPaymentRepository>();
+builder.Services.AddScoped<IOrganizerPaymentService, OrganizerPaymentService>();
+
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 

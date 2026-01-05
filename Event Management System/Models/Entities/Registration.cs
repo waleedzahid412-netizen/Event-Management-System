@@ -25,5 +25,6 @@ namespace Event_Management_System.Models.Entities
         public Event Event { get; set; }
         public User User { get; set; }
         public Payment? Payment { get; set; }
+ 
     }
 }

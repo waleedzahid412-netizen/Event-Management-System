@@ -61,9 +61,9 @@ namespace Event_Management_System.Controllers
             var eventdetails= await _organizerService.GetEventDetailsAsync(id);
             return View(eventdetails);
         }
-        public async Task<IActionResult> ViewEventParticipants(int eventId) { 
-        var participants= await _organizerService.GetEventParticipantsAsync(eventId);
-            return View(participants);
+        public async Task<IActionResult> ViewEventParticipants(int id) { 
+        var participants= await _organizerService.GetEventParticipantsAsync(id);
+         return View(participants);
         }
     }
 }

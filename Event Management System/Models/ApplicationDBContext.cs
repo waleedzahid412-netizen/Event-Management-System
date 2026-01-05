@@ -24,6 +24,8 @@ namespace EventManagement.Data
         public DbSet<EventImage> eventimage { get;set; }
         public DbSet<PaymentReciept> PaymentReceipts { get; set; }
         public DbSet<OrganizerApplication> OrganizerApplications { get; set; }
+        public DbSet<EventReview> EventReviews { get; set; }
+        public DbSet<OrganizerPayment> organizerPayments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -129,6 +131,18 @@ namespace EventManagement.Data
                 .WithMany() // no collection needed
                 .HasForeignKey(app => app.ReviewedByAdminId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<EventReview>()
+                .HasOne(er => er.Event)
+                .WithMany(e => e.Reviews) // ✅ correctly points to Reviews
+                .HasForeignKey(er => er.EventId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<EventReview>()
+                .HasOne(er => er.User)
+                .WithMany() // Or Users.Reviews if you add nav property
+                .HasForeignKey(er => er.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
 

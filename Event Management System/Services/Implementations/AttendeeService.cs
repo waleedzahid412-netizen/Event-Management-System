@@ -14,9 +14,11 @@ namespace Event_Management_System.Services.Implementations
         public readonly IPaymentReceiptService _paymentReceiptService;
         public readonly IPaymentRecieptRepository _paymentrepo;
         public readonly IOrganizerApplicationRepository _organizerApplicationRepository;
+        public readonly IEventReviewRepository _eventReviewRepository;
         public AttendeeService(IEventRepository rep, IRegistrationRepository rrep, 
             IUserRepository userRepository, IPaymentReceiptService paymentReceiptService
-            , IPaymentRecieptRepository paymentrepo,IOrganizerApplicationRepository repo)
+            , IPaymentRecieptRepository paymentrepo,IOrganizerApplicationRepository repo
+            ,IEventReviewRepository eventreviewrepo)
         {
 
             _registrationRepository = rrep;
@@ -25,6 +27,7 @@ namespace Event_Management_System.Services.Implementations
             _paymentReceiptService = paymentReceiptService;
             _paymentrepo = paymentrepo;
             _organizerApplicationRepository = repo;
+            _eventReviewRepository= eventreviewrepo;
         }
         public async Task<List<Event>> GetAllEventsAsync()
         {
@@ -188,7 +191,7 @@ namespace Event_Management_System.Services.Implementations
             return(receiptEntity,pdfBytes) ;
         }
 
-        public async Task SubmitOrganizerApplication(OrganizerApplicationCreateDTO dto,int Userid)
+        public async Task<int> SubmitOrganizerApplication(OrganizerApplicationCreateDTO dto,int Userid)
         {
             bool haspending= await _organizerApplicationRepository.CheckIfOrganizerApplicationExistAsync(Userid);
             if (haspending) {
@@ -206,7 +209,73 @@ namespace Event_Management_System.Services.Implementations
             };
             await _organizerApplicationRepository.AddApplicationAsync(application);
             await _organizerApplicationRepository.SaveChangesAsync();
+            return application.OrganizerApplicationId;
             
+        }
+
+        public async Task<List<Event>> BrowseEventAsync(int? categoryid, string status)
+        {
+            var events = await _eventRepository.GetAllEventsWithCategoryAsync();
+            if (status == "upcoming")
+            {
+                events = events.Where(e => e.StartDate > DateTime.UtcNow).ToList();
+            }
+            else { 
+            events = events.Where(e => e.EndDate < DateTime.UtcNow).ToList();
+            }
+            if (categoryid.HasValue)
+            {
+                events = events.Where(e => e.CategoryId == categoryid.Value).ToList();
+            }
+            return events;
+        }
+
+        public async Task AddEventReviewAsync(EventReviewCreateDTO dto,int userid)
+        {
+            if (await _eventReviewRepository.CheckIfUserReviewExist(dto.EventId, userid)) { 
+                throw new Exception("You have already submitted a review for this event.");
+            }
+            var review = new EventReview
+            {
+                EventId = dto.EventId,
+                UserId = userid,
+                Rating = dto.Rating,
+                Comment = dto.Comment
+            };
+            await _eventReviewRepository.AddEventReview(review);
+            await _eventReviewRepository.SaveChangesAsync();
+
+        }
+
+        public async Task<bool> CheckIfUserReviewExist(int Eventid, int userid)
+        {
+            return await _eventReviewRepository.CheckIfUserReviewExist(Eventid, userid);
+        }
+
+        public async Task<bool> checkIfEventExists(int eventid)
+        {
+            return await _eventRepository.CheckIfEventExists(eventid);
+        }
+
+        public async Task<OrganizerApplicationCreateDTO> GetOrganizerApplicationByIdAsync(int applicationid)
+        {
+            var og =await _organizerApplicationRepository.GetOrganizerApplicationByIdAsync(applicationid);
+            return new OrganizerApplicationCreateDTO
+            {
+                OrganizationName = og.OrganizationName,
+                ContactEmail = og.ContactEmail,
+                ContactPhone = og.ContactPhone,
+                ExperienceDescription = og.ExperienceDescription,
+            };
+        }
+        public Task<bool> checkIfApplicationExistButPaymentPending(int userid) {
+            return _organizerApplicationRepository.checkIfApplicationExistButPaymentPending(userid);
+        
+        }
+
+        public async Task<int> GetApplicationIdOfUser(int userid)
+        {
+            return await _organizerApplicationRepository.GetApplicationIdOfUser(userid);
         }
     }
 }

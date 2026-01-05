@@ -1,215 +1,390 @@
 ﻿@using Event_Management_System.Models.Entities
 @model IEnumerable<Event>
+
 @{
-    ViewData["Title"] = "Browse Events";
+    ViewData["Title"] = "My Registered Events";
 
     var categories = ViewBag.Categories as List<EventCategory> ?? new();
-    var recommended = (ViewBag.RecommendedEvents as List<Event>) ?? new();
     bool showRecommended = ViewBag.ShowRecommended == true;
-}
+    string selectedStatus = ViewBag.status as string ?? "upcoming";
+    var selectedCategory = Context.Request.Query["categoryId"].ToString();
 
-<!-- Hero Header -->
-<!-- Filter Bar -->
-<div class="card border-0 shadow-sm rounded-4 p-3 mb-5 filter-bar">
-    <div class="d-flex flex-wrap gap-3 align-items-center">
-        <form method="get" asp-action="BrowseEvents" class="d-flex gap-2 align-items-center">
-            <label for="categoryFilter" class="fw-semibold">Category</label>
-            <select name="categoryId" id="categoryFilter" class="form-select form-select-sm">
-                <option value="">All Categories</option>
-                @foreach (var cat in categories)
-                {
-                    <option value="@cat.CategoryId">@cat.CategoryName</option>
-                }
-            </select>
-            <button type="submit" class="btn btn-primary btn-sm px-4 custom-btn">
-                Apply
-            </button>
-        </form>
-
-        <form method="get" asp-action="BrowseEvents">
-            <input type="hidden" name="showRecommended" value="true" />
-            <button type="submit" class="btn btn-warning btn-sm px-4 custom-btn">
-                🌟 Recommended
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- Recommended Section -->
-@if (showRecommended)
-{
-    <h4 class="fw-bold mb-4">🌟 Recommended for You</h4>
-
-    @if (!recommended.Any())
-    {
-        <div class="alert alert-info rounded-4 shadow-sm">
-            ℹ️ No recommended events at the moment.
-        </div>
-    }
-    else
-    {
-        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-            @foreach (var ev in recommended)
-            {
-                <div class="col">
-                    <div class="card event-card h-100 border-0 rounded-4 shadow-sm">
-                        <div class="position-relative">
-                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" />
-                            <span class="badge bg-primary position-absolute top-0 start-0 m-3">
-                                @ev.Category?.CategoryName ?? "N/A"
-                            </span>
-                            <span class="badge bg-success position-absolute top-0 end-0 m-3">
-                                🎟 @ev.AvailableSeats
-                            </span>
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="fw-bold">@ev.Title</h5>
-                            <p class="text-muted small mb-3">
-                                📅 @ev.StartDate:MMM dd, yyyy – @ev.EndDate:MMM dd, yyyy <br />
-                                📍 @ev.Location
-                            </p>
-                            <div class="mt-auto d-flex gap-2">
-                                <a asp-controller="Attendee" asp-action="EventDetail"
-                                   asp-route-id="@ev.EventId"
-                                   class="btn btn-outline-primary btn-sm w-50">
-                                    Details
-                                </a>
-                                <a asp-controller="Attendee" asp-action="RegisterEvent"
-                                   asp-route-id="@ev.EventId"
-                                   class="btn btn-success btn-sm w-50">
-                                    Register
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-}
-
-<!-- All Events -->
-@if (!showRecommended)
-{
-    <h4 class="fw-bold mb-4">All Events</h4>
-
-    @if (!Model.Any())
-    {
-        <div class="alert alert-warning rounded-4 shadow-sm">
-            ⚠️ No events found for this category.
-        </div>
-    }
-    else
-    {
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            @foreach (var ev in Model)
-            {
-                <div class="col">
-                    <div class="card event-card h-100 border-0 rounded-4 shadow-sm">
-                        <div class="position-relative">
-                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" />
-                            <span class="badge bg-primary position-absolute top-0 start-0 m-3">
-                                @ev.Category?.CategoryName ?? "N/A"
-                            </span>
-                            <span class="badge bg-success position-absolute top-0 end-0 m-3">
-                                🎟 @ev.AvailableSeats
-                            </span>
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="fw-bold">@ev.Title</h5>
-                            <p class="text-muted small mb-3">
-                                📅 @ev.StartDate @ev.EndDate<br />
-                                📍 @ev.Location
-                            </p>
-                            <div class="mt-auto d-flex gap-2">
-                                <a asp-controller="Attendee" asp-action="EventDetail"
-                                   asp-route-id="@ev.EventId"
-                                   class="btn btn-outline-primary btn-sm w-50">
-                                    Details
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
+    var events = Model.ToList();
 }
 
 <style>
-    /* Hero Header */
     .hero-header {
-        background: linear-gradient(135deg, #1d2671, #0f9b8e);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
     }
 
-    /* Event Card Images */
-    .event-img {
-        height: 200px;
-        object-fit: cover;
-        border-top-left-radius: .5rem;
-        border-top-right-radius: .5rem;
-    }
-
-    /* Event Card Hover Effect */
-    .event-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-        .event-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(0,0,0,.15);
-        }
-
-    /* Badges */
-    .badge {
-        font-size: .75rem;
-        padding: .45em .7em;
-        border-radius: 20px;
-        font-weight: 500;
-    }
-
-    /* Buttons */
-    .custom-btn {
-        border-radius: 50px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-        .custom-btn.btn-primary {
-            background-color: #0f9b8e;
-            border-color: #0f9b8e;
-            color: #fff;
-        }
-
-            .custom-btn.btn-primary:hover {
-                background-color: #0d826f;
-                border-color: #0d826f;
-                transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            }
-
-        .custom-btn.btn-warning {
-            background-color: #f9c74f;
-            border-color: #f9c74f;
-            color: #1d2671;
-        }
-
-            .custom-btn.btn-warning:hover {
-                background-color: #f7b900;
-                border-color: #f7b900;
-                transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            }
-
-    /* Filter Bar */
-    .filter-bar {
-        background-color: #ffffff;
+    .filter-card {
+        background: #ffffff;
+        border: 1px solid #e8e8f5;
         transition: box-shadow 0.3s ease;
     }
 
-        .filter-bar:hover {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        .filter-card:hover {
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
         }
+
+    .form-select-lg, .btn-lg {
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .form-select-lg {
+        border: 2px solid #e8e8f5;
+        transition: all 0.3s ease;
+    }
+
+        .form-select-lg:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+        }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(245, 87, 108, 0.3);
+            background: linear-gradient(135deg, #df82ea 0%, #e4465b 100%);
+            color: white;
+        }
+
+    .status-toggle {
+        background: white;
+        padding: 0.5rem;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        display: inline-flex;
+        gap: 0.5rem;
+    }
+
+        .status-toggle .btn {
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .status-toggle .btn-outline-primary {
+            color: #667eea;
+            background: transparent;
+        }
+
+            .status-toggle .btn-outline-primary:hover {
+                background: rgba(102, 126, 234, 0.1);
+                border-color: transparent;
+            }
+
+            .status-toggle .btn-outline-primary.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-color: transparent;
+            }
+
+        .status-toggle .btn-outline-success {
+            color: #10b981;
+            background: transparent;
+        }
+
+            .status-toggle .btn-outline-success:hover {
+                background: rgba(16, 185, 129, 0.1);
+                border-color: transparent;
+            }
+
+            .status-toggle .btn-outline-success.active {
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+                border-color: transparent;
+            }
+
+    .section-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .event-card {
+        border: 1px solid #e8e8f5;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .event-card img {
+            transition: transform 0.3s ease;
+        }
+
+        .event-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .event-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .event-card .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+    .event-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+
+    .event-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+        color: #667eea;
+    }
+
+    .event-card .card-footer {
+        padding: 1rem 1.5rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .btn-outline-primary {
+        border: 2px solid #667eea;
+        color: #667eea;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+    .alert {
+        border-radius: 12px;
+        border: none;
+        padding: 1.25rem;
+        font-weight: 500;
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+        color: #0369a1;
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+        color: #c2410c;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #64748b;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
 </style>
+
+<!-- Hero Header -->
+<div class="hero-header text-white text-center py-5 mb-5 rounded-4 shadow-lg position-relative overflow-hidden">
+    <div class="container position-relative">
+        <h1 class="display-4 fw-bold mb-3">🎟️ My Registered Events</h1>
+        <p class="lead mb-0">Track and manage all your event registrations</p>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="card filter-card border-0 shadow-sm rounded-4 p-4 mb-4">
+    <form method="get" asp-action="AttendeeEvent" class="d-flex gap-3 flex-wrap align-items-center">
+        <input type="hidden" name="status" value="@selectedStatus" />
+
+        <div class="flex-grow-1" style="min-width: 250px;">
+            <select name="categoryId" class="form-select form-select-lg">
+                <option value="">All Categories</option>
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat.CategoryId" selected="@(selectedCategory == cat.CategoryId.ToString())">
+                        @cat.CategoryName
+                    </option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-funnel"></i> Apply Filter
+        </button>
+
+        <a asp-action="AttendeeEvent"
+           asp-route-showRecommended="true"
+           asp-route-status="@selectedStatus"
+           asp-route-categoryId="@selectedCategory"
+           class="btn btn-warning btn-lg">
+            ⭐ Recommended
+        </a>
+    </form>
+</div>
+
+<!-- Status Toggle -->
+<div class="mb-5">
+    <div class="status-toggle">
+        <a asp-action="AttendeeEvent"
+           asp-route-status="upcoming"
+           asp-route-categoryId="@selectedCategory"
+           asp-route-showRecommended="@showRecommended"
+           class="btn btn-outline-primary @(selectedStatus == "upcoming" ? "active" : "")">
+            📅 Upcoming Events
+        </a>
+
+        <a asp-action="AttendeeEvent"
+           asp-route-status="completed"
+           asp-route-categoryId="@selectedCategory"
+           asp-route-showRecommended="@showRecommended"
+           class="btn btn-outline-success @(selectedStatus == "completed" ? "active" : "")">
+            ✅ Completed Events
+        </a>
+    </div>
+</div>
+
+@if (showRecommended)
+{
+    <div class="alert alert-info">
+        <strong>💡 Recommendations:</strong> No recommendations available yet.
+    </div>
+}
+else
+{
+    <h3 class="section-title">
+        @(selectedStatus == "upcoming" ? "📅 My Upcoming Events" : "✅ My Completed Events")
+    </h3>
+
+    @if (!events.Any())
+    {
+        <div class="alert @(selectedStatus == "upcoming" ? "alert-warning" : "alert-info")">
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    @(selectedStatus == "upcoming" ? "📭" : "🎉")
+                </div>
+                <h4>
+                    @(selectedStatus == "upcoming"
+                                ? "You have no upcoming events."
+                                : "You have no completed events.")
+                </h4>
+                <p class="mb-0">
+                    @(selectedStatus == "upcoming"
+                                ? "Explore and register for exciting events!"
+                                : "Complete some events to see them here.")
+                </p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            @foreach (var ev in events)
+            {
+                <div class="col">
+                    <div class="card event-card h-100 shadow-sm">
+                        <div style="overflow: hidden; height: 220px;">
+                            <img src="@ev.CoverImageUrl" class="card-img-top" style="height:100%; width:100%; object-fit:cover;" alt="@ev.Title" />
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">@ev.Title</h5>
+
+                            <div class="event-info">
+                                <span>📅</span>
+                                <span>
+                                    @ev.StartDate.ToString("MMM dd, yyyy") – @ev.EndDate.ToString("MMM dd, yyyy")
+                                </span>
+                            </div>
+
+                            <div class="event-info mb-3">
+                                <span>📍</span>
+                                <span>@ev.Location</span>
+                            </div>
+
+                            <span class="event-badge">
+                                @(ev.Category?.CategoryName ?? "N/A")
+                            </span>
+                        </div>
+
+                        <div class="card-footer bg-white border-0">
+                            <a asp-controller="Attendee"
+                               asp-action="EventDetail"
+                               asp-route-id="@ev.EventId"
+                               class="btn btn-outline-primary w-100">
+                                View Details
+                            </a>
+                            @if (selectedStatus == "completed")
+                            {
+                                <a asp-controller="Attendee"
+                                   asp-action="RateEvent"
+                                   asp-route-eventId="@ev.EventId"
+                                   class="btn btn-warning w-100">
+                                    ⭐ Rate Event
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
