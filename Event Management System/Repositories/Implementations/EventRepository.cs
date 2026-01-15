@@ -1,4 +1,5 @@
 ﻿using Event_Management_System.Models.Entities;
+using Event_Management_System.Models.Enums;
 using Event_Management_System.Repositories.Interfaces;
 using EventManagement.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -31,19 +32,16 @@ namespace Event_Management_System.Repositories.Implementations
         {
             var todaysdate = DateTime.UtcNow;
             return await _context.Events.Include(e => e.Category)
-                .Where(er => er.OrganizerId == organizerId && er.StartDate> todaysdate)
+                .Where(er => (er.OrganizerId == organizerId && er.StartDate> todaysdate) && (er.Status==EventStatus.Upcoming))
                 .ToListAsync();
         }
         public async Task<List<Event>> GetCompletedEventByOrganizerIdAsync(int organizerid) {
             var todaysdate = DateTime.UtcNow;
             return await _context.Events.Include(e => e.Category)
-                .Where(er => er.OrganizerId == organizerid && er.EndDate < todaysdate).ToListAsync(); ;
+                .Where(er => er.OrganizerId == organizerid && er.EndDate < todaysdate &&  er.Status != EventStatus.Completed).ToListAsync(); ;
         }
 
-        public async Task<List<EventCategory>> GetEventCategoryAsync()
-        {
-            return await _context.EventCategories.ToListAsync();
-        }
+
         [Authorize("Organizer")]
 
         public async Task<Event?> GetEventDetailsByIdAsync(int eventid)
@@ -121,6 +119,18 @@ namespace Event_Management_System.Repositories.Implementations
         public async Task<bool> CheckIfEventExists(int eventid)
         {
             return await _context.Events.AnyAsync(e => e.EventId == eventid);
+        }
+
+        public async Task<List<Event>> GetEventInSpecificTimeFrameByOrganizerIdAsync(int organizerid, DateTime startdate)
+        {
+            return await _context.Events.Include(e=>e.Registrations).Include(e=>e.Reviews)
+                .Where(e => e.OrganizerId == organizerid && e.StartDate >= startdate)
+                .ToListAsync();
+        }
+
+        public async Task<Event?> GetEventbyIdAsync(int eventid)
+        {
+           return  await _context.Events.FindAsync(eventid);
         }
     }
 }

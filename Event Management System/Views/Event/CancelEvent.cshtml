@@ -1,0 +1,61 @@
+﻿@model Event_Management_System.ViewModels.CancelEventVM
+@{
+    ViewData["Title"] = "Cancel Event";
+}
+
+<div class="container mt-5">
+    <h2>Cancel Event</h2>
+    <hr />
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4>@Model.Title</h4>
+            <p><strong>Date & Time:</strong> @Model.EventDate.ToString("dd MMM yyyy, hh:mm tt")</p>
+            <p><strong>Category:</strong> @Model.Category</p>
+            <p><strong>Venue:</strong> @Model.Venue</p>
+            <p><strong>Registered Participants:</strong> @Model.TotalParticipants</p>
+            <p><strong>Description:</strong> @Model.Description</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="CancelEvent" method="post">
+
+                <!-- REQUIRED HIDDEN FIELDS -->
+                <input type="hidden" asp-for="EventId" />
+                <input type="hidden" asp-for="Title" />
+                <input type="hidden" asp-for="EventDate" />
+                <input type="hidden" asp-for="Category" />
+                <input type="hidden" asp-for="Venue" />
+                <input type="hidden" asp-for="TotalParticipants" />
+                <input type="hidden" asp-for="Description" />
+                <input type="hidden" asp-for="Status" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="CancelReason">
+                        Reason for Cancellation <span class="text-danger">*</span>
+                    </label>
+                    <textarea asp-for="CancelReason"
+                              class="form-control"
+                              placeholder="Enter the reason for cancelling this event..."
+                              rows="4"></textarea>
+                    <span asp-validation-for="CancelReason" class="text-danger"></span>
+                </div>
+
+                <p class="text-warning">
+                    ⚠️ Warning: Cancelling an event will notify all registered participants.
+                    This action cannot be undone.
+                </p>
+
+                <button type="submit" class="btn btn-danger">
+                    Cancel Event
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

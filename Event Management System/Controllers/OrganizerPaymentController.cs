@@ -12,10 +12,10 @@ namespace Event_Management_System.Controllers
         private readonly IOrganizerPaymentService _paymentService;
         private readonly IOptions<StripeSettings> _stripeOptions;
         private readonly IAttendeeService _attendeeService;
-        public readonly IPaymentReceiptService _receiptService;
+        public readonly IPaymentService _receiptService;
         public readonly IEmailService _emailService;
         public OrganizerPaymentController(IOrganizerPaymentService paymentService, IOptions<StripeSettings> stripeOptions
-            ,IAttendeeService service, IPaymentReceiptService receiptService, IEmailService emailService)
+            ,IAttendeeService service, IPaymentService receiptService, IEmailService emailService)
         {
             _paymentService = paymentService;
             _stripeOptions = stripeOptions;

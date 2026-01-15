@@ -1,4 +1,5 @@
-﻿using Event_Management_System.Repositories.Interfaces;
+﻿using Event_Management_System.Models.Enums;
+using Event_Management_System.Repositories.Interfaces;
 using EventManagement.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ namespace Event_Management_System.Repositories.Implementations
                 .Where(e => e.OrganizerId == organizerId
                          && e.StartDate <= now
                          && e.EndDate >= now
-                         && e.Status == "Upcoming")
+                         && e.Status == EventStatus.Upcoming)
                 .CountAsync();
 
         }
@@ -43,7 +44,7 @@ namespace Event_Management_System.Repositories.Implementations
             return await _context.Events
                 .Where(e => e.OrganizerId == organizerId
                          && e.StartDate > now
-                         && e.Status == "Upcoming")
+                         && e.Status == EventStatus.Upcoming)
                 .CountAsync();
         }
     }

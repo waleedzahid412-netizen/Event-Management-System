@@ -1,8 +1,9 @@
 ﻿using Event_Management_System.DTOs;
 using Event_Management_System.Models.Entities;
+using Event_Management_System.Models.Enums;
 using Event_Management_System.Repositories.Interfaces;
 using Event_Management_System.Services.Interfaces;
-
+using Event_Management_System.ViewModels;
 
 namespace Event_Management_System.Services.Implementations
 {
@@ -13,8 +14,11 @@ namespace Event_Management_System.Services.Implementations
         public readonly IEventRepository _eventrepo;
         public readonly IEventImageRepository _eventimagerepo;
         public readonly IRegistrationRepository _registrationrepo;
+        public readonly IEmailService _emailService;
         public OrganizerService(IOrganizerRepository organizer,ICloudinaryService cloud
-            , IEventRepository evrep, IEventImageRepository eventimage,IRegistrationRepository regrep)
+            , IEventRepository evrep,IEventImageRepository eventimage,
+            IRegistrationRepository regrep,IEmailService ser
+            )
         {
             
             _organizerRepo = organizer;
@@ -22,52 +26,43 @@ namespace Event_Management_System.Services.Implementations
             _eventrepo = evrep;
             _eventimagerepo = eventimage;
             _registrationrepo = regrep;
-            
+            _emailService = ser;
 
-            
+
+
         }
 
-        public async Task CreateEventAsync(CreateEventDTO dto, int organizerId)
-        {
-            var coverurl = await _cloudinary.UploadImageAsync(dto.CoverImage);
-            var ev = new Event
+        public async Task<OrganizerDashboardVM> GetAnalyticsDataAsync(int userid,  DateFilterType filter)
+
+        {   DateTime startdate= filter switch
             {
-                Title = dto.Title,
-                Description = dto.Description,
-                CategoryId = dto.CategoryId,
-                Location = dto.Location,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate,
-                TotalSeats = dto.TotalSeats,
-                TicketPrice = dto.TicketPrice,
-                AvailableSeats = dto.TotalSeats,
-                OrganizerId=organizerId,
-                CoverImageUrl=coverurl,
+                DateFilterType.Week => DateTime.Now.AddDays(-7),
+                DateFilterType.Month => DateTime.Now.AddMonths(-1),
+                DateFilterType.Year => DateTime.Now.AddYears(-1),
+                _ => DateTime.Now.AddDays(-7)
+            };
+            var events= await  _eventrepo.GetEventInSpecificTimeFrameByOrganizerIdAsync(userid, startdate);
+            return new OrganizerDashboardVM
+            {
+                TotalEvents = events.Count,
+                TotalParticipants = events.Sum(e => e.Registrations.Count),
+                AverageRating = events.Where(e => e.Reviews.Any()).Any() ? events.Where(e => e.Reviews.Any()).Average(e => e.Reviews.Average(r => r.Rating)) : 0,
+                TotalEarnings = events.Sum(e =>
+                {
+                    var soldSeats = e.TotalSeats - e.AvailableSeats;
+                    return soldSeats > 0 ? soldSeats * e.TicketPrice : 0;
+                }),
+                EventsByStatus = events.GroupBy(e => e.EndDate < DateTime.Now ? "Completed" : "Upcoming/Active  ")
+                                      .ToDictionary(g => g.Key, g => g.Count()),
+                ParticipantsPerEvent = events.ToDictionary(e => e.Title, e => e.Registrations.Count),
+                EventsCreatedOverTime = events.GroupBy(e => e.StartDate.ToString("yyyy-MM"))
+                                              .ToDictionary(g => g.Key, g => g.Count()),
+                AverageRatingPerEvent = events.Where(e => e.Reviews.Any())
+                                              .ToDictionary(e => e.Title, e => e.Reviews.Average(r => r.Rating)),
+                SelectedFilter = filter
 
             };
-            await _eventrepo.AddEventAsync(ev);
-            await _eventrepo.SaveChangesAsync();
 
-            if (dto.VenueImages != null && dto.VenueImages.Any()) {
-                foreach (var image in dto.VenueImages) {
-                    var imageurls= await _cloudinary.UploadImageAsync(image);
-                    var eventImage = new EventImage
-                    {
-                        EventId = ev.EventId,
-                        ImageUrl = imageurls,
-                    };
-                    await _eventimagerepo.AddeventImage(eventImage);
-                   
-
-                }
-                await _eventimagerepo.SaveChangesAsync();
-
-            }
-        }
-
-        public Task<List<EventCategory>> GetAllEventCategoryAsync()
-        {
-            return _eventrepo.GetEventCategoryAsync();
         }
 
         public async Task<OrganizerDashboardDTO> GetDashboardAsync(int organizerId)
@@ -82,24 +77,7 @@ namespace Event_Management_System.Services.Implementations
 
     }
 
-        public async Task<OrganizerEventDetailsDTO> GetEventDetailsAsync(int eventId)
-        {
-            var ev= await _eventrepo.GetEventDetailsByIdAsync(eventId);
-            return new OrganizerEventDetailsDTO
-            {
-                EventId = ev.EventId,
-                Title = ev.Title,
-                Description = ev.Description,
-                Location = ev.Location,
-                StartDate = ev.StartDate,
-                EndDate = ev.EndDate,
-                TotalSeats = ev.TotalSeats,
-                AvailableSeats = ev.AvailableSeats,
-                CategoryName = ev.Category.CategoryName,
-                CoverImageUrl = ev.CoverImageUrl,
-                VenueImages = ev.EventImages.Select(i => i.ImageUrl).ToList()
-            };
-        }
+
         public async Task<List<EventParticipantDTO>> GetEventParticipantsAsync(int eventId)
         {
             var registrations = await _registrationrepo.GetEventParticipantsbyEventIdAsync(eventId);
@@ -120,14 +98,9 @@ namespace Event_Management_System.Services.Implementations
                 })
                 .ToList();
         }
-            public async Task<List<Event>> GetEventsByOrganizerAsync(int organizerId,string status)
-            {
-                if (status == "upcoming")
-                {
-                    return await _eventrepo.GetUpcomingEventByOrganizerIdAsync(organizerId);
-                }
-                else {
-                    return await _eventrepo.GetCompletedEventByOrganizerIdAsync(organizerId);
-                        }
-                }
+
+
+
+
+
     } }

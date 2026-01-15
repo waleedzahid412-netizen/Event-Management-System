@@ -15,8 +15,8 @@ namespace Event_Management_System.Services.Interfaces
 
         Task<int> CountofEventAttendedByUserid(int id);
         Task<int> CountofUpcomingEventByUserid(int id);
-        Task<List<Registration>> GetRegistrationsForUserEventAsync(int userId, int eventId);
-        public Task<(PaymentReciept receipt, byte[] pdfBytes)> CreatePaymentReceiptAsync(int userId, CustomerEventDetailsDTO ev, List<Registration> registrations);
+
+      
         Task<int> SubmitOrganizerApplication(OrganizerApplicationCreateDTO dto,int Userid);
         public Task<List<Event>> BrowseEventAsync(int? categoryid, string status);
 

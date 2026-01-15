@@ -13,5 +13,8 @@ namespace Event_Management_System.Services.Interfaces
     string toEmail,
     OrganizerApplication application,
     byte[] receiptPdf);
+        public Task SendEventCancellationEmailAsync(string email, Event eventdetails,string cancelreason);
     }
+
+   
 }

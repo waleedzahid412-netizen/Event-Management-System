@@ -1,7 +1,9 @@
 ﻿using Event_Management_System.DTOs;
 using Event_Management_System.Models.Entities;
+using Event_Management_System.Models.Enums;
 using Event_Management_System.Services;
 using Event_Management_System.Services.Interfaces;
+using Event_Management_System.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,46 +26,20 @@ namespace Event_Management_System.Controllers
             return View(dashboardData);
         }
 
-        public async Task<IActionResult> CreateEvent() {
-            var categories = await _organizerService.GetAllEventCategoryAsync();
 
-          
-            ViewBag.Categories = categories;
-
-            return View(new CreateEventDTO());
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateEvent(CreateEventDTO dto) {
-            if (!ModelState.IsValid) {
-                var categories = await _organizerService.GetAllEventCategoryAsync() ?? new List<EventCategory>();
-                ViewBag.Categories = categories;
-
-                return View(dto);
-
-            }
-            int organizerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            await _organizerService.CreateEventAsync(dto, organizerId);
-
-            return RedirectToAction("MyEvents");
-
-        }
-        public async Task<IActionResult> MyEvents(string status="upcoming") {
-            int organizerid = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            IEnumerable<Event> events;
-            events=await _organizerService.GetEventsByOrganizerAsync(organizerid,status);
-
-            ViewBag.SelectedTab = status;
-            return View(events);
-        }
-        public async Task<IActionResult> EventDetails(int id) {
-            var eventdetails= await _organizerService.GetEventDetailsAsync(id);
-            return View(eventdetails);
-        }
         public async Task<IActionResult> ViewEventParticipants(int id) { 
         var participants= await _organizerService.GetEventParticipantsAsync(id);
          return View(participants);
         }
+
+        public async Task<IActionResult> AnalyticsDashboard(DateFilterType filter = DateFilterType.Month) {
+            int organizerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var analyticsData = await _organizerService.GetAnalyticsDataAsync(organizerId ,filter);
+            
+            return View(analyticsData);
+        }
+
+
+    
     }
 }

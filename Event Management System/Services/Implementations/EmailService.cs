@@ -70,6 +70,55 @@ Thank you for registering!
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
+
+        public async Task SendEventCancellationEmailAsync(string toEmail, Event eventdetails,string cancelreason)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_emailSettings.FromName, _emailSettings.SmtpUser));
+            message.To.Add(new MailboxAddress("", toEmail));
+            message.Subject = $"Event Cancellation Notice: {eventdetails.Title}";
+
+            var body = new TextPart("plain")
+            {
+                Text = $@"
+Dear Participant,
+
+We regret to inform you that the following event has been cancelled:
+
+Event Name: {eventdetails.Title}
+Category: {eventdetails.Category?.CategoryName}
+Start Date: {eventdetails.StartDate:MMMM dd, yyyy}
+Cancellation Reason: {cancelreason}
+
+We sincerely apologize for any inconvenience this may cause.
+If you have already registered, further details regarding refunds or next steps will be shared separately.
+
+Best regards,
+Event Management Team
+"
+            };
+
+            var multipart = new Multipart("mixed");
+            multipart.Add(body);
+
+            message.Body = multipart;
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(
+                _emailSettings.SmtpServer,
+                _emailSettings.SmtpPort,
+                MailKit.Security.SecureSocketOptions.StartTls
+            );
+
+            await client.AuthenticateAsync(
+                _emailSettings.SmtpUser,
+                _emailSettings.SmtpPass
+            );
+
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
+
         public async Task SendOrganizerApplicationEmailAsync(
     string toEmail,
     OrganizerApplication application,

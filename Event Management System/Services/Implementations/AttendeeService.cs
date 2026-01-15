@@ -11,23 +11,25 @@ namespace Event_Management_System.Services.Implementations
         public readonly IEventRepository _eventRepository;
         public readonly IRegistrationRepository _registrationRepository;
         public readonly IUserRepository _userRepository;
-        public readonly IPaymentReceiptService _paymentReceiptService;
+   
         public readonly IPaymentRecieptRepository _paymentrepo;
         public readonly IOrganizerApplicationRepository _organizerApplicationRepository;
         public readonly IEventReviewRepository _eventReviewRepository;
+        public readonly IEventCategoryRepository _eventCatregoryRepository;
         public AttendeeService(IEventRepository rep, IRegistrationRepository rrep, 
-            IUserRepository userRepository, IPaymentReceiptService paymentReceiptService
+            IUserRepository userRepository
             , IPaymentRecieptRepository paymentrepo,IOrganizerApplicationRepository repo
-            ,IEventReviewRepository eventreviewrepo)
+            ,IEventReviewRepository eventreviewrepo,IEventCategoryRepository eventcatrepo)
         {
 
             _registrationRepository = rrep;
             _eventRepository = rep;
             _userRepository = userRepository;
-            _paymentReceiptService = paymentReceiptService;
+
             _paymentrepo = paymentrepo;
             _organizerApplicationRepository = repo;
             _eventReviewRepository= eventreviewrepo;
+            _eventCatregoryRepository= eventcatrepo;
         }
         public async Task<List<Event>> GetAllEventsAsync()
         {
@@ -102,7 +104,7 @@ namespace Event_Management_System.Services.Implementations
 
         public async Task<List<EventCategory>> GetAllCategoriesAsync()
         {
-            return await _eventRepository.GetEventCategoryAsync();
+            return await _eventCatregoryRepository.GetEventCategoryAsync();
         }
 
         public async Task<List<Event>> GetEventByAttendeeId(int userid, int? categoryid, bool showrecommended)
@@ -152,44 +154,8 @@ namespace Event_Management_System.Services.Implementations
             return  await _eventRepository.CountofUpcomingEventByUserid(id);
         }
 
-        public async Task<List<Registration>> GetRegistrationsForUserEventAsync(int userId, int eventId)
-        {
-            return await _registrationRepository.GetRegistrationsForUserEventAsync(userId, eventId);
-        }
-        public async Task<(PaymentReciept receipt, byte[] pdfBytes)> CreatePaymentReceiptAsync(
-                           int userId,
-                           CustomerEventDetailsDTO ev,
-                           List<Registration> registrations
-    )
-        {
-
-            var receiptData = new PaymentReceiptDTO
-            {
-                UserEmail = await _registrationRepository.useremail(userId),
-                EventTitle = ev.Title,
-                NumberOfTickets = registrations.Count,
-                TicketPrice = ev.TicketPrice,
-                TicketNumbers = registrations.Select(r => r.TicketNumber).ToList()
-            };
-
-            var pdfBytes = _paymentReceiptService.GenerateReceiptPdf(receiptData);
 
 
-            var receiptEntity = new PaymentReciept
-            {
-                UserId = userId,
-                EventId = ev.EventId,
-                NumberOfTickets = registrations.Count,
-                TicketPrice = ev.TicketPrice,
-                TotalAmount = registrations.Count * ev.TicketPrice,
-                ReceiptPdf = pdfBytes
-            };
-
-            await _paymentrepo.AddPaymentReciept(receiptEntity);
-            await _paymentrepo.SaveChangesAsync();
-
-            return(receiptEntity,pdfBytes) ;
-        }
 
         public async Task<int> SubmitOrganizerApplication(OrganizerApplicationCreateDTO dto,int Userid)
         {

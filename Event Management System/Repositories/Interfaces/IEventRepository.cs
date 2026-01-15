@@ -1,4 +1,5 @@
 ﻿using Event_Management_System.Models.Entities;
+using Event_Management_System.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -11,7 +12,6 @@ namespace Event_Management_System.Repositories.Interfaces
         public Task SaveChangesAsync();
         public Task<List<Event>> GetUpcomingEventByOrganizerIdAsync(int organizerId);
 
-        public Task<List<EventCategory>> GetEventCategoryAsync();
         public Task<Event?> GetEventDetailsByIdAsync(int eventid);
 
         public Task<List<Event>> GetCompletedEventByOrganizerIdAsync(int organizerid);
@@ -26,6 +26,9 @@ namespace Event_Management_System.Repositories.Interfaces
         public Task CommitTransactionAsync(IDbContextTransaction transaction);
         public Task RollBackTransactionAsync(IDbContextTransaction transaction);
         public Task<bool> CheckIfEventExists(int eventid);
+
+        public Task<List<Event>> GetEventInSpecificTimeFrameByOrganizerIdAsync(int organizerid, DateTime startdate);
+        public Task<Event?> GetEventbyIdAsync(int eventid);
 
     }
 }

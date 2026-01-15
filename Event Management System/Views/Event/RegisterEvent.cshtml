@@ -1,0 +1,895 @@
+﻿@model Event_Management_System.DTOs.EventRegistrationDTO
+@{
+    ViewData["Title"] = "Register for Event";
+}
+
+<!-- Registration Header -->
+<div class="registration-hero">
+    <div class="container">
+        <div class="hero-content-reg">
+            <div class="progress-indicator">
+                <div class="progress-step active">
+                    <div class="step-circle">
+                        <i class="bi bi-ticket-detailed-fill"></i>
+                    </div>
+                    <span>Select Tickets</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step">
+                    <div class="step-circle">
+                        <i class="bi bi-credit-card-fill"></i>
+                    </div>
+                    <span>Payment</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step">
+                    <div class="step-circle">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <span>Confirmation</span>
+                </div>
+            </div>
+            <h1 class="registration-title">Complete Your Registration</h1>
+            <p class="registration-subtitle">Secure your spot at this amazing event</p>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-modern">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>
+                <strong>Success!</strong>
+                <p>@TempData["Success"]</p>
+            </div>
+        </div>
+    }
+
+    <div class="row g-4">
+        <!-- Event Summary Card -->
+        <div class="col-lg-7">
+            <div class="event-summary-card">
+                <div class="event-image-wrapper">
+                    <img src="@ViewBag.CoverImageUrl" class="event-summary-image" alt="@ViewBag.EventTitle" />
+                    <div class="image-badge">
+                        <i class="bi bi-calendar-event"></i>
+                        <span>Featured Event</span>
+                    </div>
+                </div>
+
+                <div class="event-summary-content">
+                    <h2 class="event-summary-title">@ViewBag.EventTitle</h2>
+
+                    <div class="registration-info-box">
+                        <div class="info-icon-box">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </div>
+                        <p class="info-text">
+                            Please confirm your registration details below. Your ticket numbers will be generated
+                            automatically after successful registration and sent to your email.
+                        </p>
+                    </div>
+
+                    <div class="registration-details">
+                        <div class="detail-card">
+                            <div class="detail-header">
+                                <i class="bi bi-credit-card-2-front-fill"></i>
+                                <h5>Payment Information</h5>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-row">
+                                    <span class="detail-label">Payment Status:</span>
+                                    <span class="status-badge status-@Model.PaymentStatus.ToLower()">
+                                        @Model.PaymentStatus
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-header">
+                                <i class="bi bi-ticket-perforated-fill"></i>
+                                <h5>Your Tickets</h5>
+                            </div>
+                            <div class="detail-content">
+                                @if (Model.TicketNumbers != null && Model.TicketNumbers.Any())
+                                {
+                                    <div class="tickets-grid">
+                                        @foreach (var ticket in Model.TicketNumbers)
+                                        {
+                                            <div class="ticket-item">
+                                                <i class="bi bi-ticket-detailed"></i>
+                                                <span>@ticket</span>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="pending-tickets">
+                                        <i class="bi bi-hourglass-split"></i>
+                                        <span>Ticket numbers will be generated after registration</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="security-notice">
+                        <i class="bi bi-shield-fill-check"></i>
+                        <div>
+                            <strong>Secure Registration</strong>
+                            <p>Your information is protected with 256-bit SSL encryption</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="col-lg-5">
+            <div class="registration-form-card sticky-form">
+                <div class="form-header">
+                    <i class="bi bi-pencil-square"></i>
+                    <h3>Registration Form</h3>
+                </div>
+
+                <form asp-action="RegisterEvent" method="post" id="registrationForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="EventId" />
+
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">
+                            <i class="bi bi-ticket-detailed"></i>
+                            Number of Tickets
+                        </label>
+                        <div class="ticket-selector">
+                            <button type="button" class="ticket-btn minus" onclick="decrementTickets()">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <input class="form-control-modern ticket-input"
+                                   asp-for="NumberOfTickets"
+                                   type="number"
+                                   min="1"
+                                   max="10"
+                                   value="1"
+                                   id="ticketCount"
+                                   onchange="updateTotal()" />
+                            <button type="button" class="ticket-btn plus" onclick="incrementTickets()">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                        <small class="form-hint">
+                            <i class="bi bi-info-circle"></i>
+                            You can book up to 10 tickets per registration
+                        </small>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">
+                            <i class="bi bi-wallet2"></i>
+                            Payment Status
+                        </label>
+                        <input class="form-control-modern" asp-for="PaymentStatus" readonly />
+                    </div>
+
+                    <div class="amount-breakdown">
+                        <div class="breakdown-row">
+                            <span>Ticket Price</span>
+                            <span class="price" id="unitPrice">PKR @ViewBag.TicketPrice</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Quantity</span>
+                            <span id="quantityDisplay">1</span>
+                        </div>
+                        <div class="breakdown-divider"></div>
+                        <div class="breakdown-row total">
+                            <span>Total Amount</span>
+                            <span class="total-price" id="totalAmount">PKR @ViewBag.TicketPrice</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-register-submit">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Complete Registration</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+
+                    <div class="form-footer-notice">
+                        <i class="bi bi-lock-fill"></i>
+                        <span>Your payment information is secure</span>
+                    </div>
+                </form>
+
+                <div class="benefits-list">
+                    <h6>What's Included:</h6>
+                    <div class="benefit-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Instant ticket confirmation</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Email & SMS notifications</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>24/7 customer support</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Easy cancellation policy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ticketPrice = @ViewBag.TicketPrice;
+
+    function updateTotal() {
+        const quantity = parseInt(document.getElementById('ticketCount').value) || 1;
+        const total = quantity * ticketPrice;
+        document.getElementById('totalAmount').textContent = 'PKR ' + total.toLocaleString();
+        document.getElementById('quantityDisplay').textContent = quantity;
+    }
+
+    function incrementTickets() {
+        const input = document.getElementById('ticketCount');
+        const currentValue = parseInt(input.value) || 1;
+        if (currentValue < 10) {
+            input.value = currentValue + 1;
+            updateTotal();
+        }
+    }
+
+    function decrementTickets() {
+        const input = document.getElementById('ticketCount');
+        const currentValue = parseInt(input.value) || 1;
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+            updateTotal();
+        }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTotal();
+    });
+</script>
+
+<style>
+    /* Registration Hero */
+    .registration-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .registration-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none"/><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+            opacity: 0.3;
+        }
+
+    .hero-content-reg {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: white;
+    }
+
+    .progress-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .progress-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .step-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .progress-step.active .step-circle {
+        background: white;
+        color: #667eea;
+        border-color: white;
+        box-shadow: 0 4px 20px rgba(255, 255, 255, 0.4);
+    }
+
+    .progress-step span {
+        font-size: 0.875rem;
+        font-weight: 600;
+        opacity: 0.9;
+    }
+
+    .progress-line {
+        width: 80px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.3);
+        margin: 0 -1rem;
+        margin-top: -2rem;
+    }
+
+    .registration-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .registration-subtitle {
+        font-size: 1.125rem;
+        opacity: 0.95;
+    }
+
+    /* Alert Modern */
+    .alert-modern {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.5rem;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(72, 187, 120, 0.2);
+    }
+
+        .alert-modern i {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .alert-modern strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-modern p {
+            margin: 0;
+        }
+
+    /* Event Summary Card */
+    .event-summary-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-image-wrapper {
+        position: relative;
+        height: 300px;
+        overflow: hidden;
+    }
+
+    .event-summary-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .event-summary-card:hover .event-summary-image {
+        transform: scale(1.05);
+    }
+
+    .image-badge {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        font-size: 0.875rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .event-summary-content {
+        padding: 2.5rem;
+    }
+
+    .event-summary-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+    }
+
+    .registration-info-box {
+        display: flex;
+        gap: 1rem;
+        background: linear-gradient(135deg, #e6f3ff 0%, #f0f7ff 100%);
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #667eea;
+    }
+
+    .info-icon-box {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .info-text {
+        margin: 0;
+        color: #4a5568;
+        line-height: 1.6;
+    }
+
+    .registration-details {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+        .detail-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+    .detail-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        color: #2d3748;
+    }
+
+        .detail-header i {
+            color: #667eea;
+            font-size: 1.25rem;
+        }
+
+        .detail-header h5 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+    .detail-content {
+        padding-left: 2.25rem;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+    }
+
+    .detail-label {
+        color: #718096;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.875rem;
+    }
+
+    .status-pending {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #2d3748;
+    }
+
+    .status-paid {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+    }
+
+    .status-unpaid {
+        background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+        color: white;
+    }
+
+    .tickets-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .ticket-item {
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 2px solid #e2e8f0;
+        font-weight: 600;
+        color: #4a5568;
+    }
+
+        .ticket-item i {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+    .pending-tickets {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #a0aec0;
+        font-style: italic;
+    }
+
+        .pending-tickets i {
+            font-size: 1.25rem;
+            animation: spin 2s linear infinite;
+        }
+
+    .security-notice {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: linear-gradient(135deg, #e6ffed 0%, #f0fff4 100%);
+        padding: 1.25rem;
+        border-radius: 15px;
+        border-left: 4px solid #48bb78;
+    }
+
+        .security-notice i {
+            color: #48bb78;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .security-notice strong {
+            display: block;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .security-notice p {
+            margin: 0;
+            color: #4a5568;
+            font-size: 0.875rem;
+        }
+
+    /* Registration Form Card */
+    .registration-form-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border: 2px solid #e2e8f0;
+    }
+
+    .sticky-form {
+        position: sticky;
+        top: 100px;
+    }
+
+    .form-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+        .form-header i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .form-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #2d3748;
+        }
+
+    .form-group-modern {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label-modern {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+        .form-label-modern i {
+            color: #667eea;
+        }
+
+    .ticket-selector {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        padding: 1rem;
+        border-radius: 15px;
+        border: 2px solid #e2e8f0;
+    }
+
+    .ticket-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .ticket-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .ticket-btn:active {
+            transform: scale(0.95);
+        }
+
+    .ticket-input {
+        flex: 1;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 800;
+        border: none;
+        background: white;
+        border-radius: 10px;
+        padding: 0.75rem;
+        color: #2d3748;
+    }
+
+    .form-control-modern {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+        .form-control-modern:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+    .form-hint {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #718096;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+        .form-hint i {
+            color: #667eea;
+        }
+
+    .amount-breakdown {
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        color: #4a5568;
+        font-weight: 500;
+    }
+
+        .breakdown-row.total {
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #2d3748;
+        }
+
+    .breakdown-divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #cbd5e0 50%, transparent 100%);
+        margin: 0.75rem 0;
+    }
+
+    .price {
+        color: #667eea;
+        font-weight: 700;
+    }
+
+    .total-price {
+        color: #667eea;
+        font-weight: 800;
+        font-size: 1.5rem;
+    }
+
+    .btn-register-submit {
+        width: 100%;
+        padding: 1.25rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        font-size: 1.125rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .btn-register-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-register-submit i:last-child {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-register-submit:hover i:last-child {
+            transform: translateX(5px);
+        }
+
+    .form-footer-notice {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        color: #718096;
+        font-size: 0.875rem;
+    }
+
+        .form-footer-notice i {
+            color: #48bb78;
+        }
+
+    .benefits-list {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px dashed #e2e8f0;
+    }
+
+        .benefits-list h6 {
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+    .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 0;
+        color: #4a5568;
+        font-weight: 500;
+    }
+
+        .benefit-item i {
+            color: #48bb78;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+    /* Responsive */
+    @@media (max-width: 991px) {
+        .sticky-form {
+            position: static;
+        }
+
+        .registration-title {
+            font-size: 2rem;
+        }
+
+        .progress-line {
+            width: 40px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .registration-title {
+            font-size: 1.5rem;
+        }
+
+        .registration-subtitle {
+            font-size: 1rem;
+        }
+
+        .progress-indicator {
+            gap: 0.5rem;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            font-size: 1.25rem;
+        }
+
+        .progress-line {
+            width: 30px;
+        }
+
+        .progress-step span {
+            font-size: 0.75rem;
+        }
+
+        .event-summary-content {
+            padding: 1.5rem;
+        }
+
+        .registration-form-card {
+            padding: 1.5rem;
+        }
+
+        .tickets-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

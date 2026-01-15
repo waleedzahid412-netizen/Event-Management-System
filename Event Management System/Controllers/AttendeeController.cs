@@ -35,113 +35,12 @@ namespace Event_Management_System.Controllers
         }
 
 
-        public async Task<IActionResult> BrowseEvents(int? categoryId, bool showRecommended = false, string status = "upcoming")
-        {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            ViewBag.Categories = await _attendeeService.GetAllCategoriesAsync();
-            ViewBag.ShowRecommended = showRecommended;
-            ViewBag.SelectedTab = status; // Pass the current status to the view
-
-            if (showRecommended)
-            {
-                // Load recommended events (you might want to implement actual recommendation logic)
-                ViewBag.RecommendedEvents = new List<Event_Management_System.Models.Entities.Event>(); // Or load actual recommended events
-                return View(new List<Event_Management_System.Models.Entities.Event>());
-            }
-
-            var events = await _attendeeService.BrowseEventAsync(categoryId, status);
-            return View(events);
-        }
 
 
-        public async Task<IActionResult> EventDetail(int id)
-        {
-            var eventDetails = await _attendeeService.GetEventDetailsAsync(id);
-            if (eventDetails == null)
-            {
-                return NotFound();
-            }
-            return View(eventDetails);
 
-        }
-        [HttpGet]
-        public async Task<IActionResult> RegisterEvent(int id)
-        {
-            var ev = await _attendeeService.GetEventDetailsAsync(id);
 
-            if (ev == null)
-                return NotFound();
 
-            // Prepare DTO for the form
-            var dto = new EventRegistrationDTO
-            {
-                EventId = id,
-                PaymentStatus = "Pending" // default
-            };
-
-            ViewBag.EventTitle = ev.Title;
-            ViewBag.CoverImageUrl = ev.CoverImageUrl;
-            ViewBag.TicketPrice = ev.TicketPrice;
-
-            return View(dto);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> RegisterEvent(EventRegistrationDTO dto)
-        {
-            var ev = await _attendeeService.GetEventDetailsAsync(dto.EventId);
-            if (ev == null)
-            {
-                ModelState.AddModelError("", "Event not found.");
-                return Content("Event not found.");
-            }
-            ViewBag.EventTitle = ev?.Title;
-            ViewBag.CoverImageUrl = ev?.CoverImageUrl;
-
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage);
-
-                return Content(string.Join(" | ", errors));
-            }
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            await _attendeeService.RegisterForEventAsync(userId, dto.EventId, dto.NumberOfTickets);
-
-            var registration = await _attendeeService.GetRegistrationsForUserEventAsync(userId, dto.EventId);
-            var (receiptEntity, pdfBytes) = await _attendeeService.CreatePaymentReceiptAsync(userId, ev, registration);
-            var email = User.FindFirstValue(ClaimTypes.Email);
-            await _emailService.SendConfirmationEmailAsync(email, ev, registration,
-                pdfBytes, "Receipt.pdf");
-            TempData["Success"] = "You have successfully registered for this event!";
-            return RedirectToAction("BrowseEvents");
-        }
-        [HttpGet]
-        public async Task<IActionResult> AttendeeEvent(
-           int? categoryId,
-           bool showRecommended = false,
-           string status = "upcoming")
-        {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            ViewBag.Categories = await _attendeeService.GetAllCategoriesAsync();
-            ViewBag.ShowRecommended = showRecommended;
-            ViewBag.status = status;
-
-            var events = await _attendeeService
-                .GetEventByAttendeeId(userId, categoryId, showRecommended);
-
-            var today = DateTime.Now;
-
-            events = status == "completed"
-                ? events.Where(e => e.EndDate < today).ToList()
-                : events.Where(e => e.EndDate >= today).ToList();
-
-            return View(events);
-        }
+ 
 
         [HttpGet]
         public async Task<IActionResult> ProfileInfo()

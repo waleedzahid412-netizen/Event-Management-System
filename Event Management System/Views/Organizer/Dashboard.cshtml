@@ -259,21 +259,27 @@
 <div class="dashboard-actions">
     <h2 class="section-title">Quick Actions</h2>
     <div class="d-flex flex-wrap gap-3">
-        <a asp-controller="Organizer" asp-action="CreateEvent" class="btn btn-primary btn-lg action-btn">
+        <a asp-controller="Event" asp-action="CreateEvent" class="btn btn-primary btn-lg action-btn">
             <span>➕</span>
             <span>Create New Event</span>
         </a>
-        <a asp-controller="Organizer" asp-action="MyEvents" class="btn btn-secondary btn-lg action-btn">
+        <a asp-controller="Event" asp-action="OrganizedEvents" class="btn btn-secondary btn-lg action-btn">
             <span>📋</span>
-            <span>My Events</span>
+            <span>Organized Events</span>
         </a>
-        <a asp-controller="Organizer" asp-action="EventRegistrations" class="btn btn-success btn-lg action-btn">
+        <a asp-controller="Event" asp-action="BrowseEvents" class="btn btn-success btn-lg action-btn">
             <span>👥</span>
-            <span>View Registrations</span>
+            <span>Register For an Event</span>
         </a>
-        <a asp-controller="Profile" asp-action="Edit" class="btn btn-info btn-lg action-btn">
-            <span>⚙️</span>
-            <span>Edit Profile</span>
+        <a asp-controller="Event" asp-action="UserEvents" class="btn btn-success btn-lg action-btn">
+            <span>👥</span>
+            <span>Registered Events</span>
         </a>
+        <a asp-controller="Organizer" asp-action="AnalyticsDashboard" class="btn btn-success btn-lg action-btn">
+            <span>👥</span>
+            <span>View Analytics</span>
+        </a>
+
+
     </div>
 </div>

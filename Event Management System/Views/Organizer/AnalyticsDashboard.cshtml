@@ -1,0 +1,496 @@
+﻿@using Event_Management_System.ViewModels
+
+<style>
+    /* Dashboard Container */
+    .analytics-dashboard {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+    }
+
+    /* Page Header */
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-subtitle {
+        color: #718096;
+        font-size: 1.1rem;
+    }
+
+    /* Filter Buttons */
+    .filter-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .btn-group .btn {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: 2px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+        .btn-group .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-group .btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+        }
+
+    /* Summary Cards */
+    .summary-cards {
+        margin-bottom: 1rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+    .stat-label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #718096;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.75rem;
+    }
+
+    .stat-value {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+    }
+
+    /* Chart Cards */
+    .chart-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        transition: all 0.3s ease;
+        height: 450px;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .chart-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+    .chart-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .chart-container {
+        flex: 1;
+        position: relative;
+        min-height: 0;
+
+    }
+
+        .chart-container canvas {
+            max-height: 100%;
+          
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .analytics-dashboard {
+            padding: 1rem;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+        }
+
+        .chart-card {
+            height: 350px;
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
+
+<div class="analytics-dashboard">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Analytics Dashboard</h1>
+        <p class="dashboard-subtitle">Track your event performance and insights</p>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-section">
+        <div class="btn-group" role="group">
+            <a asp-action="AnalyticsDashboard" asp-route-filter="Week"
+               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Week ? "active" : "")">
+                Last 7 Days
+            </a>
+            <a asp-action="AnalyticsDashboard" asp-route-filter="Month"
+               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Month ? "active" : "")">
+                Last 30 Days
+            </a>
+            <a asp-action="AnalyticsDashboard" asp-route-filter="Year"
+               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Year ? "active" : "")">
+                Last 12 Months
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-label">Total Events</div>
+                <h3 class="stat-value">@Model.TotalEvents</h3>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-label">Total Participants</div>
+                <h3 class="stat-value">@Model.TotalParticipants</h3>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-label">Average Rating</div>
+                <h3 class="stat-value">@Model.AverageRating</h3>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-label">Total Earnings</div>
+                <h3 class="stat-value">@Model.TotalEarnings</h3>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Charts Section -->
+    <div class="row g-4 mt-5">
+
+        <!-- Events by Status Pie -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h5 class="chart-title">Events by Status</h5>
+                <div class="chart-container">
+                    <canvas id="eventsByStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participants per Event Bar -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h5 class="chart-title">Participants per Event</h5>
+                <div class="chart-container">
+                    <canvas id="participantsPerEventChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Created Over Time Line -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h5 class="chart-title">Events Created Over Time</h5>
+                <div class="chart-container">
+                    <canvas id="eventsCreatedChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Average Rating per Event Bar -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h5 class="chart-title">Average Rating per Event</h5>
+                <div class="chart-container">
+                    <canvas id="averageRatingChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Enhanced color palette
+        const chartColors = {
+            primary: ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'],
+            gradients: [
+                'rgba(102, 126, 234, 0.8)',
+                'rgba(118, 75, 162, 0.8)',
+                'rgba(240, 147, 251, 0.8)',
+                'rgba(79, 172, 254, 0.8)',
+                'rgba(67, 233, 123, 0.8)',
+                'rgba(250, 112, 154, 0.8)'
+            ]
+        };
+
+        // Enhanced common chart options
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 13,
+                            family: "'Inter', 'Segoe UI', sans-serif",
+                            weight: '600'
+                        },
+                        padding: 15,
+                        color: '#4a5568',
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1,
+                    cornerRadius: 8
+                }
+            }
+        };
+
+        // Events by Status Pie Chart
+        new Chart(document.getElementById('eventsByStatusChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsByStatus.Keys)),
+                datasets: [{
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsByStatus.Values)),
+                    backgroundColor: chartColors.gradients,
+                    borderWidth: 3,
+                    borderColor: '#ffffff',
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                ...commonOptions,
+                cutout: '65%',
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: {
+                        ...commonOptions.plugins.legend,
+                        position: 'right'
+                    }
+                }
+            }
+        });
+
+        // Participants per Event Bar Chart
+        new Chart(document.getElementById('participantsPerEventChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ParticipantsPerEvent.Keys)),
+                datasets: [{
+                    label: 'Participants',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ParticipantsPerEvent.Values)),
+                    backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                    borderColor: '#667eea',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBackgroundColor: '#764ba2'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { display: false },
+                    tooltip: {
+                        ...commonOptions.plugins.tooltip,
+                        callbacks: {
+                            label: ctx => `${ctx.raw} participants`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 12, weight: '600' },
+                            color: '#4a5568'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { size: 12, weight: '600' },
+                            color: '#4a5568'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Events Created Over Time Line Chart
+        new Chart(document.getElementById('eventsCreatedChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsCreatedOverTime.Keys)),
+                datasets: [{
+                    label: 'Events Created',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsCreatedOverTime.Values)),
+                    fill: true,
+                    backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                    borderColor: '#764ba2',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: '#764ba2',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#667eea'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 12, weight: '600' },
+                            color: '#4a5568'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { size: 12, weight: '600' },
+                            color: '#4a5568',
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Average Rating per Event Bar Chart
+        new Chart(document.getElementById('averageRatingChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AverageRatingPerEvent.Keys)),
+                datasets: [{
+                    label: 'Average Rating',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AverageRatingPerEvent.Values)),
+                    backgroundColor: 'rgba(79, 172, 254, 0.8)',
+                    borderColor: '#4facfe',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBackgroundColor: '#43e97b'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { display: false },
+                    tooltip: {
+                        ...commonOptions.plugins.tooltip,
+                        callbacks: {
+                            label: ctx => `Rating: ${ctx.raw.toFixed(1)} ⭐`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 12, weight: '600' },
+                            color: '#4a5568'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 5,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { size: 12, weight: '600' },
+                            color: '#4a5568',
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

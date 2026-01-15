@@ -106,11 +106,7 @@
                         @if (User?.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item"><a class="nav-link" asp-controller="Attendee" asp-action="ProfileInfo">MyProfile</a></li>
-                            @if (User.IsInRole("Customer"))
-                            {
-                                <li class="nav-item"><a class="nav-link" asp-controller="Attendee" asp-action="OrganizerRegistration">Host An Event</a></li>
-                                
-                            }
+
                             <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Logout">logout</a></li>
                         }
 

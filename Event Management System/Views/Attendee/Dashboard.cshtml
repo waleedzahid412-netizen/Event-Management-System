@@ -99,7 +99,7 @@
                         <p class="text-muted mb-4">
                             Discover amazing events happening near you and register with just a click
                         </p>
-                        <a asp-controller="Attendee"
+                        <a asp-controller="Event"
                            asp-action="BrowseEvents"
                            class="btn btn-primary btn-lg w-100 action-btn">
                             <i class="bi bi-search me-2"></i> Explore Events
@@ -121,8 +121,8 @@
                         <p class="text-muted mb-4">
                             View all your registered events and manage your attendance
                         </p>
-                        <a asp-controller="Attendee"
-                           asp-action="AttendeeEvent"
+                        <a asp-controller="Event"
+                           asp-action="UserEvents"
                            class="btn btn-success btn-lg w-100 action-btn">
                             <i class="bi bi-list-check me-2"></i> View Registrations
                         </a>
@@ -131,28 +131,28 @@
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="card action-card action-card-info shadow-hover border-0 h-100">
-                    <div class="card-body p-4 text-center position-relative">
-                        <div class="action-icon-wrapper mb-4">
-                            <div class="icon-circle icon-circle-info">
-                                <i class="bi bi-person-gear"></i>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card action-card action-card-info shadow-hover border-0 h-100">
+                        <div class="card-body p-4 text-center position-relative">
+                            <div class="action-icon-wrapper mb-4">
+                                <div class="icon-circle icon-circle-info">
+                                    <i class="bi bi-person-gear"></i>
+                                </div>
                             </div>
+                        <h5 class="fw-bold mb-3">Become an Organizer</h5>
+                            <p class="text-muted mb-4">
+                            Bring Your Events to Life
+                            </p>
+                            <a asp-controller="Attendee"
+                               asp-action="OrganizerRegistration"
+                               class="btn btn-info btn-lg w-100 action-btn text-white">
+                            <i class="bi bi-pencil-square me-2"></i> Start Hosting Events
+                            </a>
+                            <div class="card-decoration card-decoration-info"></div>
                         </div>
-                        <h5 class="fw-bold mb-3">Edit Profile</h5>
-                        <p class="text-muted mb-4">
-                            Update your personal information and preferences
-                        </p>
-                        <a asp-controller="Profile"
-                           asp-action="Edit"
-                           class="btn btn-info btn-lg w-100 action-btn text-white">
-                            <i class="bi bi-pencil-square me-2"></i> Update Profile
-                        </a>
-                        <div class="card-decoration card-decoration-info"></div>
                     </div>
                 </div>
             </div>
-        </div>
 
         <!-- Additional Info Section -->
         <div class="row mt-5">

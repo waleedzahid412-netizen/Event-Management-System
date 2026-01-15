@@ -1,5 +1,5 @@
 ﻿using Event_Management_System.Models;
-
+using Event_Management_System.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,7 +31,7 @@ namespace Event_Management_System.Models.Entities
         public int AvailableSeats { get; set; }
 
         [MaxLength(50)]
-        public string Status { get; set; } = "Upcoming";
+        public EventStatus Status { get; set; } = EventStatus.Upcoming;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string? CoverImageUrl { get; set; }

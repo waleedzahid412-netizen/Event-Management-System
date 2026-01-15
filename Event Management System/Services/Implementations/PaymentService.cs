@@ -1,14 +1,66 @@
 ﻿using Event_Management_System.DTOs;
-using Event_Management_System.Models;
+using Event_Management_System.Models.Entities;
+using Event_Management_System.Repositories.Interfaces;
 using Event_Management_System.Services.Interfaces;
+using QuestPDF.Infrastructure;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
+
 namespace Event_Management_System.Services.Implementations
 {
-    public class PaymentReceiptService : IPaymentReceiptService
+    public class PaymentService : IPaymentService
     {
-        public byte[] GenerateReceiptPdf(PaymentReceiptDTO receipt)
+   
+        public readonly IRegistrationRepository _registrationRepository;
+
+        public readonly IPaymentRecieptRepository _paymentrepo;
+
+
+        public PaymentService(IEventRepository rep, IRegistrationRepository rrep,
+            IUserRepository userRepository
+            , IPaymentRecieptRepository paymentrepo, IOrganizerApplicationRepository repo
+            , IEventReviewRepository eventreviewrepo, IEventCategoryRepository eventcatrepo)
+        {
+
+            _registrationRepository = rrep;
+
+            _paymentrepo = paymentrepo;
+        }
+        public async Task<(PaymentReciept receipt, byte[] pdfBytes)> CreateCustomerPaymentReceiptAsync(
+                   int userId,
+                   CustomerEventDetailsDTO ev,
+                   List<Registration> registrations
+)
+        {
+
+            var receiptData = new PaymentReceiptDTO
+            {
+                UserEmail = await _registrationRepository.useremail(userId),
+                EventTitle = ev.Title,
+                NumberOfTickets = registrations.Count,
+                TicketPrice = ev.TicketPrice,
+                TicketNumbers = registrations.Select(r => r.TicketNumber).ToList()
+            };
+
+            var pdfBytes = GenerateCustomerRegistationReceiptPdf(receiptData);
+
+
+            var receiptEntity = new PaymentReciept
+            {
+                UserId = userId,
+                EventId = ev.EventId,
+                NumberOfTickets = registrations.Count,
+                TicketPrice = ev.TicketPrice,
+                TotalAmount = registrations.Count * ev.TicketPrice,
+                ReceiptPdf = pdfBytes
+            };
+
+            await _paymentrepo.AddPaymentReciept(receiptEntity);
+            await _paymentrepo.SaveChangesAsync();
+
+            return (receiptEntity, pdfBytes);
+        }
+        public byte[] GenerateCustomerRegistationReceiptPdf(PaymentReceiptDTO receipt)
         {
             QuestPDF.Settings.License = LicenseType.Community;
 
@@ -237,4 +289,3 @@ namespace Event_Management_System.Services.Implementations
         }
     }
 }
-
