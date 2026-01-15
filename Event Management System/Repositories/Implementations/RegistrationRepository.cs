@@ -1,8 +1,10 @@
 ﻿using Event_Management_System.Models.Entities;
 using Event_Management_System.Repositories.Interfaces;
 using EventManagement.Data;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Stripe.Tax;
 
 namespace Event_Management_System.Repositories.Implementations
 {
@@ -13,12 +15,12 @@ namespace Event_Management_System.Repositories.Implementations
         {
             _context = context;
         }
-        public async Task AddRegistrationAsync(Registration registration)
+        public async Task AddRegistrationAsync(List<Models.Entities.Registration> registration)
         {
-            await _context.Registrations.AddAsync(registration);
+            await _context.Registrations.AddRangeAsync(registration);
         }
 
-        public async  Task<List<Registration>> GetRegistrationsForUserEventAsync(int userId, int eventId) { 
+        public async  Task<List<Models.Entities.Registration>> GetRegistrationsForUserEventAsync(int userId, int eventId) { 
             return await _context.Registrations
                          .Where(r => r.UserId == userId && r.EventId == eventId)
                          .ToListAsync();
@@ -41,7 +43,7 @@ namespace Event_Management_System.Repositories.Implementations
                 .Select(u => u.Email)
                 .FirstOrDefaultAsync();
         }
-        public async Task<List<Registration>> GetEventParticipantsbyEventIdAsync(int eventid)
+        public async Task<List<Models.Entities.Registration>> GetEventParticipantsbyEventIdAsync(int eventid)
         {
             return await _context.Registrations
                .Include(r => r.User)

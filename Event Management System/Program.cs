@@ -47,6 +47,7 @@ builder.Services.Configure<StripeSettings>( builder.Configuration.GetSection("St
 builder.Services.AddScoped<IOrganizerPaymentRepository, OrganizerPaymentRepository>();
 builder.Services.AddScoped<IOrganizerPaymentService, OrganizerPaymentService>();
 builder.Services.AddScoped<IEventCategoryService, EventCategoryService>();
+builder.Services.AddScoped<IEventRegistrationService, EventRegistrationService>();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 

@@ -5,6 +5,7 @@ using Event_Management_System.Services.Interfaces;
 using QuestPDF.Infrastructure;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
+using Event_Management_System.ViewModels;
 
 namespace Event_Management_System.Services.Implementations
 {
@@ -28,7 +29,7 @@ namespace Event_Management_System.Services.Implementations
         }
         public async Task<(PaymentReciept receipt, byte[] pdfBytes)> CreateCustomerPaymentReceiptAsync(
                    int userId,
-                   CustomerEventDetailsDTO ev,
+                   EventDetailsVM ev,
                    List<Registration> registrations
 )
         {

@@ -57,50 +57,7 @@ namespace Event_Management_System.Services.Implementations
             };
             return eventDetailsDto;
         }
-        public async Task RegisterForEventAsync(int userId, int eventId, int nooftickets)
-        {
 
-            var transaction = await _eventRepository.BeginTransactionAsync();
-            try
-            {
-                int countoftickets = await _eventRepository.GetAvailableSeatsAsync(eventId);
-                if (countoftickets < nooftickets)
-                {
-                    throw new Exception("Not enough available seats for the event.");
-                }
-                for (int i = 0; i < nooftickets; i++)
-                {
-
-                    var registration = new Registration
-                    {
-                        UserId = userId,
-                        EventId = eventId,
-                        RegisteredOn = DateTime.UtcNow,
-                        PaymentStatus = "Pending",
-
-                        TicketNumber = Guid.NewGuid().ToString().Substring(0, 8).ToUpper(),
-
-                    };
-              
-                    await _registrationRepository.AddRegistrationAsync(registration);
-
-                }
-                var ev = await _eventRepository.GetEventDetailsByIdAsync(eventId);
-                if (ev != null)
-                {
-                    ev.AvailableSeats = ev.AvailableSeats - nooftickets;
-                }
-
-
-                await _registrationRepository.SaveChangesAsync();
-                await _eventRepository.CommitTransactionAsync(transaction);
-            }
-            catch
-            {
-                await _eventRepository.RollBackTransactionAsync(transaction);
-                throw;
-            }
-        }
 
         public async Task<List<EventCategory>> GetAllCategoriesAsync()
         {

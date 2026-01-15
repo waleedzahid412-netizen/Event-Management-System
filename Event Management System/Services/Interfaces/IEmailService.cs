@@ -1,12 +1,13 @@
 ﻿using Event_Management_System.DTOs;
 using Event_Management_System.Models.Entities;
+using Event_Management_System.ViewModels;
 
 namespace Event_Management_System.Services.Interfaces
 {
     public interface IEmailService
     {
         public Task SendConfirmationEmailAsync(string toEmail,
-            CustomerEventDetailsDTO ev,
+           EventDetailsVM ev,
             List<Registration> registrations, byte[]? pdfAttachment = null, string attachmentName = "Receipt.pdf");
 
         public Task SendOrganizerApplicationEmailAsync(

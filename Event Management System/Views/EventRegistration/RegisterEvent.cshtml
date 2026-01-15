@@ -1,4 +1,5 @@
-﻿@model Event_Management_System.DTOs.EventRegistrationDTO
+﻿@model Event_Management_System.ViewModels.EventRegistrationVM
+
 @{
     ViewData["Title"] = "Register for Event";
 }
@@ -52,7 +53,10 @@
         <div class="col-lg-7">
             <div class="event-summary-card">
                 <div class="event-image-wrapper">
-                    <img src="@ViewBag.CoverImageUrl" class="event-summary-image" alt="@ViewBag.EventTitle" />
+                    <img src="@Model.CoverImageUrl"
+                         class="event-summary-image"
+                         alt="@Model.Title" />
+                    />
                     <div class="image-badge">
                         <i class="bi bi-calendar-event"></i>
                         <span>Featured Event</span>
@@ -60,7 +64,7 @@
                 </div>
 
                 <div class="event-summary-content">
-                    <h2 class="event-summary-title">@ViewBag.EventTitle</h2>
+                    <h2 class="event-summary-title">@Model.Title</h2>
 
                     <div class="registration-info-box">
                         <div class="info-icon-box">
@@ -178,7 +182,7 @@
                     <div class="amount-breakdown">
                         <div class="breakdown-row">
                             <span>Ticket Price</span>
-                            <span class="price" id="unitPrice">PKR @ViewBag.TicketPrice</span>
+                            <span class="price" id="unitPrice">PKR @Model.TicketPrice</span>
                         </div>
                         <div class="breakdown-row">
                             <span>Quantity</span>
@@ -187,7 +191,7 @@
                         <div class="breakdown-divider"></div>
                         <div class="breakdown-row total">
                             <span>Total Amount</span>
-                            <span class="total-price" id="totalAmount">PKR @ViewBag.TicketPrice</span>
+                            <span class="total-price" id="totalAmount">PKR @Model.TicketPrice *@Model.NumberOfTickets</span>
                         </div>
                     </div>
 

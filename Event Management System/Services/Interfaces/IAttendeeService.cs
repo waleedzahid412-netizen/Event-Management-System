@@ -7,7 +7,7 @@ namespace Event_Management_System.Services.Interfaces
     {
         Task<List<Event>> GetAllEventsAsync();
         public Task<CustomerEventDetailsDTO> GetEventDetailsAsync(int eventId);
-        Task RegisterForEventAsync(int userId, int eventId,int nooftickets);
+
 
         Task<List<EventCategory>> GetAllCategoriesAsync();
         Task<List<Event>> GetEventByAttendeeId(int userid,int? categoryid,bool showrecommended);

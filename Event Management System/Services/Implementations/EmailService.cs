@@ -2,6 +2,7 @@
 using Event_Management_System.DTOs;
 using Event_Management_System.Models.Entities;
 using Event_Management_System.Services.Interfaces;
+using Event_Management_System.ViewModels;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -17,7 +18,7 @@ namespace Event_Management_System.Services.Implementations
             _emailSettings = emailSettings.Value;
         }
 
-        public async Task SendConfirmationEmailAsync(string toEmail, CustomerEventDetailsDTO ev, 
+        public async Task SendConfirmationEmailAsync(string toEmail, EventDetailsVM ev, 
             List<Registration> registrations, byte[]? pdfAttachment = null, string attachmentName = "Receipt.pdf")
         {
             var message = new MimeMessage();
