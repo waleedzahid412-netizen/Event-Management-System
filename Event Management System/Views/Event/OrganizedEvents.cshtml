@@ -55,7 +55,7 @@
 <div class="container my-5">
     <!-- Tab Navigation -->
     <div class="tab-navigation">
-        <a asp-action="MyEvents" asp-route-status="upcoming"
+        <a asp-action="OrganizedEvents" asp-route-status="upcoming"
            class="tab-button @(ViewBag.SelectedTab == "upcoming" ? "active" : "")">
             <i class="bi bi-hourglass-split"></i>
             <span>Upcoming Events</span>
@@ -64,7 +64,7 @@
                 <span class="tab-badge">@upcomingEvents.Count()</span>
             }
         </a>
-        <a asp-action="MyEvents" asp-route-status="completed"
+        <a asp-action="OrganizedEvents" asp-route-status="completed"
            class="tab-button @(ViewBag.SelectedTab == "completed" ? "active" : "")">
             <i class="bi bi-check-circle-fill"></i>
             <span>Completed Events</span>

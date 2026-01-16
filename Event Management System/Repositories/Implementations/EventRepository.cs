@@ -132,5 +132,14 @@ namespace Event_Management_System.Repositories.Implementations
         {
            return  await _context.Events.FindAsync(eventid);
         }
+
+        public async Task<int> TotalEventCount()
+        {
+            return await _context.Events.CountAsync();
+        }
+        public async Task<int> UpcomingEventCount()
+        {
+            return await _context.Events.CountAsync(e => e.Status == EventStatus.Upcoming);
+        }
     }
 }

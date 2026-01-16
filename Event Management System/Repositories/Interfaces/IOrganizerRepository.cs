@@ -6,5 +6,6 @@
         Task<int> GetUpcomingEventsAsync(int organizerId);
         Task<int> GetActiveEventsAsync(int organizerId);
         Task<int> GetTotalRegistrationsAsync(int organizerId);
+        Task<int> OrganizerCountAsync();
     }
 }

@@ -1,38 +1,160 @@
-﻿
-@model Event_Management_System.DTOs.RegisterViewDTO
+﻿@model Event_Management_System.DTOs.RegisterViewDTO
 @{
     ViewData["Title"] = "Register";
 }
 
-<h1>Register</h1>
+<div class="register-bg d-flex align-items-center justify-content-center min-vh-100 py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12">
 
-<form asp-action="Register" method="post">
-    <div class="form-group mb-3">
-        <label asp-for="UserName"></label>
-        <input asp-for="UserName" class="form-control" />
-        <span asp-validation-for="UserName" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" type="email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="row g-0">
 
-    <div class="form-group mb-3">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-     <div class="form-group mb-3">
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="age"></label>
-        <input asp-for="age" class="form-control" />
-        <span asp-validation-for="age" class="text-danger"></span>
-    </div>
+                        <div class="col-md-6 d-none d-md-block bg-primary text-white position-relative">
+                            <div class="bg-image-holder"></div>
 
-    <button class="btn btn-primary">Register</button>
-</form>
+                            <div class="position-absolute top-50 start-50 translate-middle text-center w-75 p-4 glass-overlay rounded-3">
+                                <h3 class="fw-bold mb-2">Welcome!</h3>
+                                <p class="mb-0 opacity-75">Join the best Event Management platform and start creating memories today.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 bg-white p-5">
+                            <div class="mb-5">
+                                <h3 class="fw-bold text-dark">Sign Up</h3>
+                                <p class="text-muted">Enter your details to create your account</p>
+                            </div>
+
+                            <form asp-action="Register" method="post">
+
+                                <div class="mb-4">
+                                    <label asp-for="UserName" class="form-label label-custom">USERNAME</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
+                                        <input asp-for="UserName" class="form-control bg-light border-start-0" placeholder="Choose a username" />
+                                    </div>
+                                    <span asp-validation-for="UserName" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label asp-for="Email" class="form-label label-custom">EMAIL ADDRESS</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope"></i></span>
+                                        <input asp-for="Email" type="email" class="form-control bg-light border-start-0" placeholder="name@company.com" />
+                                    </div>
+                                    <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-lg-6 mb-4">
+                                        <label asp-for="Password" class="form-label label-custom">PASSWORD</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock"></i></span>
+                                            <input asp-for="Password" type="password" class="form-control bg-light border-start-0" placeholder="••••••••" />
+                                        </div>
+                                        <span asp-validation-for="Password" class="text-danger small mt-1 d-block"></span>
+                                    </div>
+
+                                    <div class="col-12 col-lg-6 mb-4">
+                                        <label asp-for="ConfirmPassword" class="form-label label-custom">CONFIRM</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-check"></i></span>
+                                            <input asp-for="ConfirmPassword" type="password" class="form-control bg-light border-start-0" placeholder="••••••••" />
+                                        </div>
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger small mt-1 d-block"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-5">
+                                    <label asp-for="age" class="form-label label-custom">AGE</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar3"></i></span>
+                                        <input asp-for="age" type="number" class="form-control bg-light border-start-0" placeholder="Your age" />
+                                    </div>
+                                    <span asp-validation-for="age" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <div class="d-grid mb-4">
+                                    <button class="btn btn-dark btn-lg py-3 rounded-3 fw-bold transition-btn">Create Account</button>
+                                </div>
+
+                                <div class="text-center">
+                                    <span class="text-muted">Already have an account? </span>
+                                    <a asp-controller="Auth" asp-action="Login" class="fw-bold text-decoration-none text-dark">Log in</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* 1. Page Background */
+    .register-bg {
+        background-color: #f0f2f5;
+    }
+
+    /* 2. Custom Label Styling - Makes headers prominent */
+    .label-custom {
+        font-size: 0.75rem;
+        font-weight: 800; /* Extra Bold */
+        letter-spacing: 1px; /* Spaced out letters */
+        text-transform: uppercase; /* All caps */
+        color: #6c757d; /* Grey text */
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    /* 3. Input Fields Styling */
+    .form-control, .input-group-text {
+        padding: 0.8rem 1rem;
+        border-color: #e2e8f0; /* Very light grey border */
+    }
+
+        .form-control:focus {
+            background-color: #fff;
+            border-color: #e2e8f0;
+            box-shadow: none; /* Removes default blue glow */
+            border-left: 3px solid #000; /* Adds a black accent bar on focus */
+        }
+
+    .input-group-text {
+        color: #a0aec0;
+    }
+
+    /* 4. Left Side Image Styling */
+    .bg-image-holder {
+        background: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80') center center/cover no-repeat;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .glass-overlay {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* 5. Button Animation */
+    .transition-btn {
+        transition: all 0.3s ease;
+    }
+
+        .transition-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

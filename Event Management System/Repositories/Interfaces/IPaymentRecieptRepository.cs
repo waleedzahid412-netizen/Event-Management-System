@@ -6,5 +6,6 @@ namespace Event_Management_System.Repositories.Interfaces
     {
         public Task AddPaymentReciept(PaymentReciept payment);
         public Task SaveChangesAsync();
+        public Task<decimal?> TotalRevenueAsync();
     }
 }

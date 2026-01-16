@@ -1,6 +1,7 @@
 ﻿using Event_Management_System.Models.Entities;
 using Event_Management_System.Repositories.Interfaces;
 using EventManagement.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Event_Management_System.Repositories.Implementations
 {
@@ -20,6 +21,11 @@ namespace Event_Management_System.Repositories.Implementations
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public  async Task<decimal?> TotalRevenueAsync()
+        {
+            return await _context.PaymentReceipts.SumAsync(p => (decimal?)p.TotalAmount);
         }
     }
 }

@@ -48,6 +48,10 @@ builder.Services.AddScoped<IOrganizerPaymentRepository, OrganizerPaymentReposito
 builder.Services.AddScoped<IOrganizerPaymentService, OrganizerPaymentService>();
 builder.Services.AddScoped<IEventCategoryService, EventCategoryService>();
 builder.Services.AddScoped<IEventRegistrationService, EventRegistrationService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IOrganizerApplicationService, OrganizerApplicationService>();
+builder.Services.AddScoped<IAdminAnalyticsRepository, AdminAnalyticsRepository>();
+
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 

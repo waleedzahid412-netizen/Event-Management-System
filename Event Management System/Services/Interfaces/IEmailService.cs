@@ -15,6 +15,8 @@ namespace Event_Management_System.Services.Interfaces
     OrganizerApplication application,
     byte[] receiptPdf);
         public Task SendEventCancellationEmailAsync(string email, Event eventdetails,string cancelreason);
+        public  Task OrganizerApprovalEmail(int applicationId, string toEmail);
+        public Task OrganizerRejectionEmail(OrganizerApplication application, string toEmail);
     }
 
    

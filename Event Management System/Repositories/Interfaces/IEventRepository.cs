@@ -30,5 +30,8 @@ namespace Event_Management_System.Repositories.Interfaces
         public Task<List<Event>> GetEventInSpecificTimeFrameByOrganizerIdAsync(int organizerid, DateTime startdate);
         public Task<Event?> GetEventbyIdAsync(int eventid);
 
+        public Task<int> TotalEventCount();
+        public Task<int> UpcomingEventCount();
+
     }
 }

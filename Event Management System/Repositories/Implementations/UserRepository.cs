@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Event_Management_System.Repositories.Implementations
 {
-    public class UserRepository :IUserRepository
+    public class UserRepository : IUserRepository
     {
         ApplicationDbContext _context;
         public UserRepository(ApplicationDbContext context) {
@@ -50,6 +50,15 @@ namespace Event_Management_System.Repositories.Implementations
         public async Task<bool> UserEmailExistAsync(string Email) { 
         return await _context.Users.AnyAsync(u => u.Email.ToLower().Equals(Email.ToLower()));
         }
-        
+
+        public async Task<int> UserCountAsync()
+        {
+           return await _context.Users.CountAsync();
+        }
+
+        public async Task<UserRole?> GetUserRoleFromId(int userid)
+        {
+            return await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userid);
+        }
     }
 }

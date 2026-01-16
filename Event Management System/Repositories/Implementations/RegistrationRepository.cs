@@ -50,5 +50,10 @@ namespace Event_Management_System.Repositories.Implementations
                .Where(r => r.EventId == eventid)
                .ToListAsync();
         }
+
+        public async Task<int> RegistrationCountAsync()
+        {
+            return await _context.Registrations.CountAsync();
+        }
     }
 }

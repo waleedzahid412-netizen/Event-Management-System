@@ -1,0 +1,287 @@
+﻿@model Event_Management_System.ViewModels.OrganizerApplicationsDetailVM
+@using Event_Management_System.Models.Entities
+
+@{
+    ViewData["Title"] = "Application Details";
+}
+
+<div class="container-fluid py-5 min-vh-100" style="background-color: #f4f6f9;">
+    <div class="container" style="max-width: 850px;">
+
+        <div class="mb-4">
+            <a asp-action="ViewOrganizerApplications" class="text-decoration-none text-muted fw-bold small">
+                <i class="bi bi-arrow-left me-1"></i> Back to Applications
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
+
+            <div class="card-header bg-dark p-4 border-0"
+                 style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fw-bold text-white mb-1">Application Details</h4>
+                        <span class="text-white-50 small text-uppercase fw-bold ls-1">ID: #@Model.OrganizerApplicationId</span>
+                    </div>
+                    @if (Model.Status == ApplicationStatus.Pending)
+                    {
+                        <span class="badge bg-warning text-dark border border-warning px-3 py-2 rounded-3 shadow-sm">
+                            <i class="bi bi-hourglass-split me-1"></i> Pending
+                        </span>
+                    }
+                    else if (Model.Status == ApplicationStatus.Approved)
+                    {
+                        <span class="badge bg-success text-white border border-success px-3 py-2 rounded-3 shadow-sm">
+                            <i class="bi bi-check-lg me-1"></i> Approved
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger text-white border border-danger px-3 py-2 rounded-3 shadow-sm">
+                            <i class="bi bi-x-lg me-1"></i> Rejected
+                        </span>
+                    }
+                </div>
+            </div>
+
+            <div class="card-body p-5">
+
+                <div class="row g-5 mb-5">
+                    <div class="col-md-6 position-relative">
+                        <h6 class="section-title text-primary"><i class="bi bi-person-circle me-2"></i>Applicant</h6>
+
+                        <div class="mb-4">
+                            <label class="detail-label">Full Name</label>
+                            <div class="detail-value">@Model.ApplicantName</div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="detail-label">Email Address</label>
+                            <div class="detail-value">@Model.ApplicantEmail</div>
+                        </div>
+
+                        <div class="d-none d-md-block position-absolute end-0 top-0 bottom-0 border-end opacity-25" style="right: -24px;"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h6 class="section-title text-purple"><i class="bi bi-building me-2"></i>Organization</h6>
+
+                        <div class="mb-4">
+                            <label class="detail-label">Organization Name</label>
+                            <div class="detail-value">@Model.OrganizationName</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <label class="detail-label">Contact Details</label>
+                                <div class="detail-value fs-6">
+                                    <i class="bi bi-telephone text-muted me-2"></i>@Model.ContactPhone
+                                </div>
+                                <div class="detail-value fs-6 mt-1">
+                                    <i class="bi bi-envelope text-muted me-2"></i>@Model.ContactEmail
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="detail-label">Website</label>
+                                @if (!string.IsNullOrWhiteSpace(Model.WebsiteUrl))
+                                {
+                                    <div class="detail-value">
+                                        <a href="@Model.WebsiteUrl" target="_blank" class="text-primary text-decoration-none border-bottom border-primary">
+                                            @Model.WebsiteUrl
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="detail-value text-muted">N/A</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-light my-5" />
+
+                <div class="row g-5">
+                    <div class="col-12">
+                        <h6 class="section-title text-success"><i class="bi bi-wallet2 me-2"></i>Payment Status</h6>
+
+                        <div class="p-4 rounded-3 border @(Model.IsPaymentCompleted ? "bg-success-subtle border-success" : "bg-warning-subtle border-warning")">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <label class="detail-label mb-1">Fee Transaction</label>
+                                    <div class="detail-value fw-bold">
+                                        @(Model.IsPaymentCompleted ? "Payment Received" : "Payment Pending")
+                                    </div>
+                                </div>
+                                <div class="fs-1 opacity-25">
+                                    @if (Model.IsPaymentCompleted)
+                                    {
+                                        <i class="bi bi-check-circle-fill text-success"></i>
+                                    }
+                                    else
+                                    {
+
+                                        <i class="bi bi-exclamation-circle-fill text-warning"></i>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <h6 class="section-title text-secondary"><i class="bi bi-file-text me-2"></i>Experience</h6>
+                        <div class="bg-light p-4 rounded-3 border">
+                            <p class="mb-0 text-dark" style="line-height: 1.8; white-space: pre-line;">@Model.ExperienceDescription</p>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.ReviewedOn != null)
+                {
+                    <div class="mt-5 pt-4 border-top">
+                        <h6 class="section-title text-dark"><i class="bi bi-shield-lock me-2"></i>Admin Review</h6>
+                        <div class="alert alert-secondary border-0 mb-0">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold small text-uppercase">Reviewer: @Model.ReviewedByAdminName</span>
+                                <span class="small text-muted">@Model.ReviewedOn?.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <p class="mb-0 fst-italic">"@Model.AdminComments"</p>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h6 class="fw-bold text-dark m-0">Available Actions</h6>
+                <span class="text-muted small">Please review carefully</span>
+            </div>
+
+            @if (Model.CanApprove)
+            {
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-danger btn-lg w-100 py-3 rounded-3 fw-bold shadow-sm action-btn"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#rejectCollapse">
+                            <i class="bi bi-x-circle me-2"></i> REJECT
+                        </button>
+                    </div>
+
+                    <div class="col-md-6">
+                        <form asp-action="ApproveApplication" method="post" class="h-100">
+                            <input type="hidden" name="Applicationid" value="@Model.OrganizerApplicationId" />
+                            <input type="hidden" name="Userid" value="@Model.UserId" />
+                            <input type="hidden" name="ApplicantEmail" value="@Model.ApplicantEmail" />
+                            <button type="submit" class="btn btn-dark btn-lg w-100 py-3 rounded-3 fw-bold shadow-sm action-btn gradient-btn">
+                                <i class="bi bi-check2-circle me-2"></i> APPROVE
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="collapse mt-4" id="rejectCollapse">
+                    <div class="card card-body bg-danger bg-opacity-10 border border-danger rounded-3">
+                        <form asp-action="RejectApplication" method="post">
+                            <input type="hidden" name="Applicationid" value="@Model.OrganizerApplicationId" />
+                            <input type="hidden" name="ApplicantEmail" value="@Model.ApplicantEmail" />
+                            <input type="hidden" name="AdminComments" value="@Model.AdminComments" />
+
+
+                            <label class="form-label fw-bold text-danger">Reason for Rejection</label>
+                            <textarea name="comments" class="form-control mb-3" rows="3" required placeholder="Enter comments..."></textarea>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-danger fw-bold px-4">Confirm Rejection</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-light text-center border mb-0 text-muted fw-bold">
+                    <i class="bi bi-lock-fill me-2"></i> No actions available for this application.
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* 1. Typography Contrast */
+    .section-title {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid rgba(0,0,0,0.05);
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    .detail-label {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 800; /* Extra Bold for Heading */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #94a3b8; /* Muted Gray for contrast against value */
+        margin-bottom: 6px;
+    }
+
+    .detail-value {
+        font-size: 1.15rem; /* Large size */
+        font-weight: 500; /* Regular/Medium weight (NOT BOLD) */
+        color: #0f172a; /* Deep Black/Blue for readability */
+        line-height: 1.4;
+    }
+
+    /* 2. Custom Colors */
+    .text-purple {
+        color: #7c3aed;
+    }
+
+    .bg-success-subtle {
+        background-color: #dcfce7;
+    }
+
+    .bg-warning-subtle {
+        background-color: #fef9c3;
+    }
+
+    /* 3. Professional Buttons */
+    .action-btn {
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+    }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+    /* Gradient for Approve Button */
+    .gradient-btn {
+        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        border: none;
+    }
+
+        .gradient-btn:hover {
+            background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+        }
+
+    /* 4. Layout */
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+</style>

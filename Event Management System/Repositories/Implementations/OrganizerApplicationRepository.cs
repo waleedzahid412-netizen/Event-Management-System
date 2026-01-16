@@ -40,14 +40,55 @@ namespace Event_Management_System.Repositories.Implementations
             .FirstAsync();
         }
 
+        public async Task<OrganizerApplication> GetApprovedApplications()
+        {
+            return await _context.OrganizerApplications
+                .FirstAsync(o => o.Status == ApplicationStatus.Approved);
+        }
+
         public async Task<OrganizerApplication?> GetOrganizerApplicationByIdAsync(int applicationid)
         {
-            return await _context.OrganizerApplications.FirstOrDefaultAsync(og => og.OrganizerApplicationId == applicationid);
+            return await _context.OrganizerApplications.Include(og=>og.User).
+                FirstOrDefaultAsync(og => og.OrganizerApplicationId == applicationid);
+        }
+
+        public async Task<List<OrganizerApplication>> GetPendingOrganizerApplications()
+        {
+            return await _context.OrganizerApplications
+                .Include(o => o.User)
+                .Where(o => o.Status ==ApplicationStatus.Pending)
+                .ToListAsync();
         }
 
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> TotalOrganizerPendingRequestAsync()
+        {
+            return await _context.OrganizerApplications.CountAsync(o => o.Status ==ApplicationStatus.Pending);
+        }
+
+        public async Task<List<OrganizerApplication>> GetApprovedOrganizerApplications()
+        {
+            return await _context.OrganizerApplications
+                .Include(o => o.User)
+                .Where(o => o.Status == ApplicationStatus.Approved)
+                .ToListAsync();
+        }
+
+        public async Task<List<OrganizerApplication>> GetRejectedOrganizerApplications()
+        {
+            return await _context.OrganizerApplications
+    .Include(o => o.User)
+    .Where(o => o.Status == ApplicationStatus.Rejected)
+    .ToListAsync();
+        }
+
+        public async Task<OrganizerApplication?> ApproveApplication(int Applicationid)
+        {
+            return await _context.OrganizerApplications.FirstOrDefaultAsync(og => og.OrganizerApplicationId == Applicationid);
         }
     }
 }

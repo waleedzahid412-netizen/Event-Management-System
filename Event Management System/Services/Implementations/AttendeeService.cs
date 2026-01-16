@@ -114,27 +114,6 @@ namespace Event_Management_System.Services.Implementations
 
 
 
-        public async Task<int> SubmitOrganizerApplication(OrganizerApplicationCreateDTO dto,int Userid)
-        {
-            bool haspending= await _organizerApplicationRepository.CheckIfOrganizerApplicationExistAsync(Userid);
-            if (haspending) {
-               throw new Exception("You have already submitted an application. Please wait for review." );
-
-            }
-            var application = new OrganizerApplication
-            {
-                UserId = Userid,
-                OrganizationName = dto.OrganizationName,
-                ContactEmail = dto.ContactEmail,
-                ContactPhone = dto.ContactPhone,
-                ExperienceDescription = dto.ExperienceDescription,
-                WebsiteUrl = dto.WebsiteUrl,
-            };
-            await _organizerApplicationRepository.AddApplicationAsync(application);
-            await _organizerApplicationRepository.SaveChangesAsync();
-            return application.OrganizerApplicationId;
-            
-        }
 
         public async Task<List<Event>> BrowseEventAsync(int? categoryid, string status)
         {
@@ -180,25 +159,9 @@ namespace Event_Management_System.Services.Implementations
             return await _eventRepository.CheckIfEventExists(eventid);
         }
 
-        public async Task<OrganizerApplicationCreateDTO> GetOrganizerApplicationByIdAsync(int applicationid)
-        {
-            var og =await _organizerApplicationRepository.GetOrganizerApplicationByIdAsync(applicationid);
-            return new OrganizerApplicationCreateDTO
-            {
-                OrganizationName = og.OrganizationName,
-                ContactEmail = og.ContactEmail,
-                ContactPhone = og.ContactPhone,
-                ExperienceDescription = og.ExperienceDescription,
-            };
-        }
-        public Task<bool> checkIfApplicationExistButPaymentPending(int userid) {
-            return _organizerApplicationRepository.checkIfApplicationExistButPaymentPending(userid);
-        
-        }
 
-        public async Task<int> GetApplicationIdOfUser(int userid)
-        {
-            return await _organizerApplicationRepository.GetApplicationIdOfUser(userid);
-        }
+
+
+
     }
 }

@@ -1,0 +1,317 @@
+﻿@model List<Event_Management_System.ViewModels.OrganizerApplicationListVM>
+@using Event_Management_System.Models.Entities
+@{
+    ViewData["Title"] = "Organizer Applications";
+    var currentStatus = ViewBag.CurrentStatus as ApplicationStatus? ?? ApplicationStatus.Pending;
+}
+
+<div class="container-fluid py-5 min-vh-100" style="background-color: #f3f4f6;">
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Organizer Applications</h2>
+                <p class="text-muted mb-0">Manage partnership requests</p>
+            </div>
+            <div class="bg-white px-4 py-2 rounded-pill shadow-sm border border-light">
+                <span class="text-muted small text-uppercase fw-bold me-2">Total Requests</span>
+                <span class="fs-5 fw-bold text-dark">@Model.Count()</span>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
+            <div class="card-body p-1 bg-white">
+                <nav class="nav nav-pills nav-fill gap-2 p-1">
+                    <a asp-action="ViewOrganizerApplications" asp-route-status="Pending"
+                       class="nav-link rounded-3 fw-bold py-2 @(currentStatus == ApplicationStatus.Pending ? "active-pending" : "text-dark bg-transparent hover-light")">
+                        Pending
+                    </a>
+                    <a asp-action="ViewOrganizerApplications" asp-route-status="Approved"
+                       class="nav-link rounded-3 fw-bold py-2 @(currentStatus == ApplicationStatus.Approved ? "active-approved" : "text-dark bg-transparent hover-light")">
+                        Approved
+                    </a>
+                    <a asp-action="ViewOrganizerApplications" asp-route-status="Rejected"
+                       class="nav-link rounded-3 fw-bold py-2 @(currentStatus == ApplicationStatus.Rejected ? "active-rejected" : "text-dark bg-transparent hover-light")">
+                        Rejected
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <div class="table-responsive" style="overflow-x: visible;">
+            <table class="table table-borderless table-modern">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-muted small fw-bold ps-4">Applicant Profile</th>
+                        <th class="text-uppercase text-muted small fw-bold">Organization</th>
+                        <th class="text-uppercase text-muted small fw-bold">Date Applied</th>
+                        <th class="text-uppercase text-muted small fw-bold">Current Status</th>
+                        <th class="text-uppercase text-muted small fw-bold text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="bg-white rounded-4 shadow-sm text-center py-5 mt-2">
+                                    <div class="mb-3 p-3 bg-light rounded-circle d-inline-block text-muted">
+                                        <i class="bi bi-inbox fs-1"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-dark">No applications found</h5>
+                                    <p class="text-muted small mb-0">No @currentStatus.ToString().ToLower() requests to display.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var app in Model)
+                        {
+                            <tr class="table-row-card">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center py-2">
+                                        <div class="avatar-square me-3 shadow-sm @GetAvatarColor(app.ApplicantName)">
+                                            @app.ApplicantName.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark fs-6">@app.ApplicantName</div>
+                                            <div class="small text-muted">ID: #@app.Id</div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex align-items-center text-dark fw-medium">
+                                        <div class="org-icon me-2"><i class="bi bi-building"></i></div>
+                                        @app.OrganizationName
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="date-badge">
+                                        <i class="bi bi-calendar3 me-2 text-muted"></i>
+                                        <span class="text-dark fw-semibold">@app.AppliedOn.ToString("dd MMM, yyyy")</span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @if (app.Status == ApplicationStatus.Pending)
+                                    {
+                                        <div class="status-pill status-pending">
+                                            <span class="dot"></span> Pending
+                                        </div>
+                                    }
+                                    else if (app.Status == ApplicationStatus.Approved)
+                                    {
+                                        <div class="status-pill status-approved">
+                                            <i class="bi bi-check2 me-1"></i> Approved
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="status-pill status-rejected">
+                                            <i class="bi bi-x me-1"></i> Rejected
+                                        </div>
+                                    }
+                                </td>
+
+                                <td class="text-end pe-4">
+                                    <a asp-action="OrganizerApplicationDetails" asp-route-id="@app.Id"
+                                       class="btn btn-action shadow-sm">
+                                        Review <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr class="spacer-row"></tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@functions {
+    // Helper to randomize avatar colors for visual interest
+    public string GetAvatarColor(string name)
+    {
+        var colors = new[] { "bg-blue", "bg-purple", "bg-teal", "bg-orange" };
+        var index = Math.Abs(name.GetHashCode()) % colors.Length;
+        return colors[index];
+    }
+}
+
+<style>
+    /* --- 1. Modern Table Layout (The "Floating Card" Effect) --- */
+    .table-modern {
+        border-collapse: separate;
+        border-spacing: 0 15px; /* Creates the gap between rows */
+    }
+
+        .table-modern thead th {
+            border: none;
+            padding-bottom: 10px;
+            letter-spacing: 0.05em;
+            color: #9ca3af; /* Cool Gray Text */
+        }
+
+    /* The actual row card */
+    .table-row-card td {
+        background-color: #ffffff;
+        border: none;
+        vertical-align: middle;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        /* Rounded corners for the row ends */
+        .table-row-card td:first-child {
+            border-top-left-radius: 16px;
+            border-bottom-left-radius: 16px;
+        }
+
+        .table-row-card td:last-child {
+            border-top-right-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+    /* Hover Effect: Lifts up */
+    .table-row-card:hover td {
+        background-color: #ffffff;
+        transform: translateY(-3px);
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* Soft shadow */
+    }
+
+    /* Default shadow for non-hover state */
+    .table-row-card td {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    /* --- 2. Avatar Styling --- */
+    .avatar-square {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    .bg-blue {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .bg-purple {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    .bg-teal {
+        background: linear-gradient(135deg, #14b8a6, #0d9488);
+    }
+
+    .bg-orange {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+    }
+
+    /* --- 3. Status Pills (Modern Look) --- */
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .status-pending {
+        background-color: #fffbeb;
+        color: #b45309;
+        border: 1px solid #fcd34d;
+    }
+
+    .status-approved {
+        background-color: #ecfdf5;
+        color: #047857;
+        border: 1px solid #6ee7b7;
+    }
+
+    .status-rejected {
+        background-color: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fca5a5;
+    }
+
+    /* Pulsing Dot for Pending */
+    .dot {
+        height: 8px;
+        width: 8px;
+        background-color: #f59e0b;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+        animation: pulse 2s infinite;
+    }
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+        }
+    }
+
+    /* --- 4. Button & Icons --- */
+    .org-icon {
+        color: #9ca3af;
+    }
+
+    .btn-action {
+        background-color: #111827; /* Dark Black/Blue */
+        color: white;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+        .btn-action:hover {
+            background-color: #374151;
+            transform: translateY(-1px);
+            color: white;
+        }
+
+    /* --- 5. Filter Navigation --- */
+    .active-pending {
+        background-color: #fffbeb !important;
+        color: #b45309 !important;
+    }
+
+    .active-approved {
+        background-color: #ecfdf5 !important;
+        color: #047857 !important;
+    }
+
+    .active-rejected {
+        background-color: #fef2f2 !important;
+        color: #b91c1c !important;
+    }
+
+    .hover-light:hover {
+        background-color: #f3f4f6 !important;
+    }
+
+</style>

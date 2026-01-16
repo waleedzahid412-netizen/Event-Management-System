@@ -47,5 +47,12 @@ namespace Event_Management_System.Repositories.Implementations
                          && e.Status == EventStatus.Upcoming)
                 .CountAsync();
         }
+
+        public async Task<int> OrganizerCountAsync()
+        {
+            return await _context.Users
+                .Where(u => u.UserRoles.Any(ur => ur.Role.RoleName == "Organizer"))
+                .CountAsync();
+        }
     }
 }

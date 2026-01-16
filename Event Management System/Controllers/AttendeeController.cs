@@ -54,41 +54,8 @@ namespace Event_Management_System.Controllers
 
             return View(profile); // pass DTO to view
         }
-        [HttpGet]
-        public async Task<IActionResult> OrganizerRegistration()
-        {
-            int userid=int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (await _attendeeService.checkIfApplicationExistButPaymentPending(userid)) {
-            var applicationid=await _attendeeService.GetApplicationIdOfUser(userid);
-             return RedirectToAction("Pay", "OrganizerPayment", new { applicationid });
-            }
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> OrganizerRegistration(OrganizerApplicationCreateDTO dto)
-
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(dto);
-            }
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            try
-            {
-                var applicationId =await _attendeeService.SubmitOrganizerApplication(dto, userId);
-                TempData["Success"] = "Your application has been submitted successfully!";
-                return RedirectToAction("Pay", "OrganizerPayment", new { applicationId });
-            }
-            catch (Exception ex)
-            {
-                var realError = ex.InnerException?.Message ?? ex.Message;
-                ModelState.AddModelError("", realError);
-                return View(dto);
 
 
-            }
-
-        }
         [HttpGet]
         public async Task<IActionResult> RateEvent(int eventId)
         {

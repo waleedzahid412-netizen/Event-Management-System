@@ -16,5 +16,8 @@ namespace Event_Management_System.Repositories.Interfaces
         Task<User> GetUserByIdAsync(int id);
         Task<bool> UserEmailExistAsync(string Email);
 
+        Task<int> UserCountAsync();
+        Task<UserRole> GetUserRoleFromId(int userid);
+
      }
 }

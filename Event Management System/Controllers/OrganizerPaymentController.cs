@@ -14,20 +14,22 @@ namespace Event_Management_System.Controllers
         private readonly IAttendeeService _attendeeService;
         public readonly IPaymentService _receiptService;
         public readonly IEmailService _emailService;
+        public readonly IOrganizerApplicationService _organizerApplicationService;
         public OrganizerPaymentController(IOrganizerPaymentService paymentService, IOptions<StripeSettings> stripeOptions
-            ,IAttendeeService service, IPaymentService receiptService, IEmailService emailService)
+            ,IAttendeeService service, IPaymentService receiptService, IEmailService emailService, IOrganizerApplicationService organizerApplicationService)
         {
             _paymentService = paymentService;
             _stripeOptions = stripeOptions;
             _attendeeService = service;
             _receiptService = receiptService;
             _emailService = emailService;
+            _organizerApplicationService = organizerApplicationService;
         }
 
         public async Task<IActionResult> Pay(int applicationId)
 
         {
-            var dto=await _attendeeService.GetOrganizerApplicationByIdAsync(applicationId);
+            var dto=await _organizerApplicationService.GetOrganizerApplicationByIdAsync(applicationId);
             var clientSecret = await _paymentService.CreateOrganizerPaymentAsync(applicationId);
             ViewBag.PublishableKey = _stripeOptions.Value.PublishableKey;
             ViewBag.ClientSecret = clientSecret;

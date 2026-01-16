@@ -169,6 +169,87 @@ Event Management System
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
+        public async Task OrganizerApprovalEmail(int applicationId, string toEmail)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_emailSettings.FromName, _emailSettings.SmtpUser));
+            message.To.Add(MailboxAddress.Parse(toEmail));
+            message.Subject = "Organizer Request Approval Confirmation";
+
+            var body = new TextPart("plain")
+            {
+                Text = $@"
+Hello,
+
+We’re excited to inform you that your request to become an Organizer has been approved by the admin!
+
+As an approved organizer, you now have access to a suite of powerful tools to manage and grow your events:
+
+- Create and Manage Events: Easily set up new events, manage registrations, and track attendee details.
+- Analytics Dashboard: Gain insights into ticket sales, attendee engagement, and overall event performance.
+- Customizable Event Pages: Showcase your events with personalized branding and details.
+- Exclusive Organizer Perks: Receive early access to platform features and support to maximize your event success.
+
+We’re thrilled to have you as part of our organizer community and can’t wait to see the amazing events you’ll create!
+
+Thank you for joining us and taking your first step towards hosting unforgettable experiences.
+
+Application ID: {applicationId}
+"
+            };
+
+            var multipart = new Multipart("mixed");
+            multipart.Add(body);
+            message.Body = multipart;
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(_emailSettings.SmtpUser, _emailSettings.SmtpPass);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
+        public async Task OrganizerRejectionEmail(OrganizerApplication application, string toEmail)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_emailSettings.FromName, _emailSettings.SmtpUser));
+            message.To.Add(MailboxAddress.Parse(toEmail));
+            message.Subject = "Organizer Application Status Update";
+
+            var body = new TextPart("plain")
+            {
+                Text = $@"
+Hello {application.User.FullName},
+
+We wanted to update you regarding your recent request to become an Organizer on our platform.
+
+After careful review, your application has been **rejected** by the admin.
+
+**Admin Comments:**
+{application.AdminComments}
+
+We understand this may be disappointing, but we encourage you to review the feedback and consider applying again in the future. We value your interest in being part of our organizer community and hope to see your applications again.
+
+Thank you for your time and understanding.
+
+Application ID: {application.OrganizerApplicationId}
+Reviewed On: {application.ReviewedOn:yyyy-MM-dd}
+"
+            };
+
+            var multipart = new Multipart("mixed");
+            multipart.Add(body);
+
+            message.Body = multipart;
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(_emailSettings.SmtpUser, _emailSettings.SmtpPass);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
+
+
+
 
     }
 }

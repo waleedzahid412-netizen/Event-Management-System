@@ -11,6 +11,6 @@ namespace Event_Management_System.Repositories.Interfaces
         public Task<string> useremail(int userid);
 
         public Task<List<Registration>> GetEventParticipantsbyEventIdAsync(int eventid);
-
+        public Task<int> RegistrationCountAsync();
     }
 }
