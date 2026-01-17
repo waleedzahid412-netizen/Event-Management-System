@@ -1,4 +1,5 @@
-using Event_Management_System.Configuration;
+﻿using Event_Management_System.Configuration;
+using Event_Management_System.Models.Entities;
 using Event_Management_System.Repositories.Implementations;
 using Event_Management_System.Repositories.Interfaces;
 using Event_Management_System.Services.Implementations;
@@ -8,6 +9,7 @@ using EventManagement.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,6 +118,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+
 
 app.UseHttpsRedirection();
 app.UseRouting();

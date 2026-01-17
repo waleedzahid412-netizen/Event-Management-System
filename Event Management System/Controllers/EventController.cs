@@ -55,7 +55,7 @@ namespace Event_Management_System.Controllers
 
             await _eventService.CreateEventAsync(dto, organizerId);
 
-            return RedirectToAction("MyEvents");
+            return RedirectToAction("UserEvents");
 
         }
         public async Task<IActionResult> CancelEvent(int eventId)

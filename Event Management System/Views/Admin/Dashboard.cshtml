@@ -2,10 +2,9 @@
 @{
     ViewData["Title"] = "Admin Dashboard";
 
-    // Calculation for the 8th card
-    var avgTicketPrice = Model.TotalRegistrations > 0
-        ? (Model.TotalRevenue / Model.TotalRegistrations)
-        : 0;
+    var avgTicketPrice = (Model.TotalRegistrations > 0 && Model.TotalRevenue.HasValue)
+        ? Math.Round(Model.TotalRevenue.Value / Model.TotalRegistrations, 2)
+        : 0m;
 }
 
 <div class="container-fluid py-5 min-vh-100" style="background-color: #eef2f6;">
@@ -146,7 +145,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="text-muted fw-bold small mb-1">AVG. TICKET</p>
-                                <h3 class="fw-bold text-dark mb-0">@avgTicketPrice)</h3>
+                                <h3 class="fw-bold text-dark mb-0">PKR @avgTicketPrice</h3>
                             </div>
                             <div class="icon-box bg-primary bg-opacity-10 text-primary">
                                 <i class="bi bi-tags-fill fs-4"></i>

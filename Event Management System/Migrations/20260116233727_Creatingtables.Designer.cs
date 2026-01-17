@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Event_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260104122157_addedreviewfeaturetable")]
-    partial class addedreviewfeaturetable
+    [Migration("20260116233727_Creatingtables")]
+    partial class Creatingtables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,10 +63,9 @@ namespace Event_Management_System.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<int>("Status")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TicketPrice")
                         .HasColumnType("decimal(18,2)");
@@ -218,6 +217,9 @@ namespace Event_Management_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsPaymentCompleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("OrganizationName")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -245,6 +247,38 @@ namespace Event_Management_System.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("OrganizerApplications");
+                });
+
+            modelBuilder.Entity("Event_Management_System.Models.Entities.OrganizerPayment", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrganizerApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("OrganizerApplicationId");
+
+                    b.ToTable("organizerPayments");
                 });
 
             modelBuilder.Entity("Event_Management_System.Models.Entities.Payment", b =>
@@ -524,6 +558,17 @@ namespace Event_Management_System.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Event_Management_System.Models.Entities.OrganizerPayment", b =>
+                {
+                    b.HasOne("Event_Management_System.Models.Entities.OrganizerApplication", "OrganizerApplication")
+                        .WithMany("organizerpayment")
+                        .HasForeignKey("OrganizerApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrganizerApplication");
+                });
+
             modelBuilder.Entity("Event_Management_System.Models.Entities.Payment", b =>
                 {
                     b.HasOne("Event_Management_System.Models.Entities.Registration", "Registration")
@@ -606,6 +651,11 @@ namespace Event_Management_System.Migrations
             modelBuilder.Entity("Event_Management_System.Models.Entities.EventCategory", b =>
                 {
                     b.Navigation("Events");
+                });
+
+            modelBuilder.Entity("Event_Management_System.Models.Entities.OrganizerApplication", b =>
+                {
+                    b.Navigation("organizerpayment");
                 });
 
             modelBuilder.Entity("Event_Management_System.Models.Entities.Registration", b =>
