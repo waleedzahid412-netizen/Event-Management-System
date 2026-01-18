@@ -21,6 +21,7 @@ namespace Event_Management_System.Controllers
         {
             return View();
         }
+        [Authorize(Roles = "Customer")]
         [HttpGet]
         public async Task<IActionResult> OrganizerRegistration()
         {
@@ -32,7 +33,7 @@ namespace Event_Management_System.Controllers
             }
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> OrganizerRegistration(OrganizerApplicationCreateDTO dto)
@@ -62,6 +63,7 @@ namespace Event_Management_System.Controllers
                 return View(dto);
             }
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ViewOrganizerApplications(ApplicationStatus status =ApplicationStatus.Pending) {
 
             var applications =
@@ -70,6 +72,8 @@ namespace Event_Management_System.Controllers
             ViewBag.CurrentStatus = status;
             return View(applications);
         }
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> OrganizerApplicationDetails(int id)
         {
             var vm = await _organizerApplicationService.GetApplicationDetailsAsync(id);
@@ -78,7 +82,8 @@ namespace Event_Management_System.Controllers
 
             return View(vm);
         }
-     
+        [Authorize(Roles = "Admin")]
+
         [HttpPost]
         public async Task<IActionResult> ApproveApplication(int applicationId, int userId, string ApplicantEmail)
 
@@ -90,7 +95,7 @@ namespace Event_Management_System.Controllers
 
             return RedirectToAction("ViewOrganizerApplications");
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> RejectApplication(int applicationId, string ApplicantEmail ,string comments)
         {

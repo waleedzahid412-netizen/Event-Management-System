@@ -1,0 +1,544 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<style>
+    .about-page {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+
+    /* Hero Section */
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .about-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: white;
+    }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-content p {
+            font-size: 1.35rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+    /* Mission Section */
+    .mission-section {
+        padding: 5rem 0;
+    }
+
+    .mission-card {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .mission-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+    .mission-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 2rem;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+
+    .mission-card h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 1.5rem;
+    }
+
+    .mission-card p {
+        font-size: 1.15rem;
+        color: #64748b;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 5rem 0;
+        background: white;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+        .section-header h2 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+    .feature-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        border: 2px solid #f1f5f9;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        text-align: center;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .feature-card.feature-1 .feature-icon {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        color: #667eea;
+    }
+
+    .feature-card.feature-2 .feature-icon {
+        background: linear-gradient(135deg, rgba(67, 233, 123, 0.15) 0%, rgba(56, 249, 215, 0.15) 100%);
+        color: #43e97b;
+    }
+
+    .feature-card.feature-3 .feature-icon {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(251, 191, 36, 0.15) 100%);
+        color: #f59e0b;
+    }
+
+    .feature-card.feature-4 .feature-icon {
+        background: linear-gradient(135deg, rgba(245, 87, 108, 0.15) 0%, rgba(240, 147, 251, 0.15) 100%);
+        color: #f5576c;
+    }
+
+    .feature-card.feature-5 .feature-icon {
+        background: linear-gradient(135deg, rgba(79, 172, 254, 0.15) 0%, rgba(0, 242, 254, 0.15) 100%);
+        color: #4facfe;
+    }
+
+    .feature-card.feature-6 .feature-icon {
+        background: linear-gradient(135deg, rgba(134, 140, 255, 0.15) 0%, rgba(67, 24, 255, 0.15) 100%);
+        color: #868CFF;
+    }
+
+    .feature-card h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+        font-size: 1rem;
+        color: #64748b;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    /* Stats Section */
+    .stats-section {
+        padding: 5rem 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.4;
+        }
+
+    .stat-card {
+        text-align: center;
+        color: white;
+        position: relative;
+        z-index: 2;
+        padding: 2rem 1rem;
+    }
+
+    .stat-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+
+    .stat-value {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 5rem 0;
+        text-align: center;
+    }
+
+    .cta-card {
+        background: white;
+        border-radius: 20px;
+        padding: 4rem 3rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+        .cta-card h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-card p {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-btn {
+        padding: 1.25rem 3rem;
+        border-radius: 12px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .cta-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+            .cta-btn.primary:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+                background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+                color: white;
+                text-decoration: none;
+            }
+
+        .cta-btn.secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+            .cta-btn.secondary:hover {
+                background: #f8f9fa;
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+                color: #667eea;
+                text-decoration: none;
+            }
+
+    @@media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .cta-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="about-page">
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>🎉 About EventHub</h1>
+                <p>
+                    Your complete solution for discovering, organizing, and managing unforgettable events.
+                    We connect people through experiences that matter.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="mission-card">
+                <div class="mission-icon">🎯</div>
+                <h2>Our Mission</h2>
+                <p>
+                    To revolutionize event management by providing a seamless platform that empowers organizers
+                    to create exceptional experiences and enables attendees to discover events that inspire,
+                    educate, and entertain. We believe in the power of bringing people together and making
+                    event planning effortless for everyone.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose EventHub?</h2>
+                <p>Powerful features designed to make event management simple and effective</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card feature-1">
+                        <div class="feature-icon">🎫</div>
+                        <h3>Easy Registration</h3>
+                        <p>
+                            Streamlined registration process with secure payment integration.
+                            Attendees can register for events in just a few clicks.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card feature-2">
+                        <div class="feature-icon">📊</div>
+                        <h3>Real-time Analytics</h3>
+                        <p>
+                            Comprehensive dashboard with insights into registrations, revenue,
+                            and event performance to help you make data-driven decisions.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card feature-3">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Secure Payments</h3>
+                        <p>
+                            Industry-standard payment processing with Stripe integration.
+                            Your transactions are always safe and encrypted.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card feature-4">
+                        <div class="feature-icon">🎨</div>
+                        <h3>Custom Branding</h3>
+                        <p>
+                            Create beautiful event pages with custom images, descriptions,
+                            and branding that reflect your unique style.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card feature-5">
+                        <div class="feature-icon">👥</div>
+                        <h3>User Management</h3>
+                        <p>
+                            Robust role-based access control for organizers, attendees,
+                            and administrators with streamlined approval workflows.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card feature-6">
+                        <div class="feature-icon">📱</div>
+                        <h3>Mobile Friendly</h3>
+                        <p>
+                            Fully responsive design that works seamlessly across all devices.
+                            Manage events on-the-go from anywhere.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎉</div>
+                        <div class="stat-value">10K+</div>
+                        <div class="stat-label">Events Created</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value">50K+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎟️</div>
+                        <div class="stat-value">100K+</div>
+                        <div class="stat-label">Tickets Sold</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value">4.9/5</div>
+                        <div class="stat-label">User Rating</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-card">
+                <h2>Ready to Get Started?</h2>
+                <p>
+                    Join thousands of organizers and attendees who trust EventHub
+                    to power their events. Start creating amazing experiences today!
+                </p>
+ 
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div class="cta-buttons">
+                        <a asp-controller="Auth" asp-action="Register" class="cta-btn primary">
+                            <span>🚀</span>
+                            <span>Create Account</span>
+                        </a>
+                        <a asp-controller="Auth" asp-action="Login" class="cta-btn secondary">
+                            <span>🔍</span>
+                            <span>Login</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+</div>

@@ -53,6 +53,8 @@ builder.Services.AddScoped<IEventRegistrationService, EventRegistrationService>(
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IOrganizerApplicationService, OrganizerApplicationService>();
 builder.Services.AddScoped<IAdminAnalyticsRepository, AdminAnalyticsRepository>();
+builder.Services.AddHostedService<EventStatusBackgroundService>();
+
 
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));

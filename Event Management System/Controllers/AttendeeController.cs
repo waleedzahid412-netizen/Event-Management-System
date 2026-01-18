@@ -24,6 +24,7 @@ namespace Event_Management_System.Controllers
             _attendeeService = attendeeService;
             _emailService = emailService;
         }
+        [Authorize(Roles ="Customer")]
         public async Task<IActionResult> Dashboard()
         {
             var id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -40,8 +41,8 @@ namespace Event_Management_System.Controllers
 
 
 
- 
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> ProfileInfo()
         {
@@ -56,48 +57,7 @@ namespace Event_Management_System.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> RateEvent(int eventId)
-        {
-            var ev = await _attendeeService.checkIfEventExists(eventId);
-            if (!ev) return NotFound();
-
-            // Optional: check if already rated
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            bool alreadyRated = await _attendeeService.CheckIfUserReviewExist(eventId,userId);
-
-            if (alreadyRated)
-            {
-                TempData["Error"] = "You have already rated this event.";
-                return RedirectToAction("AttendeeEvent");
-            }
-
-            var model = new EventReviewCreateDTO
-            {
-                EventId = eventId
-            };
-
-            return View(model);
-        }
-        [HttpPost]
-        public async Task<IActionResult> RateEvent(EventReviewCreateDTO dto)
-        {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            try
-            {
-                await _attendeeService.AddEventReviewAsync(dto, userId);
-            }
-            catch (Exception ex)
-            {
-                // Instead of returning raw exception, set TempData and redirect
-                TempData["Error"] = ex.InnerException?.Message ?? ex.Message;
-                return RedirectToAction("AttendeeEvent");
-            }
-
-            TempData["Success"] = "Your review has been submitted successfully!";
-            return RedirectToAction("AttendeeEvent");
-        }
+ 
 
     }
 }

@@ -7,257 +7,578 @@
         : 0m;
 }
 
-<div class="container-fluid py-5 min-vh-100" style="background-color: #eef2f6;">
-    <div class="container">
-
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <div>
-                <h2 class="fw-bold text-dark">Admin Dashboard</h2>
-                <p class="text-muted mb-0">System performance overview</p>
-            </div>
-            <div class="bg-white px-4 py-2 rounded-pill shadow-sm">
-                <i class="bi bi-calendar3 me-2 text-primary"></i>
-                <span class="fw-bold text-dark">@DateTime.Now.ToString("MMM dd, yyyy")</span>
-            </div>
-        </div>
-
-        <h5 class="text-muted fw-bold mb-3 text-uppercase small ls-1">Key Metrics</h5>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-5">
-
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="text-muted fw-bold small mb-1">TOTAL USERS</p>
-                                <h3 class="fw-bold text-dark mb-0">@Model.TotalUsers</h3>
-                            </div>
-                            <div class="icon-box bg-primary bg-opacity-10 text-primary">
-                                <i class="bi bi-people-fill fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="text-muted fw-bold small mb-1">ORGANIZERS</p>
-                                <h3 class="fw-bold text-dark mb-0">@Model.TotalOrganizers</h3>
-                            </div>
-                            <div class="icon-box bg-info bg-opacity-10 text-info">
-                                <i class="bi bi-person-badge-fill fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="text-muted fw-bold small mb-1">TOTAL EVENTS</p>
-                                <h3 class="fw-bold text-dark mb-0">@Model.TotalEvents</h3>
-                            </div>
-                            <div class="icon-box bg-success bg-opacity-10 text-success">
-                                <i class="bi bi-calendar-event-fill fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="text-muted fw-bold small mb-1">UPCOMING</p>
-                                <h3 class="fw-bold text-dark mb-0">@Model.UpcomingEvents</h3>
-                            </div>
-                            <div class="icon-box bg-warning bg-opacity-10 text-warning">
-                                <i class="bi bi-hourglass-split fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="text-muted fw-bold small mb-1">REGISTRATIONS</p>
-                                <h3 class="fw-bold text-dark mb-0">@Model.TotalRegistrations</h3>
-                            </div>
-                            <div class="icon-box bg-secondary bg-opacity-10 text-secondary">
-                                <i class="bi bi-ticket-perforated-fill fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift position-relative overflow-hidden">
-                    <div class="card-body p-4 position-relative z-2">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="text-muted fw-bold small mb-1">REVENUE</p>
-                                <h3 class="fw-bold text-success mb-0">@Model.TotalRevenue</h3>
-                                <small class="text-muted" style="font-size: 0.7rem;">PKR Currency</small>
-                            </div>
-                            <div class="icon-box bg-success bg-opacity-10 text-success">
-                                <i class="bi bi-wallet-fill fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift @(Model.PendingOrganizerRequests > 0 ? "border-start border-4 border-danger" : "")">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="text-muted fw-bold small mb-1">PENDING REQUESTS</p>
-                                <h3 class="fw-bold @(Model.PendingOrganizerRequests > 0 ? "text-danger" : "text-dark") mb-0">
-                                    @Model.PendingOrganizerRequests
-                                </h3>
-                            </div>
-                            <div class="icon-box bg-danger bg-opacity-10 text-danger">
-                                <i class="bi bi-exclamation-triangle-fill fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="text-muted fw-bold small mb-1">AVG. TICKET</p>
-                                <h3 class="fw-bold text-dark mb-0">PKR @avgTicketPrice</h3>
-                            </div>
-                            <div class="icon-box bg-primary bg-opacity-10 text-primary">
-                                <i class="bi bi-tags-fill fs-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <h5 class="text-muted fw-bold mb-3 text-uppercase small ls-1">Quick Management</h5>
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <a asp-controller="OrganizerApplication" asp-action="ViewOrganizerApplications" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 hover-scale">
-                        <div class="card-body p-4 text-center">
-                            <div class="action-icon mx-auto mb-3 bg-white shadow-sm text-primary rounded-circle">
-                                <i class="bi bi-person-check fs-3"></i>
-                            </div>
-                            <h5 class="fw-bold text-dark">Verify Organizers</h5>
-                            <p class="text-muted small">Review pending applications</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a asp-action="Events" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 hover-scale">
-                        <div class="card-body p-4 text-center">
-                            <div class="action-icon mx-auto mb-3 bg-white shadow-sm text-purple rounded-circle">
-                                <i class="bi bi-calendar-range fs-3"></i>
-                            </div>
-                            <h5 class="fw-bold text-dark">Manage Events</h5>
-                            <p class="text-muted small">Edit, feature or cancel events</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a asp-action="Analytics" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 hover-scale">
-                        <div class="card-body p-4 text-center">
-                            <div class="action-icon mx-auto mb-3 bg-white shadow-sm text-success rounded-circle">
-                                <i class="bi bi-graph-up-arrow fs-3"></i>
-                            </div>
-                            <h5 class="fw-bold text-dark">System Analytics</h5>
-                            <p class="text-muted small">View financial reports</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-        </div>
-    </div>
-</div>
-
 <style>
-    /* 1. Icon Styling */
-    .icon-box {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .admin-dashboard {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
     }
 
-    /* 2. Action Buttons Styling */
-    .action-icon {
-        width: 64px;
-        height: 64px;
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        color: white;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .dashboard-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .header-title h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-title p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    .date-badge {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 0.875rem 1.75rem;
+        border-radius: 50px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-header {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .section-header::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+    /* KPI Cards */
+    .kpi-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.75rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+    }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--card-color), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .kpi-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+            border-color: var(--card-color);
+        }
+
+        .kpi-card.primary {
+            --card-color: #667eea;
+        }
+
+        .kpi-card.info {
+            --card-color: #4facfe;
+        }
+
+        .kpi-card.success {
+            --card-color: #43e97b;
+        }
+
+        .kpi-card.warning {
+            --card-color: #f59e0b;
+        }
+
+        .kpi-card.secondary {
+            --card-color: #868CFF;
+        }
+
+        .kpi-card.danger {
+            --card-color: #f5576c;
+        }
+
+    .kpi-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .kpi-info {
+        flex: 1;
+    }
+
+    .kpi-label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: #1a1a2e;
+        line-height: 1.2;
+        margin-bottom: 0.25rem;
+    }
+
+    .kpi-subtitle {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
+    .kpi-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 1.75rem;
+        flex-shrink: 0;
+        position: relative;
         transition: all 0.3s ease;
     }
 
-    /* 3. Hover Effects for KPI Cards */
-    .hover-lift {
-        background-color: #ffffff; /* Explicitly set White Card Background */
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .kpi-card:hover .kpi-icon {
+        transform: rotate(10deg) scale(1.1);
     }
 
-        .hover-lift:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important; /* Soft large shadow on hover */
+    .kpi-card.primary .kpi-icon {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        color: #667eea;
+    }
+
+    .kpi-card.info .kpi-icon {
+        background: linear-gradient(135deg, rgba(79, 172, 254, 0.15) 0%, rgba(0, 242, 254, 0.15) 100%);
+        color: #4facfe;
+    }
+
+    .kpi-card.success .kpi-icon {
+        background: linear-gradient(135deg, rgba(67, 233, 123, 0.15) 0%, rgba(56, 249, 215, 0.15) 100%);
+        color: #43e97b;
+    }
+
+    .kpi-card.warning .kpi-icon {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(251, 191, 36, 0.15) 100%);
+        color: #f59e0b;
+    }
+
+    .kpi-card.secondary .kpi-icon {
+        background: linear-gradient(135deg, rgba(134, 140, 255, 0.15) 0%, rgba(67, 24, 255, 0.15) 100%);
+        color: #868CFF;
+    }
+
+    .kpi-card.danger .kpi-icon {
+        background: linear-gradient(135deg, rgba(245, 87, 108, 0.15) 0%, rgba(240, 147, 251, 0.15) 100%);
+        color: #f5576c;
+    }
+
+    /* Pending Alert Card */
+    .kpi-card.danger.alert-card {
+        border-left: 4px solid #f5576c;
+        animation: pulse-border 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulse-border {
+        0%, 100% {
+            border-left-width: 4px;
         }
 
-    /* 4. Hover Effects for Action Cards */
-    .hover-scale {
-        background-color: #ffffff;
-        transition: transform 0.2s;
+        50% {
+            border-left-width: 6px;
+        }
     }
 
-        .hover-scale:hover {
-            transform: scale(1.02);
+    .alert-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
         }
 
-            .hover-scale:hover .action-icon {
-                background-color: #f8f9fa !important;
-                transform: rotate(10deg);
-            }
-
-    /* 5. Typography */
-    .ls-1 {
-        letter-spacing: 1px;
+        50% {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
     }
 
-    .text-purple {
+    /* Action Cards */
+    .action-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(102, 126, 234, 0.03) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .action-card:hover::before {
+            opacity: 1;
+        }
+
+        .action-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+            text-decoration: none;
+            color: inherit;
+        }
+
+    .action-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.25rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .action-card.primary .action-icon-wrapper {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        color: #667eea;
+    }
+
+    .action-card.purple .action-icon-wrapper {
+        background: linear-gradient(135deg, rgba(134, 140, 255, 0.15) 0%, rgba(67, 24, 255, 0.15) 100%);
         color: #6f42c1;
     }
+
+    .action-card.success .action-icon-wrapper {
+        background: linear-gradient(135deg, rgba(67, 233, 123, 0.15) 0%, rgba(56, 249, 215, 0.15) 100%);
+        color: #43e97b;
+    }
+
+    .action-card:hover .action-icon-wrapper {
+        transform: rotate(5deg) scale(1.1);
+    }
+
+    .action-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 0.5rem;
+    }
+
+    .action-description {
+        font-size: 0.95rem;
+        color: #64748b;
+        margin: 0;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .dashboard-header {
+            padding: 2rem 1.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+        }
+
+        .header-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .kpi-value {
+            font-size: 1.875rem;
+        }
+
+        .kpi-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+    }
 </style>
+
+<div class="admin-dashboard">
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>⚡ Admin Dashboard</h1>
+                    <p>Monitor and manage your event management system</p>
+                </div>
+                <div class="date-badge">
+                    <i class="bi bi-calendar3"></i>
+                    <span>@DateTime.Now.ToString("MMM dd, yyyy")</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Section -->
+        <h5 class="section-header">Key Performance Indicators</h5>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-5">
+            <!-- Total Users -->
+            <div class="col">
+                <div class="kpi-card primary">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Total Users</div>
+                            <div class="kpi-value">@Model.TotalUsers</div>
+                        </div>
+                        <div class="kpi-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Organizers -->
+            <div class="col">
+                <div class="kpi-card info">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Organizers</div>
+                            <div class="kpi-value">@Model.TotalOrganizers</div>
+                        </div>
+                        <div class="kpi-icon">
+                            <i class="bi bi-person-badge-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Events -->
+            <div class="col">
+                <div class="kpi-card success">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Total Events</div>
+                            <div class="kpi-value">@Model.TotalEvents</div>
+                        </div>
+                        <div class="kpi-icon">
+                            <i class="bi bi-calendar-event-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events -->
+            <div class="col">
+                <div class="kpi-card warning">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Upcoming</div>
+                            <div class="kpi-value">@Model.UpcomingEvents</div>
+                        </div>
+                        <div class="kpi-icon">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registrations -->
+            <div class="col">
+                <div class="kpi-card secondary">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Registrations</div>
+                            <div class="kpi-value">@Model.TotalRegistrations</div>
+                        </div>
+                        <div class="kpi-icon">
+                            <i class="bi bi-ticket-perforated-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue -->
+            <div class="col">
+                <div class="kpi-card success">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Revenue</div>
+                            <div class="kpi-value">@Model.TotalRevenue</div>
+                            <div class="kpi-subtitle">PKR Currency</div>
+                        </div>
+                        <div class="kpi-icon">
+                            <i class="bi bi-wallet-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Requests -->
+            <div class="col">
+                <div class="kpi-card danger @(Model.PendingOrganizerRequests > 0 ? "alert-card" : "")">
+                    @if (Model.PendingOrganizerRequests > 0)
+                    {
+                        <span class="alert-badge">Action Needed</span>
+                    }
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Pending Requests</div>
+                            <div class="kpi-value">@Model.PendingOrganizerRequests</div>
+                        </div>
+                        <div class="kpi-icon">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Avg Ticket Price -->
+            <div class="col">
+                <div class="kpi-card primary">
+                    <div class="kpi-content">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Avg. Ticket</div>
+                            <div class="kpi-value">@avgTicketPrice</div>
+                            <div class="kpi-subtitle">PKR</div>
+                        </div>
+                        <div class="kpi-icon">
+                            <i class="bi bi-tags-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <h5 class="section-header">Quick Management Actions</h5>
+        <div class="row g-4">
+            <!-- Verify Organizers -->
+            <div class="col-md-4">
+                <a asp-controller="OrganizerApplication" asp-action="ViewOrganizerApplications" class="action-card primary">
+                    <div class="action-icon-wrapper">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <h5 class="action-title">Verify Organizers</h5>
+                    <p class="action-description">Review and approve pending organizer applications</p>
+                </a>
+            </div>
+
+            <!-- Manage Events -->
+            <div class="col-md-4">
+                <a asp-action="Events" class="action-card purple">
+                    <div class="action-icon-wrapper">
+                        <i class="bi bi-calendar-range"></i>
+                    </div>
+                    <h5 class="action-title">Manage Events</h5>
+                    <p class="action-description">Edit, feature or cancel events across the platform</p>
+                </a>
+            </div>
+
+            <!-- System Analytics -->
+            <div class="col-md-4">
+                <a asp-action="Analytics" class="action-card success">
+                    <div class="action-icon-wrapper">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h5 class="action-title">System Analytics</h5>
+                    <p class="action-description">View detailed financial and performance reports</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

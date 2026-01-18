@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Data;
 
 namespace Event_Management_System.Repositories.Implementations
@@ -38,7 +39,7 @@ namespace Event_Management_System.Repositories.Implementations
         public async Task<List<Event>> GetCompletedEventByOrganizerIdAsync(int organizerid) {
             var todaysdate = DateTime.UtcNow;
             return await _context.Events.Include(e => e.Category)
-                .Where(er => er.OrganizerId == organizerid && er.EndDate < todaysdate &&  er.Status != EventStatus.Completed).ToListAsync(); ;
+                .Where(er => er.OrganizerId == organizerid && er.EndDate < todaysdate &&  er.Status == EventStatus.Completed).ToListAsync(); ;
         }
 
 
@@ -140,6 +141,18 @@ namespace Event_Management_System.Repositories.Implementations
         public async Task<int> UpcomingEventCount()
         {
             return await _context.Events.CountAsync(e => e.Status == EventStatus.Upcoming);
+        }
+
+        public async Task<IEnumerable<Event>> GetCompletedEventsAsync()
+        {
+           return  await _context.Events
+                    .Where(e => e.EndDate <= DateTime.Now && e.Status != EventStatus.Completed)
+                    .ToListAsync();
+        }
+        public async Task UpdateAsync(Event ev)
+        {
+            _context.Events.Update(ev);
+            await _context.SaveChangesAsync();
         }
     }
 }

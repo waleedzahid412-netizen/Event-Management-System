@@ -15,10 +15,7 @@ namespace Event_Management_System.Controllers
         _eventService= eventService; 
         _eventRegistrationService= regservice;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+        [Authorize(Roles = "Customer,Organizer")]
         [HttpGet]
         public async Task<IActionResult> RegisterEvent(int id)
         {
@@ -30,6 +27,7 @@ namespace Event_Management_System.Controllers
             return View(model);
 
         }
+        [Authorize(Roles = "Customer,Organizer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]

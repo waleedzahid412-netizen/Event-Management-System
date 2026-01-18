@@ -1,461 +1,799 @@
 ﻿@using Event_Management_System.Models.Entities
 @model IEnumerable<Event>
+
 @{
     ViewData["Title"] = "Browse Events";
 
     var categories = ViewBag.Categories as List<EventCategory> ?? new();
     var recommended = (ViewBag.RecommendedEvents as List<Event>) ?? new();
     bool showRecommended = ViewBag.ShowRecommended == true;
+    string? statusSelected = ViewBag.Status as string;
 }
 
 <!-- Hero Header -->
-<div class="hero-header text-white text-center py-5 mb-5 rounded-4 shadow-lg">
+<div class="browse-hero">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-3">🎉 Discover Amazing Events</h1>
-        <p class="lead mb-0">Find and register for the best events in your area</p>
+        <div class="hero-content-browse">
+            <div class="hero-icon-browse">
+                <i class="bi bi-calendar-event-fill"></i>
+            </div>
+            <h1 class="browse-title">Discover Amazing Events</h1>
+            <p class="browse-subtitle">Find and register for the best events in your area</p>
+        </div>
     </div>
 </div>
 
 <!-- Filter Bar -->
-<div class="card border-0 shadow-sm rounded-4 p-4 mb-5 filter-bar">
-    <div class="d-flex flex-wrap gap-3 align-items-center justify-content-between">
-        <form method="get" asp-action="BrowseEvents" class="d-flex gap-3 align-items-center flex-wrap">
-            <div class="filter-group">
-                <label for="categoryFilter" class="fw-semibold text-muted mb-2 d-block">
-                    <i class="bi bi-funnel"></i> Filter by Category
+<div class="container my-4">
+    <div class="filter-section">
+        <div class="filter-container">
+            <!-- Category Filter -->
+            <form method="get" asp-action="UserEvents" class="filter-form-group">
+                <label class="filter-label">
+                    <i class="bi bi-funnel-fill"></i>
+                    Category
                 </label>
-                <select name="categoryId" id="categoryFilter" class="form-select form-select-lg custom-select">
-                    <option value="">All Categories</option>
-                    @foreach (var cat in categories)
-                    {
-                        <option value="@cat.CategoryId">@cat.CategoryName</option>
-                    }
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg px-5 custom-btn mt-auto">
-                <i class="bi bi-search"></i> Apply Filter
-            </button>
-        </form>
+                <div class="filter-input-group">
+                    <select name="categoryId" class="filter-select">
+                        <option value="">All Categories</option>
+                        @foreach (var cat in categories)
+                        {
+                            <option value="@cat.CategoryId">@cat.CategoryName</option>
+                        }
+                    </select>
+                    <button type="submit" class="filter-apply-btn">
+                        <i class="bi bi-search"></i>
+                        Apply
+                    </button>
+                </div>
+            </form>
 
-        <form method="get" asp-action="BrowseEvents">
-            <input type="hidden" name="showRecommended" value="true" />
-            <button type="submit" class="btn btn-warning btn-lg px-5 custom-btn">
-                <i class="bi bi-star-fill"></i> Show Recommended
-            </button>
-        </form>
+            <!-- Status Filters -->
+            <div class="status-filter-group">
+                <span class="filter-label">
+                    <i class="bi bi-clock-fill"></i>
+                    Status
+                </span>
+                <div class="status-buttons">
+                    <form method="get" asp-action="UserEvents">
+                        <input type="hidden" name="status" value="Upcoming" />
+                        <button type="submit" class="status-btn upcoming @(statusSelected == "Upcoming" ? "active" : "")">
+                            <i class="bi bi-calendar-plus"></i>
+                            Upcoming
+                        </button>
+                    </form>
+
+                    <form method="get" asp-action="UserEvents">
+                        <input type="hidden" name="status" value="Completed" />
+                        <button type="submit" class="status-btn completed @(statusSelected == "Completed" ? "active" : "")">
+                            <i class="bi bi-calendar-check"></i>
+                            Completed
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Recommended Section -->
 @if (showRecommended)
 {
-    <div class="section-header mb-4">
-        <h2 class="fw-bold d-inline-flex align-items-center gap-2">
-            <span class="icon-badge">🌟</span> Recommended for You
-        </h2>
-        <p class="text-muted">Handpicked events based on your interests</p>
-    </div>
-
-    @if (!recommended.Any())
-    {
-        <div class="alert alert-info rounded-4 shadow-sm border-0 p-4">
-            <div class="d-flex align-items-center gap-3">
-                <span class="fs-2">ℹ️</span>
-                <div>
-                    <h5 class="mb-1">No Recommendations Yet</h5>
-                    <p class="mb-0">Check back later for personalized event suggestions!</p>
-                </div>
+    <div class="container my-5">
+        <div class="section-header-browse">
+            <div class="section-icon-browse recommended">
+                <i class="bi bi-star-fill"></i>
+            </div>
+            <div>
+                <h2 class="section-title-browse">Recommended for You</h2>
+                <p class="section-subtitle-browse">Handpicked events based on your interests</p>
             </div>
         </div>
-    }
-    else
-    {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
-            @foreach (var ev in recommended)
-            {
-                <div class="col">
-                    <div class="card event-card h-100 border-0 rounded-4 shadow-hover">
-                        <div class="position-relative overflow-hidden">
-                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" alt="@ev.Title" />
-                            <div class="image-overlay"></div>
-                            <span class="badge badge-category position-absolute top-0 start-0 m-3">
+
+        @if (!recommended.Any())
+        {
+            <div class="empty-state-browse">
+                <div class="empty-icon-browse">
+                    <i class="bi bi-stars"></i>
+                </div>
+                <h3>No Recommendations Yet</h3>
+                <p>Check back later for personalized event suggestions!</p>
+            </div>
+        }
+        else
+        {
+            <div class="events-grid-browse">
+                @foreach (var ev in recommended)
+                {
+                    <div class="event-card-browse">
+                        <div class="event-image-container">
+                            <img src="@ev.CoverImageUrl" class="event-image-browse" alt="@ev.Title" />
+                            <div class="image-overlay-browse"></div>
+                            <span class="category-tag">
+                                <i class="bi bi-tag-fill"></i>
                                 @ev.Category?.CategoryName ?? "N/A"
                             </span>
-                            <span class="badge badge-seats position-absolute top-0 end-0 m-3">
-                                <i class="bi bi-ticket-perforated"></i> @ev.AvailableSeats seats
+                            <span class="seats-tag">
+                                <i class="bi bi-ticket-perforated-fill"></i>
+                                @ev.AvailableSeats seats
                             </span>
                         </div>
-                        <div class="card-body d-flex flex-column p-4">
-                            <h5 class="fw-bold mb-3 event-title">@ev.Title</h5>
-                            <div class="event-meta mb-3">
-                                <p class="text-muted small mb-2">
-                                    <i class="bi bi-calendar-event text-primary"></i>
-                                    @ev.StartDate.ToString("MMM dd, yyyy") – @ev.EndDate.ToString("MMM dd, yyyy")
-                                </p>
-                                <p class="text-muted small mb-0">
-                                    <i class="bi bi-geo-alt-fill text-danger"></i>
-                                    @ev.Location
-                                </p>
+                        <div class="event-body-browse">
+                            <h5 class="event-title-browse">@ev.Title</h5>
+                            <div class="event-info-browse">
+                                <div class="info-item-browse">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>@ev.StartDate.ToString("MMM dd, yyyy") – @ev.EndDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="info-item-browse">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>@ev.Location</span>
+                                </div>
                             </div>
-                            <div class="mt-auto d-flex gap-2">
+                            <div class="event-actions-browse">
                                 <a asp-controller="Event" asp-action="EventDetail"
                                    asp-route-id="@ev.EventId"
-                                   class="btn btn-outline-primary btn-action w-50">
-                                    <i class="bi bi-info-circle"></i> Details
+                                   class="event-btn-browse details">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                    Details
                                 </a>
-                                <a asp-controller="Event" asp-action="RegisterEvent"
-                                   asp-route-id="@ev.EventId"
-                                   class="btn btn-success btn-action w-50">
-                                    <i class="bi bi-check-circle"></i> Register
-                                </a>
+
+                                @if (ev.EndDate < DateTime.Now)
+                                {
+                                    <a asp-controller="Event" asp-action="RateEvent"
+                                       asp-route-eventId="@ev.EventId"
+                                       class="event-btn-browse rate">
+                                        <i class="bi bi-star-fill"></i>
+                                        Rate
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Event" asp-action="RegisterEvent"
+                                       asp-route-id="@ev.EventId"
+                                       class="event-btn-browse register">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Register
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
-    }
+                }
+            </div>
+        }
+    </div>
 }
 
-<!-- All Events -->
+<!-- All Events Section -->
 @if (!showRecommended)
 {
-    <div class="section-header mb-4">
-        <h2 class="fw-bold d-inline-flex align-items-center gap-2">
-            <span class="icon-badge">🎪</span> All Events
-        </h2>
-        <p class="text-muted">Browse our complete collection of upcoming events</p>
-    </div>
-
-    @if (!Model.Any())
-    {
-        <div class="alert alert-warning rounded-4 shadow-sm border-0 p-4">
-            <div class="d-flex align-items-center gap-3">
-                <span class="fs-2">⚠️</span>
-                <div>
-                    <h5 class="mb-1">No Events Found</h5>
-                    <p class="mb-0">Try adjusting your filter or check back later for new events.</p>
-                </div>
+    <div class="container my-5">
+        <div class="section-header-browse">
+            <div class="section-icon-browse all-events">
+                <i class="bi bi-calendar3"></i>
+            </div>
+            <div>
+                <h2 class="section-title-browse">All Events</h2>
+                <p class="section-subtitle-browse">Browse our complete collection of events</p>
             </div>
         </div>
-    }
-    else
-    {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var ev in Model)
-            {
-                <div class="col">
-                    <div class="card event-card h-100 border-0 rounded-4 shadow-hover">
-                        <div class="position-relative overflow-hidden">
-                            <img src="@ev.CoverImageUrl" class="card-img-top event-img" alt="@ev.Title" />
-                            <div class="image-overlay"></div>
-                            <span class="badge badge-category position-absolute top-0 start-0 m-3">
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state-browse">
+                <div class="empty-icon-browse">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
+                <h3>No Events Found</h3>
+                <p>Try adjusting your filter or check back later for new events.</p>
+            </div>
+        }
+        else
+        {
+            <div class="events-grid-browse">
+                @foreach (var ev in Model)
+                {
+                    <div class="event-card-browse">
+                        <div class="event-image-container">
+                            <img src="@ev.CoverImageUrl" class="event-image-browse" alt="@ev.Title" />
+                            <div class="image-overlay-browse"></div>
+                            <span class="category-tag">
+                                <i class="bi bi-tag-fill"></i>
                                 @ev.Category?.CategoryName
                             </span>
-                            <span class="badge badge-seats position-absolute top-0 end-0 m-3">
-                                <i class="bi bi-ticket-perforated"></i> @ev.AvailableSeats seats
+                            <span class="seats-tag">
+                                <i class="bi bi-ticket-perforated-fill"></i>
+                                @ev.AvailableSeats seats
                             </span>
                         </div>
-                        <div class="card-body d-flex flex-column p-4">
-                            <h5 class="fw-bold mb-3 event-title">@ev.Title</h5>
-                            <div class="event-meta mb-3">
-                                <p class="text-muted small mb-2">
-                                    <i class="bi bi-calendar-event text-primary"></i>
-                                    @ev.StartDate.ToString("MMM dd, yyyy") – @ev.EndDate.ToString("MMM dd, yyyy")
-                                </p>
-                                <p class="text-muted small mb-0">
-                                    <i class="bi bi-geo-alt-fill text-danger"></i>
-                                    @ev.Location
-                                </p>
+                        <div class="event-body-browse">
+                            <h5 class="event-title-browse">@ev.Title</h5>
+                            <div class="event-info-browse">
+                                <div class="info-item-browse">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>@ev.StartDate.ToString("MMM dd, yyyy") – @ev.EndDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="info-item-browse">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    <span>@ev.Location</span>
+                                </div>
                             </div>
-                            <div class="mt-auto d-flex gap-2">
-                                <a asp-controller="Attendee" asp-action="EventDetail"
+                            <div class="event-actions-browse">
+                                <a asp-controller="Event" asp-action="EventDetails"
                                    asp-route-id="@ev.EventId"
-                                   class="btn btn-outline-primary btn-action w-50">
-                                    <i class="bi bi-info-circle"></i> Details
+                                   class="event-btn-browse details">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                    Details
                                 </a>
-                                <a asp-controller="Attendee" asp-action="RegisterEvent"
-                                   asp-route-id="@ev.EventId"
-                                   class="btn btn-success btn-action w-50">
-                                    <i class="bi bi-check-circle"></i> Register
-                                </a>
+
+                                @if (ev.EndDate < DateTime.Now)
+                                {
+                                    <a asp-controller="Event" asp-action="RateEvent"
+                                       asp-route-eventId="@ev.EventId"
+                                       class="event-btn-browse rate">
+                                        <i class="bi bi-star-fill"></i>
+                                        Rate
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="EventRegistration" asp-action="RegisterEvent"
+                                       asp-route-id="@ev.EventId"
+                                       class="event-btn-browse register">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Register
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
-    }
+                }
+            </div>
+        }
+    </div>
 }
 
 <style>
-    /* Hero Header */
-    .hero-header {
+    /* Hero Section */
+    .browse-hero {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        padding: 3rem 0;
         position: relative;
         overflow: hidden;
     }
 
-        .hero-header::before {
+        .browse-hero::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
-            background-size: cover;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none"/><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
             opacity: 0.3;
         }
 
-        .hero-header .container {
-            position: relative;
-            z-index: 1;
-        }
-
-    /* Section Headers */
-    .section-header {
-        border-left: 5px solid #667eea;
-        padding-left: 20px;
-        margin-bottom: 30px;
+    .hero-content-browse {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: white;
     }
 
-        .section-header h2 {
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .section-header .icon-badge {
-            font-size: 2rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
-
-    /* Filter Bar */
-    .filter-bar {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        border: 1px solid #e9ecef;
-        transition: all 0.3s ease;
+    .hero-icon-browse {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
-        .filter-bar:hover {
-            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-            transform: translateY(-2px);
-        }
-
-    .filter-group label {
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    .browse-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
     }
 
-    .custom-select {
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        padding: 12px 16px;
-        transition: all 0.3s ease;
+    .browse-subtitle {
+        font-size: 1.125rem;
+        opacity: 0.95;
+    }
+
+    /* Filter Section */
+    .filter-section {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        border: 2px solid #e2e8f0;
+    }
+
+    .filter-container {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .filter-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        flex: 1;
         min-width: 250px;
     }
 
-        .custom-select:focus {
+    .filter-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        font-size: 0.875rem;
+    }
+
+        .filter-label i {
+            color: #667eea;
+            font-size: 1rem;
+        }
+
+    .filter-input-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .filter-select {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: white;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+
+        .filter-select:focus {
+            outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
 
+    .filter-apply-btn {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        white-space: nowrap;
+    }
+
+        .filter-apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .filter-apply-btn i {
+            font-size: 1rem;
+        }
+
+    /* Status Filter Group */
+    .status-filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .status-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .status-btn {
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        background: white;
+        color: #718096;
+        font-weight: 700;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+        .status-btn i {
+            font-size: 1rem;
+        }
+
+        .status-btn:hover {
+            border-color: #cbd5e0;
+            background: #f7fafc;
+        }
+
+        .status-btn.upcoming.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #2d3748;
+            border-color: #ffd700;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .status-btn.completed.active {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border-color: #48bb78;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+    /* Section Headers */
+    .section-header-browse {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .section-icon-browse {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+        .section-icon-browse.recommended {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+
+        .section-icon-browse.all-events {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+    .section-title-browse {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #2d3748;
+        margin: 0;
+    }
+
+    .section-subtitle-browse {
+        color: #718096;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    /* Events Grid */
+    .events-grid-browse {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
     /* Event Card */
-    .event-card {
-        background: #fff;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    .event-card-browse {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 2px solid #e2e8f0;
+    }
+
+        .event-card-browse:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+    .event-image-container {
+        position: relative;
+        height: 220px;
         overflow: hidden;
     }
 
-        .event-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
-        }
-
-    .shadow-hover {
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    }
-
-    /* Event Card Images */
-    .event-img {
-        height: 220px;
+    .event-image-browse {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         transition: transform 0.5s ease;
     }
 
-    .event-card:hover .event-img {
-        transform: scale(1.08);
+    .event-card-browse:hover .event-image-browse {
+        transform: scale(1.1);
     }
 
-    .image-overlay {
+    .image-overlay-browse {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
     }
 
-    .event-card:hover .image-overlay {
-        opacity: 1;
-    }
-
-    /* Event Title */
-    .event-title {
-        color: #2c3e50;
-        font-size: 1.25rem;
-        line-height: 1.4;
-        transition: color 0.3s ease;
-    }
-
-    .event-card:hover .event-title {
-        color: #667eea;
-    }
-
-    /* Event Meta */
-    .event-meta i {
-        margin-right: 6px;
-        font-size: 1rem;
-    }
-
-    /* Badges */
-    .badge {
-        font-size: 0.75rem;
-        padding: 0.5em 0.85em;
-        border-radius: 25px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-
-    .badge-category {
+    .category-tag {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
         background: rgba(102, 126, 234, 0.95);
+        backdrop-filter: blur(10px);
         color: white;
-    }
-
-    .badge-seats {
-        background: rgba(40, 167, 69, 0.95);
-        color: white;
-    }
-
-    /* Buttons */
-    .custom-btn {
+        padding: 0.5rem 1rem;
         border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        border: none;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: 0.875rem;
+        font-weight: 700;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
 
-        .custom-btn.btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
+        .category-tag i {
+            font-size: 0.8rem;
         }
 
-            .custom-btn.btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            }
-
-        .custom-btn.btn-warning {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-
-            .custom-btn.btn-warning:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
-            }
-
-    .btn-action {
-        border-radius: 10px;
-        font-weight: 600;
-        padding: 10px;
-        font-size: 0.875rem;
-        transition: all 0.3s ease;
-    }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-    .btn-outline-primary {
-        border: 2px solid #667eea;
-        color: #667eea;
-    }
-
-        .btn-outline-primary:hover {
-            background: #667eea;
-            border-color: #667eea;
-            color: white;
-        }
-
-    .btn-success {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        border: none;
+    .seats-tag {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(72, 187, 120, 0.95);
+        backdrop-filter: blur(10px);
         color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
 
-        .btn-success:hover {
-            background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+        .seats-tag i {
+            font-size: 0.9rem;
         }
 
-    /* Alerts */
-    .alert {
-        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        animation: slideIn 0.5s ease-out;
+    /* Event Body */
+    .event-body-browse {
+        padding: 1.5rem;
     }
 
-    @@keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .event-title-browse {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #2d3748;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    /* Responsive */
-    @@media (max-width: 768px) {
-        .hero-header h1 {
-            font-size: 2rem;
+    .event-info-browse {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px dashed #e2e8f0;
+    }
+
+    .info-item-browse {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #4a5568;
+        font-size: 0.875rem;
+    }
+
+        .info-item-browse i {
+            color: #667eea;
+            font-size: 1rem;
+            flex-shrink: 0;
         }
 
-        .hero-header p {
+    /* Event Actions */
+    .event-actions-browse {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .event-btn-browse {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+        .event-btn-browse i {
             font-size: 1rem;
         }
 
-        .filter-bar {
-            padding: 1.5rem !important;
+        .event-btn-browse.details {
+            background: white;
+            color: #667eea;
+            border-color: #667eea;
         }
 
-        .custom-select {
+            .event-btn-browse.details:hover {
+                background: #667eea;
+                color: white;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            }
+
+        .event-btn-browse.register {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+            .event-btn-browse.register:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+            }
+
+        .event-btn-browse.rate {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #2d3748;
+        }
+
+            .event-btn-browse.rate:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            }
+
+    /* Empty State */
+    .empty-state-browse {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        border-radius: 20px;
+        border: 2px dashed #cbd5e0;
+    }
+
+    .empty-icon-browse {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        color: #a0aec0;
+        font-size: 4rem;
+    }
+
+    .empty-state-browse h3 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-browse p {
+        color: #718096;
+        font-size: 1.125rem;
+        margin: 0;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 991px) {
+        .browse-title {
+            font-size: 2rem;
+        }
+
+        .filter-container {
+            gap: 1rem;
+        }
+
+        .events-grid-browse {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .browse-hero {
+            padding: 2rem 0;
+        }
+
+        .hero-icon-browse {
+            width: 60px;
+            height: 60px;
+            font-size: 2rem;
+        }
+
+        .browse-title {
+            font-size: 1.75rem;
+        }
+
+        .browse-subtitle {
+            font-size: 1rem;
+        }
+
+        .filter-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-form-group,
+        .status-filter-group {
             min-width: 100%;
         }
 
-        .filter-bar .d-flex {
+        .status-buttons {
             flex-direction: column;
-            align-items: stretch !important;
         }
 
-        .filter-bar form {
+        .status-btn {
             width: 100%;
+            justify-content: center;
         }
 
-        .filter-group {
+        .filter-input-group {
+            flex-direction: column;
+        }
+
+        .filter-apply-btn {
             width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @@xmedia (max-width: 576px) {
+        .events-grid-browse {
+            grid-template-columns: 1fr;
+        }
+
+        .event-actions-browse {
+            flex-direction: column;
+        }
+
+        .empty-state-browse {
+            padding: 3rem 1.5rem;
+        }
+
+        .empty-icon-browse {
+            width: 100px;
+            height: 100px;
+            font-size: 3rem;
         }
     }
 </style>

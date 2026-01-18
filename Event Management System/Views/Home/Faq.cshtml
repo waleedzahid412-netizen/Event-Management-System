@@ -1,0 +1,198 @@
+﻿@{
+    ViewData["Title"] = "FAQ - EventFlow";
+    Layout = "_Layout";
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    header {
+        text-align: center;
+        color: white;
+        margin-bottom: 60px;
+    }
+
+    h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.95;
+    }
+
+    .search-box {
+        background: white;
+        border-radius: 20px;
+        padding: 20px 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 1.1rem;
+    }
+
+    .category-filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .category-btn {
+        background: white;
+        border: 2px solid transparent;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #4a5568;
+        text-decoration: none;
+    }
+
+        .category-btn.active {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+    .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .faq-item {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        padding: 25px 30px;
+    }
+
+    .question-text {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 10px;
+    }
+
+    .category-badge {
+        background: #f0f4ff;
+        color: #667eea;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+
+    .answer-text {
+        color: #4a5568;
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+
+    .contact-section {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-top: 60px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 35px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+    }
+</style>
+
+<div class="container">
+    <header>
+        <h1>Frequently Asked Questions</h1>
+        <p class="subtitle">Everything you need to know about EventFlow</p>
+    </header>
+
+    <!-- Search (server-side later) -->
+    <form method="get">
+        <div class="search-box">
+            <span>🔍</span>
+            <input class="search-input" name="q" placeholder="Search for answers..." />
+        </div>
+    </form>
+
+    <!-- Category filters (server-side) -->
+
+
+    <!-- FAQ List -->
+    <div class="faq-list">
+
+        <div class="faq-item">
+            <span class="category-badge">General</span>
+            <div class="question-text">What is EventFlow and how does it work?</div>
+            <p class="answer-text">
+                EventFlow is a comprehensive event management platform that helps you plan,
+                organize, and execute events of all sizes.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <span class="category-badge">Pricing</span>
+            <div class="question-text">What pricing plans do you offer?</div>
+            <p class="answer-text">
+                We offer Free, Professional, and Enterprise plans depending on your needs.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <span class="category-badge">Features</span>
+            <div class="question-text">Can I customize my event registration page?</div>
+            <p class="answer-text">
+                Yes, you can customize branding, forms, and layouts extensively.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <span class="category-badge">Technical</span>
+            <div class="question-text">How secure is my data?</div>
+            <p class="answer-text">
+                We use SSL encryption, GDPR compliance, and PCI-compliant payment providers.
+            </p>
+        </div>
+
+    </div>
+
+
+</div>

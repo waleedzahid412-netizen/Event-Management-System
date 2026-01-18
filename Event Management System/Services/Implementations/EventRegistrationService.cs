@@ -3,6 +3,7 @@ using Event_Management_System.Models.Entities;
 using Event_Management_System.Repositories.Interfaces;
 using Event_Management_System.Services.Interfaces;
 using Event_Management_System.ViewModels;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Event_Management_System.Services.Implementations
 {
@@ -56,11 +57,15 @@ namespace Event_Management_System.Services.Implementations
 
                 // 5️⃣ Add registrations to DB
                 await _registrationRepo.AddRegistrationAsync(registrations);
-
+                var even =await _eventRepo.GetEventDetailsForCustomerByIdAsync(model.EventId);
+                if (even == null) {
+                    throw new Exception("Event is mull");
+                }
                 // 6️⃣ Update event available seats
-                ev.AvailableSeats -= model.NumberOfTickets;
+                even.AvailableSeats -= model.NumberOfTickets;
 
                 // 7️⃣ Save all changes
+                await _eventRepo.UpdateAsync(even);
                 await _registrationRepo.SaveChangesAsync();
                 await _eventRepo.CommitTransactionAsync(transaction);
 

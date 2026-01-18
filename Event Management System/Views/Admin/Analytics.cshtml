@@ -2,159 +2,327 @@
 @model AdminChartsVM
 
 <style>
-    .admin-dashboard {
-        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    .analytics-dashboard {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         min-height: 100vh;
-        padding: 2rem;
+        padding: 2rem 0;
     }
 
-    .dashboard-header {
-        margin-bottom: 2rem;
+    .analytics-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        color: white;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
     }
 
-    .dashboard-title {
-        font-size: 2.4rem;
-        font-weight: 800;
-        color: #1e293b;
-    }
-
-    .dashboard-subtitle {
-        color: #64748b;
-        font-size: 1.05rem;
-    }
-
-    /* Filters */
-    .filter-section {
-        margin-bottom: 2rem;
-    }
-
-    .btn-group .btn {
-        padding: 0.7rem 1.4rem;
-        font-weight: 600;
-        border: 2px solid #6366f1;
-        transition: 0.3s ease;
-    }
-
-        .btn-group .btn.active {
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
-            color: #fff;
-            border-color: transparent;
+        .analytics-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
         }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    /* Filter Section */
+    .filter-wrapper {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-label {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .filter-label::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+    .filter-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.875rem 2rem;
+        border: 2px solid #e8e8f5;
+        border-radius: 12px;
+        background: white;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .filter-btn:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            text-decoration: none;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+            .filter-btn.active:hover {
+                background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+                color: white;
+            }
 
     /* Chart Cards */
     .chart-card {
-        background: #ffffff;
+        background: white;
         border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-        height: 420px;
+        padding: 1.75rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        height: 450px;
         display: flex;
         flex-direction: column;
-        transition: transform .3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
+
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chart-card:hover::before {
+            opacity: 1;
+        }
 
         .chart-card:hover {
             transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.15);
         }
 
+    .chart-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .chart-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: #667eea;
+        flex-shrink: 0;
+    }
+
     .chart-title {
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         font-weight: 700;
-        color: #1e293b;
-        text-align: center;
-        margin-bottom: 1rem;
-        border-bottom: 2px solid #e5e7eb;
-        padding-bottom: 0.6rem;
+        color: #1a1a2e;
+        margin: 0;
     }
 
     .chart-container {
         flex: 1;
         position: relative;
+        min-height: 0;
+    }
+
+    .chart-card.full-width {
+        height: 400px;
     }
 
     @@media (max-width: 768px) {
+        .analytics-hero {
+            padding: 2rem 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+        }
+
         .chart-card {
-            height: 340px;
+            height: 350px;
+        }
+
+            .chart-card.full-width {
+                height: 320px;
+            }
+
+        .filter-btn {
+            flex: 1;
+            justify-content: center;
+            min-width: calc(50% - 0.375rem);
         }
     }
 </style>
 
-<div class="admin-dashboard">
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">Admin Analytics</h1>
-        <p class="dashboard-subtitle">
-            System-wide event insights & performance tracking
-        </p>
-    </div>
-
-    <!-- Filters -->
-    <div class="filter-section">
-        <div class="btn-group">
-            <a asp-action="Analytics" asp-route-filter="Week"
-               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Week ? "active" : "")">
-                Last 7 Days
-            </a>
-
-            <a asp-action="Analytics" asp-route-filter="Month"
-               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Month ? "active" : "")">
-                Last 30 Days
-            </a>
-
-            <a asp-action="Analytics" asp-route-filter="Year"
-               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Year ? "active" : "")">
-                Last 12 Months
-            </a>
-        </div>
-    </div>
-
-    <!-- Charts -->
-    <div class="row g-4">
-
-        <div class="col-md-6">
-            <div class="chart-card">
-                <h5 class="chart-title">Events by Status</h5>
-                <div class="chart-container">
-                    <canvas id="eventsByStatusChart"></canvas>
-                </div>
+<div class="analytics-dashboard">
+    <div class="container">
+        <!-- Hero Header -->
+        <div class="analytics-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">📊 Admin Analytics</h1>
+                <p class="hero-subtitle">Comprehensive insights and performance tracking across your platform</p>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="chart-card">
-                <h5 class="chart-title">Registrations per Event</h5>
-                <div class="chart-container">
-                    <canvas id="registrationsPerEventChart"></canvas>
-                </div>
+        <!-- Filters -->
+        <div class="filter-wrapper">
+            <div class="filter-label">
+                📅 Time Period
+            </div>
+            <div class="filter-buttons">
+                <a asp-action="Analytics" asp-route-filter="Week"
+                   class="filter-btn @(Model.SelectedFilter == DateFilterType.Week ? "active" : "")">
+                    <span>📆</span>
+                    <span>Last 7 Days</span>
+                </a>
+
+                <a asp-action="Analytics" asp-route-filter="Month"
+                   class="filter-btn @(Model.SelectedFilter == DateFilterType.Month ? "active" : "")">
+                    <span>📅</span>
+                    <span>Last 30 Days</span>
+                </a>
+
+                <a asp-action="Analytics" asp-route-filter="Year"
+                   class="filter-btn @(Model.SelectedFilter == DateFilterType.Year ? "active" : "")">
+                    <span>📊</span>
+                    <span>Last 12 Months</span>
+                </a>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="chart-card">
-                <h5 class="chart-title">Revenue Over Time</h5>
-                <div class="chart-container">
-                    <canvas id="revenueOverTimeChart"></canvas>
+        <!-- Charts Grid -->
+        <div class="row g-4">
+            <!-- Events by Status -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">🎯</div>
+                        <h5 class="chart-title">Events by Status</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="eventsByStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registrations per Event -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">👥</div>
+                        <h5 class="chart-title">Registrations per Event</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="registrationsPerEventChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue Over Time -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">💰</div>
+                        <h5 class="chart-title">Revenue Over Time</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueOverTimeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events Trend -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">📈</div>
+                        <h5 class="chart-title">Upcoming Events Trend</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="upcomingEventsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Ticket Price -->
+            <div class="col-12">
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <div class="chart-icon">🎫</div>
+                        <h5 class="chart-title">Average Ticket Price Over Time</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="avgTicketPriceChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <div class="chart-card">
-                <h5 class="chart-title">Upcoming Events Trend</h5>
-                <div class="chart-container">
-                    <canvas id="upcomingEventsChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <div class="chart-card">
-                <h5 class="chart-title">Average Ticket Price Over Time</h5>
-                <div class="chart-container">
-                    <canvas id="avgTicketPriceChart"></canvas>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 
@@ -163,68 +331,65 @@
 
     <script>
         // --- 1. UTILITY FUNCTIONS ---
-
-        // Truncate long labels for the axis (e.g., "Football..." instead of full name)
         const truncateLabel = (label, maxLength = 15) => {
             if (label.length > maxLength) return label.substring(0, maxLength) + '...';
             return label;
         };
 
-        // Helper to create a professional gradient for Line Charts
-        // This fades from the color to transparent at the bottom
         const createGradient = (ctx, colorStart, colorEnd) => {
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, colorStart); // Top color (opaque)
-            gradient.addColorStop(1, colorEnd);   // Bottom color (transparent)
+            gradient.addColorStop(0, colorStart);
+            gradient.addColorStop(1, colorEnd);
             return gradient;
         };
 
-        // --- 2. GLOBAL STYLING & OPTIONS ---
-
-        // Professional Color Palette (Tailwind-like shades)
+        // --- 2. PROFESSIONAL COLOR PALETTE ---
         const colors = {
-            primary:   '#6366f1', // Indigo
-            primaryFade: 'rgba(99, 102, 241, 0.1)',
-            success:   '#10b981', // Emerald
-            successFade: 'rgba(16, 185, 129, 0.1)',
-            warning:   '#f59e0b', // Amber
-            warningFade: 'rgba(245, 158, 11, 0.1)',
-            danger:    '#ef4444', // Red
-            info:      '#0ea5e9', // Sky Blue
-            text:      '#64748b', // Slate 500
-            grid:      '#f1f5f9'  // Slate 100
+            primary:     '#667eea',
+            primaryFade: 'rgba(102, 126, 234, 0.15)',
+            secondary:   '#764ba2',
+            success:     '#43e97b',
+            successFade: 'rgba(67, 233, 123, 0.15)',
+            warning:     '#f59e0b',
+            warningFade: 'rgba(245, 158, 11, 0.15)',
+            danger:      '#f5576c',
+            info:        '#4facfe',
+            infoFade:    'rgba(79, 172, 254, 0.15)',
+            text:        '#64748b',
+            grid:        '#f1f5f9'
         };
 
-        Chart.defaults.font.family = "'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif";
+        // --- 3. GLOBAL CHART DEFAULTS ---
+        Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
         Chart.defaults.color = colors.text;
 
-        // Common options for X/Y axis charts
         const baseChartOptions = {
             responsive: true,
             maintainAspectRatio: false,
             layout: { padding: 10 },
             plugins: {
-                legend: { display: false }, // Hide legend for single-series charts (cleaner)
+                legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#1e293b',
-                    padding: 12,
-                    cornerRadius: 8,
-                    titleFont: { size: 13, weight: 600 },
-                    bodyFont: { size: 12 },
-                    displayColors: false, // Don't show the little color box in tooltip
+                    backgroundColor: '#1a1a2e',
+                    padding: 14,
+                    cornerRadius: 10,
+                    titleFont: { size: 14, weight: 700 },
+                    bodyFont: { size: 13, weight: 500 },
+                    displayColors: false,
+                    boxPadding: 6,
                     callbacks: {
-                        // FIX: Show FULL name in tooltip even if axis is truncated
                         title: (context) => context[0].label
                     }
                 }
             },
             scales: {
                 x: {
-                    grid: { display: false }, // No vertical grid lines
+                    grid: { display: false },
                     ticks: {
                         maxRotation: 0,
                         autoSkip: false,
-                        font: { size: 11 },
+                        font: { size: 11, weight: 600 },
+                        color: colors.text,
                         callback: function(value) {
                             return truncateLabel(this.getLabelForValue(value));
                         }
@@ -234,15 +399,19 @@
                     beginAtZero: true,
                     grid: {
                         color: colors.grid,
-                        borderDash: [5, 5], // Dashed horizontal lines
-                        drawBorder: false   // Remove left axis line
+                        borderDash: [5, 5],
+                        drawBorder: false
                     },
-                    ticks: { padding: 10 }
+                    ticks: {
+                        padding: 10,
+                        font: { size: 11, weight: 600 },
+                        color: colors.text
+                    }
                 }
             }
         };
 
-        // --- 3. CHART INITIALIZATION ---
+        // --- 4. CHART INITIALIZATION ---
 
         // A. Events By Status (Doughnut)
         new Chart(document.getElementById('eventsByStatusChart'), {
@@ -252,8 +421,10 @@
                 datasets: [{
                     data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsByStatus.Values)),
                     backgroundColor: [colors.primary, colors.success, colors.warning, colors.danger],
-                    borderWidth: 0,
-                    hoverOffset: 10 // Pops out more on hover
+                    borderWidth: 3,
+                    borderColor: '#ffffff',
+                    hoverOffset: 12,
+                    hoverBorderWidth: 4
                 }]
             },
             options: {
@@ -262,10 +433,22 @@
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { usePointStyle: true, padding: 20, font: { size: 12 } }
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { size: 13, weight: 600 },
+                            color: colors.text
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1a1a2e',
+                        padding: 14,
+                        cornerRadius: 10,
+                        titleFont: { size: 14, weight: 700 },
+                        bodyFont: { size: 13, weight: 500 }
                     }
                 },
-                cutout: '70%', // Thinner ring looks more modern
+                cutout: '65%'
             }
         });
 
@@ -278,9 +461,10 @@
                     label: 'Registrations',
                     data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RegistrationsPerEvent.Values)),
                     backgroundColor: colors.primary,
-                    borderRadius: 6, // Rounded top corners
-                    barPercentage: 0.5,
-                    categoryPercentage: 0.8
+                    borderRadius: 8,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8,
+                    hoverBackgroundColor: colors.secondary
                 }]
             },
             options: baseChartOptions
@@ -297,15 +481,15 @@
                     data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RevenueOverTime.Values)),
                     borderColor: colors.success,
                     borderWidth: 3,
-                    // Create gradient fill
                     backgroundColor: createGradient(revenueCtx, colors.successFade, 'rgba(255,255,255,0)'),
                     fill: true,
-                    tension: 0.4, // Smooth curve
-                    pointRadius: 4,
-                    pointBackgroundColor: '#fff',
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#ffffff',
                     pointBorderColor: colors.success,
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 6
+                    pointBorderWidth: 3,
+                    pointHoverRadius: 7,
+                    pointHoverBorderWidth: 4
                 }]
             },
             options: baseChartOptions
@@ -325,10 +509,12 @@
                     backgroundColor: createGradient(upcomingCtx, colors.warningFade, 'rgba(255,255,255,0)'),
                     fill: true,
                     tension: 0.4,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#fff',
+                    pointRadius: 5,
+                    pointBackgroundColor: '#ffffff',
                     pointBorderColor: colors.warning,
-                    pointBorderWidth: 2
+                    pointBorderWidth: 3,
+                    pointHoverRadius: 7,
+                    pointHoverBorderWidth: 4
                 }]
             },
             options: baseChartOptions
@@ -340,15 +526,16 @@
             data: {
                 labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AvgTicketPriceOverTime.Keys)),
                 datasets: [{
-                    label: 'Ticket Price',
+                    label: 'Avg Ticket Price',
                     data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AvgTicketPriceOverTime.Values)),
                     backgroundColor: colors.info,
-                    borderRadius: 6,
-                    barPercentage: 0.5
+                    borderRadius: 8,
+                    barPercentage: 0.6,
+                    hoverBackgroundColor: colors.primary
                 }]
             },
             options: baseChartOptions
         });
     </script>
-
 }
+</document_content>

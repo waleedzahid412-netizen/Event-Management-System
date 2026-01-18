@@ -174,17 +174,12 @@ namespace Event_Management_System.Services.Implementations
         {
             return await _registrationRepository.GetRegistrationsForUserEventAsync(userId, eventId);
         }
-        public async Task<List<Event>> BrowseEventAsync(int? categoryid, string status)
+        public async Task<List<Event>> BrowseEventAsync(int? categoryid)
         {
             var events = await _eventrepo.GetAllEventsWithCategoryAsync();
-            if (status == "upcoming")
-            {
-                events = events.Where(e => e.StartDate > DateTime.UtcNow).ToList();
-            }
-            else
-            {
-                events = events.Where(e => e.EndDate < DateTime.UtcNow).ToList();
-            }
+
+                events = events.Where(e => e.StartDate > DateTime.Now).ToList();
+
             if (categoryid.HasValue)
             {
                 events = events.Where(e => e.CategoryId == categoryid.Value).ToList();

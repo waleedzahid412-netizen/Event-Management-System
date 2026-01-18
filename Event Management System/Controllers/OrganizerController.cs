@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace Event_Management_System.Controllers
 {
-    [Authorize(Roles = "Admin,Organizer")]
+    [Authorize(Roles = "Organizer")]
     public class OrganizerController : Controller
     {
         public IOrganizerService _organizerService { get; set; }

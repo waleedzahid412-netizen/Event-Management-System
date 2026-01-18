@@ -15,7 +15,7 @@ namespace Event_Management_System.Services.Interfaces
         public  Task<EventDetailsVM> GetCustomerEventDetailsAsync(int id);
     
         public Task<List<Registration>> GetRegistrationsForUserEventAsync(int userId, int eventId);
-        public  Task<List<Event>> BrowseEventAsync(int? categoryid, string status);
+        public  Task<List<Event>> BrowseEventAsync(int? categoryid);
         public  Task<List<Event>> GetEventByAttendeeId(int userid, int? categoryid, bool showrecommended);
         public Task<EventRegistrationVM?> GetEventRegistrationAsync(int id);
 

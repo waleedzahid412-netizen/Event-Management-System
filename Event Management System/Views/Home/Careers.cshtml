@@ -1,0 +1,238 @@
+﻿@{
+    ViewData["Title"] = "Careers - EventFlow";
+    Layout = "_Layout";
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    header {
+        padding: 40px 0;
+        text-align: center;
+        color: white;
+    }
+
+    h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .subtitle {
+        font-size: 1.3rem;
+        opacity: 0.95;
+    }
+
+    .careers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        padding: 60px 0;
+    }
+
+    .job-card {
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+        .job-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #667eea;
+        }
+
+    .job-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 20px;
+    }
+
+    .job-type {
+        background: #f0f4ff;
+        color: #667eea;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    h3 {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+        color: #1a202c;
+    }
+
+    .job-location {
+        color: #718096;
+        margin-bottom: 15px;
+    }
+
+    .job-description {
+        color: #4a5568;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .job-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .tag {
+        background: #edf2f7;
+        color: #4a5568;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+    }
+
+    .apply-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    .benefits-section {
+        background: white;
+        border-radius: 30px;
+        padding: 60px;
+        margin: 40px 0 60px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+
+    .benefit-item {
+        text-align: center;
+    }
+
+    .benefit-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin: 0 auto 20px;
+    }
+</style>
+
+<header>
+    <div class="container">
+        <h1>Join Our Team</h1>
+        <p class="subtitle">Help us create unforgettable experiences for events worldwide</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="careers-grid">
+
+        @* Job Card *@
+        <div class="job-card">
+            <div class="job-icon">🎯</div>
+            <div class="job-header">
+                <div>
+                    <h3>Senior Event Coordinator</h3>
+                    <p class="job-location">📍 New York, NY • Remote</p>
+                </div>
+                <span class="job-type">Full-time</span>
+            </div>
+            <p class="job-description">
+                Lead event planning and execution for enterprise clients.
+            </p>
+            <div class="job-tags">
+                <span class="tag">Project Management</span>
+                <span class="tag">Client Relations</span>
+                <span class="tag">3+ years exp</span>
+            </div>
+
+            <a asp-controller="Careers" asp-action="Apply" class="apply-btn">
+                Apply Now
+            </a>
+        </div>
+
+        @* Repeat cards or render dynamically from Model *@
+
+    </div>
+
+    <div class="benefits-section">
+        <h2 style="text-align:center;">Why Join EventFlow?</h2>
+
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="benefit-icon">🏥</div>
+                <h4>Health & Wellness</h4>
+                <p>Comprehensive health coverage</p>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">🌴</div>
+                <h4>Unlimited PTO</h4>
+                <p>Work-life balance</p>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">💰</div>
+                <h4>Competitive Salary</h4>
+                <p>Industry-leading compensation</p>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">📚</div>
+                <h4>Learning Budget</h4>
+                <p>Professional development support</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,175 +4,901 @@
     ViewData["Title"] = "Event Details";
 }
 
-<style>
-    body {
-        background: linear-gradient(135deg, #f5f7fa, #e4ecf5);
-        font-family: "Segoe UI", sans-serif;
-    }
-
-    .page-container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 30px;
-    }
-
-    .glass-card {
-        background: #ffffff;
-        border-radius: 18px;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-        overflow: hidden;
-    }
-
-    .section-title {
-        font-weight: 600;
-        letter-spacing: 0.4px;
-    }
-
-    .event-badge {
-        font-size: 0.9rem;
-        padding: 6px 14px;
-        border-radius: 20px;
-    }
-
-    .cover-title {
-        position: absolute;
-        bottom: 20px;
-        left: 25px;
-        color: #fff;
-        text-shadow: 0 3px 10px rgba(0,0,0,0.9);
-    }
-
-    .carousel img {
-        border-radius: 14px;
-    }
-
-    .btn-rounded {
-        border-radius: 30px;
-        padding: 8px 22px;
-    }
-</style>
-
-<div class="page-container">
-
-    <!-- HEADER -->
-    <div class="mb-5">
-        <h1 class="fw-bold">@Model.Title</h1>
-
-        <span class="badge bg-primary event-badge me-2">
-            @Model.CategoryName
-        </span>
-
-        <span class="badge bg-success event-badge">
-            @Model.AvailableSeats Seats Available
-        </span>
-    </div>
-
-    <div class="row g-4">
-
-        <!-- LEFT: EVENT DETAILS -->
-        <div class="col-md-6">
-            <div class="glass-card h-100">
-
-                <div class="position-relative">
-                    <img src="@Model.CoverImageUrl"
-                         class="w-100"
-                         style="height:320px; object-fit:cover;" />
-
-                    <div class="cover-title">
-                        <h3 class="fw-bold">@Model.Title</h3>
-                        <p class="mb-0">@Model.Location</p>
+<!-- Page Header -->
+<div class="organizer-details-hero">
+    <div class="container">
+        <div class="hero-content-organizer">
+            <div class="breadcrumb-nav">
+                <a asp-controller="Organizer" asp-action="MyEvents" class="breadcrumb-link">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to My Events
+                </a>
+            </div>
+            <div class="event-header-info">
+                <div class="event-title-section">
+                    <h1 class="organizer-event-title">@Model.Title</h1>
+                    <div class="event-badges">
+                        <span class="badge-organizer category">
+                            <i class="bi bi-tag-fill"></i>
+                            @Model.CategoryName
+                        </span>
+                        <span class="badge-organizer seats">
+                            <i class="bi bi-people-fill"></i>
+                            @Model.AvailableSeats / @Model.TotalSeats Available
+                        </span>
                     </div>
                 </div>
-
-                <div class="p-4">
-                    <h4 class="section-title mb-3">📌 Event Overview</h4>
-
-                    <p class="text-muted">@Model.Description</p>
-
-                    <div class="row mt-4">
-                        <div class="col-6 mb-2">
-                            <strong>Start Date:</strong><br />
-                            @Model.StartDate.ToString("MMM dd, yyyy")
-                        </div>
-
-                        <div class="col-6 mb-2">
-                            <strong>End Date:</strong><br />
-                            @Model.EndDate.ToString("MMM dd, yyyy")
-                        </div>
-
-                        <div class="col-6 mb-2">
-                            <strong>Total Seats:</strong><br />
-                            @Model.TotalSeats
-                        </div>
-
-                        <div class="col-6 mb-2">
-                            <strong>Available Seats:</strong><br />
-                            @Model.AvailableSeats
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ACTION BUTTONS -->
-                <div class="p-4 border-top d-flex justify-content-between">
-                    <a asp-controller="Organizer"
-                       asp-action="EditEvent"
-                       asp-route-id="@Model.EventId"
-                       class="btn btn-outline-warning btn-rounded">
-                        ✏️ Edit Event
-                    </a>
-
-                    <a asp-controller="Organizer"
-                       asp-action="ViewEventParticipants"
-                       asp-route-id="@Model.EventId"
-                       class="btn btn-outline-success btn-rounded">
-                        👥 View Participants
-                    </a>
-                </div>
-
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- RIGHT: VENUE IMAGES -->
-        <div class="col-md-6">
-            <div class="glass-card h-100 p-4">
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- Left Column: Event Details -->
+        <div class="col-lg-7">
+            <!-- Cover Image Section -->
+            <div class="organizer-card cover-section">
+                <div class="cover-image-wrapper">
+                    <img src="@Model.CoverImageUrl" class="cover-image-org" alt="@Model.Title" />
+                    <div class="cover-overlay">
+                        <div class="cover-info">
+                            <h3 class="cover-event-title">@Model.Title</h3>
+                            <p class="cover-location">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                @Model.Location
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                <h4 class="section-title text-center mb-4">
-                    🏛 Venue Gallery
-                </h4>
+                <!-- Event Overview -->
+                <div class="card-content">
+                    <div class="section-header-org">
+                        <div class="section-icon-org">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </div>
+                        <h4 class="section-title-org">Event Overview</h4>
+                    </div>
+                    <p class="event-description-org">@Model.Description</p>
+                </div>
+            </div>
+
+            <!-- Event Details Grid -->
+            <div class="organizer-card">
+                <div class="section-header-org">
+                    <div class="section-icon-org">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                    <h4 class="section-title-org">Event Information</h4>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-item-org">
+                        <div class="detail-icon-org">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <div class="detail-content-org">
+                            <span class="detail-label-org">Start Date</span>
+                            <span class="detail-value-org">@Model.StartDate.ToString("MMMM dd, yyyy")</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item-org">
+                        <div class="detail-icon-org">
+                            <i class="bi bi-calendar-x"></i>
+                        </div>
+                        <div class="detail-content-org">
+                            <span class="detail-label-org">End Date</span>
+                            <span class="detail-value-org">@Model.EndDate.ToString("MMMM dd, yyyy")</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item-org">
+                        <div class="detail-icon-org">
+                            <i class="bi bi-ticket-perforated-fill"></i>
+                        </div>
+                        <div class="detail-content-org">
+                            <span class="detail-label-org">Total Seats</span>
+                            <span class="detail-value-org">@Model.TotalSeats</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item-org">
+                        <div class="detail-icon-org">
+                            <i class="bi bi-ticket-detailed-fill"></i>
+                        </div>
+                        <div class="detail-content-org">
+                            <span class="detail-label-org">Available Seats</span>
+                            <span class="detail-value-org">@Model.AvailableSeats</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item-org">
+                        <div class="detail-icon-org">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div class="detail-content-org">
+                            <span class="detail-label-org">Location</span>
+                            <span class="detail-value-org">@Model.Location</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item-org">
+                        <div class="detail-icon-org progress-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <div class="detail-content-org">
+                            <span class="detail-label-org">Booking Progress</span>
+                            @{
+                                var bookedSeats = Model.TotalSeats - Model.AvailableSeats;
+                                var progressPercent = ((double)bookedSeats / Model.TotalSeats) * 100;
+                            }
+                            <div class="progress-bar-org">
+                                <div class="progress-fill-org" style="width: @progressPercent%"></div>
+                            </div>
+                            <span class="progress-text">@bookedSeats of @Model.TotalSeats seats booked (@progressPercent.ToString("F0")%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (User.IsInRole("Organizer"))
+            {
+                <!-- Action Buttons -->
+                <div class="organizer-card actions-section">
+                    <div class="section-header-org">
+                        <div class="section-icon-org">
+                            <i class="bi bi-gear-fill"></i>
+                        </div>
+                        <h4 class="section-title-org">Manage Event</h4>
+                    </div>
+
+                    <div class="action-buttons-grid">
+                        <a asp-controller="Organizer"
+                           asp-action="EditEvent"
+                           asp-route-id="@Model.EventId"
+                           class="action-button-org edit">
+                            <i class="bi bi-pencil-square"></i>
+                            <div>
+                                <strong>Edit Event</strong>
+                                <small>Update event details</small>
+                            </div>
+                        </a>
+
+                        <a asp-controller="Organizer"
+                           asp-action="ViewEventParticipants"
+                           asp-route-id="@Model.EventId"
+                           class="action-button-org participants">
+                            <i class="bi bi-people-fill"></i>
+                            <div>
+                                <strong>View Participants</strong>
+                                <small>See registered attendees</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Right Column: Venue Gallery -->
+        <div class="col-lg-5">
+            <div class="organizer-card venue-section sticky-venue">
+                <div class="section-header-org">
+                    <div class="section-icon-org venue">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <h4 class="section-title-org">Venue Gallery</h4>
+                </div>
 
                 @if (Model.VenueImages != null && Model.VenueImages.Any())
                 {
-                    <div id="venueCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div id="venueCarousel" class="carousel slide venue-carousel-org" data-bs-ride="carousel">
+                        <!-- Indicators -->
+                        <div class="carousel-indicators-custom">
+                            @for (int i = 0; i < Model.VenueImages.Count; i++)
+                            {
+                                <button type="button"
+                                        data-bs-target="#venueCarousel"
+                                        data-bs-slide-to="@i"
+                                        class="@(i == 0 ? "active" : "")"
+                                        aria-current="@(i == 0 ? "true" : "false")"
+                                        aria-label="Slide @(i + 1)"></button>
+                            }
+                        </div>
+
+                        <!-- Images -->
                         <div class="carousel-inner">
                             @for (int i = 0; i < Model.VenueImages.Count; i++)
                             {
                                 <div class="carousel-item @(i == 0 ? "active" : "")">
                                     <img src="@Model.VenueImages[i]"
-                                         class="d-block w-100"
-                                         style="height:420px; object-fit:cover;" />
+                                         class="venue-image-org"
+                                         alt="Venue Image @(i + 1)" />
+                                    <div class="carousel-caption-custom">
+                                        <p>Venue View @(i + 1) of @Model.VenueImages.Count</p>
+                                    </div>
                                 </div>
                             }
                         </div>
 
-                        <button class="carousel-control-prev" type="button"
-                                data-bs-target="#venueCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
+                        <!-- Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#venueCarousel" data-bs-slide="prev">
+                            <div class="carousel-control-icon">
+                                <i class="bi bi-chevron-left"></i>
+                            </div>
+                            <span class="visually-hidden">Previous</span>
                         </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#venueCarousel" data-bs-slide="next">
+                            <div class="carousel-control-icon">
+                                <i class="bi bi-chevron-right"></i>
+                            </div>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
 
-                        <button class="carousel-control-next" type="button"
-                                data-bs-target="#venueCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
+                    <!-- Image Count -->
+                    <div class="image-count-badge">
+                        <i class="bi bi-images"></i>
+                        @Model.VenueImages.Count @(Model.VenueImages.Count == 1 ? "Image" : "Images")
                     </div>
                 }
                 else
                 {
-                    <div class="alert alert-light text-center rounded-4 border">
-                        No venue images uploaded yet.
+                    <div class="no-venue-images">
+                        <i class="bi bi-image"></i>
+                        <p>No venue images uploaded yet</p>
+                        <small>Add images to showcase your venue</small>
                     </div>
                 }
             </div>
-        </div>
 
+            <!-- Quick Stats Card -->
+            <div class="organizer-card stats-card">
+                <div class="section-header-org">
+                    <div class="section-icon-org stats">
+                        <i class="bi bi-bar-chart-fill"></i>
+                    </div>
+                    <h4 class="section-title-org">Quick Stats</h4>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item-org">
+                        <div class="stat-icon-org booked">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">@(Model.TotalSeats - Model.AvailableSeats)</span>
+                            <span class="stat-label">Booked</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-item-org">
+                        <div class="stat-icon-org available">
+                            <i class="bi bi-ticket-perforated"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">@Model.AvailableSeats</span>
+                            <span class="stat-label">Available</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-item-org">
+                        <div class="stat-icon-org total">
+                            <i class="bi bi-grid-3x3-gap-fill"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">@Model.TotalSeats</span>
+                            <span class="stat-label">Total Capacity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    /* Hero Section */
+    .organizer-details-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem 0 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .organizer-details-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none"/><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+            opacity: 0.3;
+        }
+
+    .hero-content-organizer {
+        position: relative;
+        z-index: 2;
+        color: white;
+    }
+
+    .breadcrumb-nav {
+        margin-bottom: 1.5rem;
+    }
+
+    .breadcrumb-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+        .breadcrumb-link:hover {
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .breadcrumb-link i {
+            font-size: 1.1rem;
+        }
+
+    .event-title-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .organizer-event-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .event-badges {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .badge-organizer {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+        .badge-organizer.category {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .badge-organizer.seats {
+            background: rgba(72, 187, 120, 0.3);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .badge-organizer i {
+            font-size: 1.1rem;
+        }
+
+    /* Cards */
+    .organizer-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        border: 2px solid #e2e8f0;
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .card-content {
+        padding: 2rem;
+    }
+
+    /* Cover Image Section */
+    .cover-section {
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .cover-image-wrapper {
+        position: relative;
+        height: 350px;
+        overflow: hidden;
+    }
+
+    .cover-image-org {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .cover-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+        display: flex;
+        align-items: flex-end;
+        padding: 2rem;
+    }
+
+    .cover-info {
+        color: white;
+    }
+
+    .cover-event-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .cover-location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.125rem;
+        margin: 0;
+        opacity: 0.95;
+    }
+
+        .cover-location i {
+            font-size: 1.25rem;
+        }
+
+    /* Section Headers */
+    .section-header-org {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-icon-org {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+        .section-icon-org.venue {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .section-icon-org.stats {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+
+        .section-icon-org.progress-icon {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+    .section-title-org {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #2d3748;
+        margin: 0;
+    }
+
+    /* Event Description */
+    .event-description-org {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: #4a5568;
+        margin: 0;
+    }
+
+    /* Details Grid */
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+
+    .detail-item-org {
+        display: flex;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        border-radius: 15px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+        .detail-item-org:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+    .detail-icon-org {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .detail-content-org {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+    }
+
+    .detail-label-org {
+        font-size: 0.875rem;
+        color: #718096;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value-org {
+        font-size: 1.125rem;
+        color: #2d3748;
+        font-weight: 800;
+    }
+
+    /* Progress Bar */
+    .progress-bar-org {
+        width: 100%;
+        height: 10px;
+        background: #e2e8f0;
+        border-radius: 50px;
+        overflow: hidden;
+        margin: 0.5rem 0;
+    }
+
+    .progress-fill-org {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50px;
+        transition: width 0.6s ease;
+    }
+
+    .progress-text {
+        font-size: 0.875rem;
+        color: #718096;
+        font-weight: 600;
+    }
+
+    /* Action Buttons */
+    .actions-section {
+        padding: 2rem;
+    }
+
+    .action-buttons-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .action-button-org {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+        .action-button-org i {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .action-button-org strong {
+            display: block;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .action-button-org small {
+            color: inherit;
+            opacity: 0.8;
+        }
+
+        .action-button-org.edit {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #2d3748;
+        }
+
+            .action-button-org.edit:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+            }
+
+        .action-button-org.participants {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+            .action-button-org.participants:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+            }
+
+    /* Venue Section */
+    .venue-section {
+        padding: 2rem;
+    }
+
+    .sticky-venue {
+        position: sticky;
+        top: 100px;
+    }
+
+    .venue-carousel-org {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+    }
+
+    .venue-image-org {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .carousel-indicators-custom {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 2;
+    }
+
+        .carousel-indicators-custom button {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .carousel-indicators-custom button.active {
+                background: white;
+                width: 30px;
+                border-radius: 5px;
+            }
+
+    .carousel-caption-custom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+        padding: 2rem 1rem 1rem;
+        text-align: center;
+    }
+
+        .carousel-caption-custom p {
+            margin: 0;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+    .carousel-control-icon {
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #667eea;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .carousel-control-prev:hover .carousel-control-icon,
+    .carousel-control-next:hover .carousel-control-icon {
+        background: white;
+        transform: scale(1.1);
+    }
+
+    .image-count-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        padding: 0.75rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 700;
+        color: #4a5568;
+        font-size: 0.95rem;
+    }
+
+        .image-count-badge i {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+    .no-venue-images {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        border-radius: 15px;
+        color: #a0aec0;
+    }
+
+        .no-venue-images i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-venue-images p {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-venue-images small {
+            color: #a0aec0;
+        }
+
+    /* Stats Card */
+    .stats-card {
+        padding: 2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .stat-item-org {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+        .stat-item-org:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+    .stat-icon-org {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+        .stat-icon-org.booked {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .stat-icon-org.available {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+
+        .stat-icon-org.total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #2d3748;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: #718096;
+        font-weight: 600;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 991px) {
+        .organizer-event-title {
+            font-size: 2rem;
+        }
+
+        .sticky-venue {
+            position: static;
+        }
+
+        .details-grid,
+        .action-buttons-grid,
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .organizer-details-hero {
+            padding: 1.5rem 0 2rem;
+        }
+
+        .organizer-event-title {
+            font-size: 1.75rem;
+        }
+
+        .cover-image-wrapper {
+            height: 250px;
+        }
+
+        .cover-event-title {
+            font-size: 1.5rem;
+        }
+
+        .venue-image-org {
+            height: 300px;
+        }
+
+        .details-grid,
+        .card-content,
+        .actions-section,
+        .venue-section,
+        .stats-card {
+            padding: 1.5rem;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .event-badges {
+            flex-direction: column;
+        }
+
+        .badge-organizer {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>

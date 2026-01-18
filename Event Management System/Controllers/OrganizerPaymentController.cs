@@ -1,12 +1,14 @@
 ﻿using Event_Management_System.Configuration;
 using Event_Management_System.DTOs;
 using Event_Management_System.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
 namespace Event_Management_System.Controllers
 {
+    [Authorize(Roles ="Organizer")]
     public class OrganizerPaymentController : Controller
     {
         private readonly IOrganizerPaymentService _paymentService;
