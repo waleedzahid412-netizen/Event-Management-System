@@ -46,9 +46,9 @@ jobs:
     - name: Azure Login
       uses: azure/login@v2
       with:
-        client-id: ${{ vars.Eventora_demo_waleed_CLIENT_ID_5D5C }}
-        tenant-id: ${{ vars.Eventora_demo_waleed_TENANT_ID_94A5 }}
-        subscription-id: ${{ vars.Eventora_demo_waleed_SUBSCRIPTION_ID_94A5 }}
+        client-id: ${{ vars.Eventora_demo_waleed_CLIENT_ID_A1E7 }}
+        tenant-id: ${{ vars.Eventora_demo_waleed_TENANT_ID_A1E7 }}
+        subscription-id: ${{ vars.Eventora_demo_waleed_SUBSCRIPTION_ID_A1E7 }}
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
