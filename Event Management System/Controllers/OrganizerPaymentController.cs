@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Event_Management_System.Controllers
 {
-    [Authorize(Roles ="Organizer")]
+    [Authorize(Roles ="Customer")]
     public class OrganizerPaymentController : Controller
     {
         private readonly IOrganizerPaymentService _paymentService;
@@ -52,10 +52,10 @@ namespace Event_Management_System.Controllers
                 PaymentDate = DateTime.UtcNow
             };
 
-            // Generate receipt PDF
+            
             var receiptPdf = _receiptService.GenerateOrganizerReceiptPdf(receiptDto);
 
-            // Send email
+           
             await _emailService.SendOrganizerApplicationEmailAsync(
                 receiptDto.UserEmail,
                 payment.OrganizerApplication,
