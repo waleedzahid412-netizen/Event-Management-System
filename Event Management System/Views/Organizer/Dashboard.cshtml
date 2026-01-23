@@ -57,22 +57,6 @@
                 height: 6px;
             }
 
-        .stat-card.card-1::before {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .stat-card.card-2::before {
-            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .stat-card.card-3::before {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .stat-card.card-4::before {
-            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
-        }
-
     .stat-icon {
         width: 60px;
         height: 60px;
@@ -82,26 +66,8 @@
         justify-content: center;
         font-size: 1.75rem;
         margin-bottom: 1rem;
-    }
-
-    .stat-card.card-1 .stat-icon {
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
         color: #667eea;
-    }
-
-    .stat-card.card-2 .stat-icon {
-        background: linear-gradient(135deg, rgba(240, 147, 251, 0.15) 0%, rgba(245, 87, 108, 0.15) 100%);
-        color: #f5576c;
-    }
-
-    .stat-card.card-3 .stat-icon {
-        background: linear-gradient(135deg, rgba(79, 172, 254, 0.15) 0%, rgba(0, 242, 254, 0.15) 100%);
-        color: #4facfe;
-    }
-
-    .stat-card.card-4 .stat-icon {
-        background: linear-gradient(135deg, rgba(67, 233, 123, 0.15) 0%, rgba(56, 249, 215, 0.15) 100%);
-        color: #43e97b;
     }
 
     .stat-card .card-body {
@@ -134,56 +100,41 @@
 
     .action-btn {
         border: none;
-        border-radius: 12px;
-        padding: 1rem 1.75rem;
+        border-radius: 16px;
+        padding: 2.5rem 1.5rem;
         font-size: 1rem;
         font-weight: 600;
         transition: all 0.3s ease;
-        display: inline-flex;
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-        .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-    .btn-primary.action-btn {
+        justify-content: center;
+        gap: 1rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        height: 200px;
+        text-align: center;
+        text-decoration: none;
+        width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
     }
 
-        .btn-primary.action-btn:hover {
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.3);
+            text-decoration: none;
             background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+            color: white;
         }
 
-    .btn-secondary.action-btn {
-        background: linear-gradient(135deg, #868CFF 0%, #4318FF 100%);
-        color: white;
-    }
-
-        .btn-secondary.action-btn:hover {
-            background: linear-gradient(135deg, #7178ee 0%, #3610e8 100%);
+        .action-btn .btn-icon {
+            font-size: 3rem;
+            line-height: 1;
         }
 
-    .btn-success.action-btn {
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        color: white;
-    }
-
-        .btn-success.action-btn:hover {
-            background: linear-gradient(135deg, #32d86a 0%, #27e8c6 100%);
-        }
-
-    .btn-info.action-btn {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        color: white;
-    }
-
-        .btn-info.action-btn:hover {
-            background: linear-gradient(135deg, #3e9bed 0%, #00e1ed 100%);
+        .action-btn .btn-text {
+            font-size: 1rem;
+            line-height: 1.4;
         }
 
     .section-title {
@@ -191,6 +142,32 @@
         font-weight: 700;
         color: #1a1a2e;
         margin-bottom: 1.5rem;
+    }
+
+    @@media (max-width: 1400px) {
+        .action-btn {
+            padding: 2rem 1rem;
+            font-size: 0.9rem;
+        }
+
+            .action-btn .btn-icon {
+                font-size: 2.5rem;
+            }
+
+            .action-btn .btn-text {
+                font-size: 0.9rem;
+            }
+    }
+
+    @@media (max-width: 1200px) {
+        .action-btn {
+            height: 180px;
+            padding: 1.5rem 1rem;
+        }
+
+            .action-btn .btn-icon {
+                font-size: 2rem;
+            }
     }
 
     @@media (max-width: 768px) {
@@ -203,8 +180,7 @@
         }
 
         .action-btn {
-            width: 100%;
-            justify-content: center;
+            height: 160px;
         }
     }
 </style>
@@ -218,7 +194,7 @@
 <!-- Stats Section -->
 <div class="row mb-5 g-4">
     <div class="col-md-6 col-lg-3">
-        <div class="card stat-card card-1">
+        <div class="card stat-card">
             <div class="card-body">
                 <div class="stat-icon">📊</div>
                 <div class="stat-label">Total Events</div>
@@ -227,7 +203,7 @@
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card stat-card card-2">
+        <div class="card stat-card">
             <div class="card-body">
                 <div class="stat-icon">📅</div>
                 <div class="stat-label">Upcoming Events</div>
@@ -236,7 +212,7 @@
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card stat-card card-3">
+        <div class="card stat-card">
             <div class="card-body">
                 <div class="stat-icon">👥</div>
                 <div class="stat-label">Total Registrations</div>
@@ -245,7 +221,7 @@
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card stat-card card-4">
+        <div class="card stat-card">
             <div class="card-body">
                 <div class="stat-icon">✨</div>
                 <div class="stat-label">Active Events</div>
@@ -258,28 +234,36 @@
 <!-- Action Buttons -->
 <div class="dashboard-actions">
     <h2 class="section-title">Quick Actions</h2>
-    <div class="d-flex flex-wrap gap-3">
-        <a asp-controller="Event" asp-action="CreateEvent" class="btn btn-primary btn-lg action-btn">
-            <span>➕</span>
-            <span>Create New Event</span>
-        </a>
-        <a asp-controller="Event" asp-action="OrganizedEvents" class="btn btn-secondary btn-lg action-btn">
-            <span>📋</span>
-            <span>Organized Events</span>
-        </a>
-        <a asp-controller="Event" asp-action="BrowseEvents" class="btn btn-success btn-lg action-btn">
-            <span>👥</span>
-            <span>Register For an Event</span>
-        </a>
-        <a asp-controller="Event" asp-action="UserEvents" class="btn btn-success btn-lg action-btn">
-            <span>👥</span>
-            <span>Registered Events</span>
-        </a>
-        <a asp-controller="Organizer" asp-action="AnalyticsDashboard" class="btn btn-success btn-lg action-btn">
-            <span>👥</span>
-            <span>View Analytics</span>
-        </a>
-
-
+    <div class="row g-3">
+        <div class="col">
+            <a asp-controller="Event" asp-action="CreateEvent" class="action-btn">
+                <span class="btn-icon">➕</span>
+                <span class="btn-text">Create New Event</span>
+            </a>
+        </div>
+        <div class="col">
+            <a asp-controller="Event" asp-action="OrganizedEvents" class="action-btn">
+                <span class="btn-icon">📋</span>
+                <span class="btn-text">Organized Events</span>
+            </a>
+        </div>
+        <div class="col">
+            <a asp-controller="Event" asp-action="BrowseEvents" class="action-btn">
+                <span class="btn-icon">🔍</span>
+                <span class="btn-text">Register For an Event</span>
+            </a>
+        </div>
+        <div class="col">
+            <a asp-controller="Event" asp-action="UserEvents" class="action-btn">
+                <span class="btn-icon">📝</span>
+                <span class="btn-text">Registered Events</span>
+            </a>
+        </div>
+        <div class="col">
+            <a asp-controller="Organizer" asp-action="AnalyticsDashboard" class="action-btn">
+                <span class="btn-icon">📈</span>
+                <span class="btn-text">View Analytics</span>
+            </a>
+        </div>
     </div>
 </div>

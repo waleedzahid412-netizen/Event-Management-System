@@ -1,67 +1,133 @@
 ﻿@using Event_Management_System.ViewModels
 
 <style>
-    /* Dashboard Container */
     .analytics-dashboard {
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         min-height: 100vh;
-        padding: 2rem;
+        padding: 2rem 0;
     }
 
-    /* Page Header */
-    .dashboard-header {
-        margin-bottom: 2rem;
-    }
-
-    .dashboard-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #2d3748;
-        margin-bottom: 0.5rem;
-    }
-
-    .dashboard-subtitle {
-        color: #718096;
-        font-size: 1.1rem;
-    }
-
-    /* Filter Buttons */
-    .filter-section {
+    .analytics-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
         margin-bottom: 2.5rem;
+        color: white;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
     }
 
-    .btn-group .btn {
-        padding: 0.75rem 1.5rem;
+        .analytics-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    /* Filter Section */
+    .filter-wrapper {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-label {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .filter-label::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+    .filter-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.875rem 2rem;
+        border: 2px solid #e8e8f5;
+        border-radius: 12px;
+        background: white;
+        color: #64748b;
         font-weight: 600;
         font-size: 0.95rem;
-        border: 2px solid #667eea;
+        text-decoration: none;
         transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
-        .btn-group .btn:hover {
+        .filter-btn:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            color: #667eea;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            text-decoration: none;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
-        .btn-group .btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            color: white;
-        }
+            .filter-btn.active:hover {
+                background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+                color: white;
+            }
 
     /* Summary Cards */
-    .summary-cards {
-        margin-bottom: 1rem;
-    }
-
     .stat-card {
         background: white;
         border-radius: 16px;
-        padding: 2rem;
+        padding: 1.75rem;
         text-align: center;
         transition: all 0.3s ease;
         border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
         position: relative;
         overflow: hidden;
     }
@@ -78,25 +144,23 @@
 
         .stat-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
         }
 
     .stat-label {
         font-size: 0.95rem;
         font-weight: 600;
-        color: #718096;
+        color: #64748b;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-bottom: 0.75rem;
     }
 
     .stat-value {
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #1a1a2e;
+        line-height: 1;
         margin: 0;
     }
 
@@ -104,157 +168,216 @@
     .chart-card {
         background: white;
         border-radius: 16px;
-        padding: 1.5rem;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-        transition: all 0.3s ease;
+        padding: 1.75rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
         height: 450px;
         display: flex;
         flex-direction: column;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
 
-        .chart-card:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-    .chart-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #2d3748;
-        margin-bottom: 1.5rem;
-        text-align: center;
+        .chart-card:hover::before {
+            opacity: 1;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.15);
+        }
+
+    .chart-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
         padding-bottom: 1rem;
-        border-bottom: 2px solid #e2e8f0;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .chart-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: #667eea;
+        flex-shrink: 0;
+    }
+
+    .chart-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0;
     }
 
     .chart-container {
         flex: 1;
         position: relative;
         min-height: 0;
-
     }
 
-        .chart-container canvas {
-            max-height: 100%;
-          
-        }
-
-    /* Responsive adjustments */
     @@media (max-width: 768px) {
-        .analytics-dashboard {
-            padding: 1rem;
+        .analytics-hero {
+            padding: 2rem 1.5rem;
         }
 
-        .dashboard-title {
+        .hero-title {
             font-size: 2rem;
         }
 
         .stat-value {
-            font-size: 2.5rem;
+            font-size: 2rem;
         }
 
         .chart-card {
             height: 350px;
-            margin-bottom: 1.5rem;
+        }
+
+        .filter-btn {
+            flex: 1;
+            justify-content: center;
+            min-width: calc(50% - 0.375rem);
         }
     }
 </style>
 
 <div class="analytics-dashboard">
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">Analytics Dashboard</h1>
-        <p class="dashboard-subtitle">Track your event performance and insights</p>
-    </div>
-
-    <!-- Filter Buttons -->
-    <div class="filter-section">
-        <div class="btn-group" role="group">
-            <a asp-action="AnalyticsDashboard" asp-route-filter="Week"
-               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Week ? "active" : "")">
-                Last 7 Days
-            </a>
-            <a asp-action="AnalyticsDashboard" asp-route-filter="Month"
-               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Month ? "active" : "")">
-                Last 30 Days
-            </a>
-            <a asp-action="AnalyticsDashboard" asp-route-filter="Year"
-               class="btn btn-outline-primary @(Model.SelectedFilter == DateFilterType.Year ? "active" : "")">
-                Last 12 Months
-            </a>
-        </div>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="row g-4">
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-label">Total Events</div>
-                <h3 class="stat-value">@Model.TotalEvents</h3>
+    <div class="container">
+        <!-- Hero Header -->
+        <div class="analytics-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">📊 Analytics Dashboard</h1>
+                <p class="hero-subtitle">Track your event performance and insights</p>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-label">Total Participants</div>
-                <h3 class="stat-value">@Model.TotalParticipants</h3>
+        <!-- Filters -->
+        <div class="filter-wrapper">
+            <div class="filter-label">
+                📅 Time Period
+            </div>
+            <div class="filter-buttons">
+                <a asp-action="AnalyticsDashboard" asp-route-filter="Week"
+                   class="filter-btn @(Model.SelectedFilter == DateFilterType.Week ? "active" : "")">
+                    <span>📆</span>
+                    <span>Last 7 Days</span>
+                </a>
+
+                <a asp-action="AnalyticsDashboard" asp-route-filter="Month"
+                   class="filter-btn @(Model.SelectedFilter == DateFilterType.Month ? "active" : "")">
+                    <span>📅</span>
+                    <span>Last 30 Days</span>
+                </a>
+
+                <a asp-action="AnalyticsDashboard" asp-route-filter="Year"
+                   class="filter-btn @(Model.SelectedFilter == DateFilterType.Year ? "active" : "")">
+                    <span>📊</span>
+                    <span>Last 12 Months</span>
+                </a>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-label">Average Rating</div>
-                <h3 class="stat-value">@Model.AverageRating</h3>
+        <!-- Summary Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="stat-label">Total Events</div>
+                    <h3 class="stat-value">@Model.TotalEvents</h3>
+                </div>
             </div>
-        </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="stat-card">
-                <div class="stat-label">Total Earnings</div>
-                <h3 class="stat-value">@Model.TotalEarnings</h3>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="stat-label">Total Participants</div>
+                    <h3 class="stat-value">@Model.TotalParticipants</h3>
+                </div>
             </div>
-        </div>
-    </div>
 
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="stat-label">Average Rating</div>
+                    <h3 class="stat-value">@Model.AverageRating</h3>
+                </div>
+            </div>
 
-    <!-- Charts Section -->
-    <div class="row g-4 mt-5">
-
-        <!-- Events by Status Pie -->
-        <div class="col-md-6">
-            <div class="chart-card">
-                <h5 class="chart-title">Events by Status</h5>
-                <div class="chart-container">
-                    <canvas id="eventsByStatusChart"></canvas>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="stat-label">Total Earnings</div>
+                    <h3 class="stat-value">@Model.TotalEarnings</h3>
                 </div>
             </div>
         </div>
 
-        <!-- Participants per Event Bar -->
-        <div class="col-md-6">
-            <div class="chart-card">
-                <h5 class="chart-title">Participants per Event</h5>
-                <div class="chart-container">
-                    <canvas id="participantsPerEventChart"></canvas>
+        <!-- Charts Grid -->
+        <div class="row g-4">
+            <!-- Events by Status -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">🎯</div>
+                        <h5 class="chart-title">Events by Status</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="eventsByStatusChart"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Events Created Over Time Line -->
-        <div class="col-md-6">
-            <div class="chart-card">
-                <h5 class="chart-title">Events Created Over Time</h5>
-                <div class="chart-container">
-                    <canvas id="eventsCreatedChart"></canvas>
+            <!-- Participants per Event -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">👥</div>
+                        <h5 class="chart-title">Participants per Event</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="participantsPerEventChart"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Average Rating per Event Bar -->
-        <div class="col-md-6">
-            <div class="chart-card">
-                <h5 class="chart-title">Average Rating per Event</h5>
-                <div class="chart-container">
-                    <canvas id="averageRatingChart"></canvas>
+            <!-- Events Created Over Time -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">📈</div>
+                        <h5 class="chart-title">Events Created Over Time</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="eventsCreatedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Rating per Event -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-icon">⭐</div>
+                        <h5 class="chart-title">Average Rating per Event</h5>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="averageRatingChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -263,230 +386,200 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
-        // Enhanced color palette
-        const chartColors = {
-            primary: ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'],
-            gradients: [
-                'rgba(102, 126, 234, 0.8)',
-                'rgba(118, 75, 162, 0.8)',
-                'rgba(240, 147, 251, 0.8)',
-                'rgba(79, 172, 254, 0.8)',
-                'rgba(67, 233, 123, 0.8)',
-                'rgba(250, 112, 154, 0.8)'
-            ]
+        // --- 1. UTILITY FUNCTIONS ---
+        const truncateLabel = (label, maxLength = 15) => {
+            if (label.length > maxLength) return label.substring(0, maxLength) + '...';
+            return label;
         };
 
-        // Enhanced common chart options
-        const commonOptions = {
+        const createGradient = (ctx, colorStart, colorEnd) => {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, colorStart);
+            gradient.addColorStop(1, colorEnd);
+            return gradient;
+        };
+
+        // --- 2. PROFESSIONAL COLOR PALETTE ---
+        const colors = {
+            primary:     '#667eea',
+            primaryFade: 'rgba(102, 126, 234, 0.15)',
+            secondary:   '#764ba2',
+            success:     '#43e97b',
+            successFade: 'rgba(67, 233, 123, 0.15)',
+            warning:     '#f59e0b',
+            warningFade: 'rgba(245, 158, 11, 0.15)',
+            danger:      '#f5576c',
+            info:        '#4facfe',
+            infoFade:    'rgba(79, 172, 254, 0.15)',
+            text:        '#64748b',
+            grid:        '#f1f5f9'
+        };
+
+        // --- 3. GLOBAL CHART DEFAULTS ---
+        Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+        Chart.defaults.color = colors.text;
+
+        const baseChartOptions = {
             responsive: true,
             maintainAspectRatio: false,
+            layout: { padding: 10 },
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        font: {
-                            size: 13,
-                            family: "'Inter', 'Segoe UI', sans-serif",
-                            weight: '600'
-                        },
-                        padding: 15,
-                        color: '#4a5568',
-                        usePointStyle: true,
-                        pointStyle: 'circle'
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1a1a2e',
+                    padding: 14,
+                    cornerRadius: 10,
+                    titleFont: { size: 14, weight: 700 },
+                    bodyFont: { size: 13, weight: 500 },
+                    displayColors: false,
+                    boxPadding: 6,
+                    callbacks: {
+                        title: (context) => context[0].label
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        maxRotation: 0,
+                        autoSkip: false,
+                        font: { size: 11, weight: 600 },
+                        color: colors.text,
+                        callback: function(value) {
+                            return truncateLabel(this.getLabelForValue(value));
+                        }
                     }
                 },
-                tooltip: {
-                    enabled: true,
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleFont: {
-                        size: 14,
-                        weight: 'bold'
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: colors.grid,
+                        borderDash: [5, 5],
+                        drawBorder: false
                     },
-                    bodyFont: {
-                        size: 13
-                    },
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                    borderWidth: 1,
-                    cornerRadius: 8
+                    ticks: {
+                        padding: 10,
+                        font: { size: 11, weight: 600 },
+                        color: colors.text
+                    }
                 }
             }
         };
 
-        // Events by Status Pie Chart
-        new Chart(document.getElementById('eventsByStatusChart').getContext('2d'), {
+        // --- 4. CHART INITIALIZATION ---
+
+        // A. Events By Status (Doughnut)
+        new Chart(document.getElementById('eventsByStatusChart'), {
             type: 'doughnut',
             data: {
                 labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsByStatus.Keys)),
                 datasets: [{
                     data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsByStatus.Values)),
-                    backgroundColor: chartColors.gradients,
+                    backgroundColor: [colors.primary, colors.success, colors.warning, colors.danger],
                     borderWidth: 3,
                     borderColor: '#ffffff',
-                    hoverOffset: 15
+                    hoverOffset: 12,
+                    hoverBorderWidth: 4
                 }]
             },
             options: {
-                ...commonOptions,
-                cutout: '65%',
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    ...commonOptions.plugins,
                     legend: {
-                        ...commonOptions.plugins.legend,
-                        position: 'right'
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { size: 13, weight: 600 },
+                            color: colors.text
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1a1a2e',
+                        padding: 14,
+                        cornerRadius: 10,
+                        titleFont: { size: 14, weight: 700 },
+                        bodyFont: { size: 13, weight: 500 }
                     }
-                }
+                },
+                cutout: '65%'
             }
         });
 
-        // Participants per Event Bar Chart
-        new Chart(document.getElementById('participantsPerEventChart').getContext('2d'), {
+        // B. Participants Per Event (Bar)
+        new Chart(document.getElementById('participantsPerEventChart'), {
             type: 'bar',
             data: {
                 labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ParticipantsPerEvent.Keys)),
                 datasets: [{
                     label: 'Participants',
                     data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ParticipantsPerEvent.Values)),
-                    backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                    borderColor: '#667eea',
-                    borderWidth: 2,
+                    backgroundColor: colors.primary,
                     borderRadius: 8,
-                    hoverBackgroundColor: '#764ba2'
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8,
+                    hoverBackgroundColor: colors.secondary
                 }]
             },
-            options: {
-                ...commonOptions,
-                plugins: {
-                    ...commonOptions.plugins,
-                    legend: { display: false },
-                    tooltip: {
-                        ...commonOptions.plugins.tooltip,
-                        callbacks: {
-                            label: ctx => `${ctx.raw} participants`
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            font: { size: 12, weight: '600' },
-                            color: '#4a5568'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            font: { size: 12, weight: '600' },
-                            color: '#4a5568'
-                        }
-                    }
-                }
-            }
+            options: baseChartOptions
         });
 
-        // Events Created Over Time Line Chart
-        new Chart(document.getElementById('eventsCreatedChart').getContext('2d'), {
+        // C. Events Created Over Time (Line with Gradient)
+        const eventsCreatedCtx = document.getElementById('eventsCreatedChart').getContext('2d');
+        new Chart(eventsCreatedCtx, {
             type: 'line',
             data: {
                 labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsCreatedOverTime.Keys)),
                 datasets: [{
-                    label: 'Events Created',
+                    label: 'Events',
                     data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EventsCreatedOverTime.Values)),
-                    fill: true,
-                    backgroundColor: 'rgba(118, 75, 162, 0.1)',
-                    borderColor: '#764ba2',
+                    borderColor: colors.secondary,
                     borderWidth: 3,
+                    backgroundColor: createGradient(eventsCreatedCtx, 'rgba(118, 75, 162, 0.15)', 'rgba(255,255,255,0)'),
+                    fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#764ba2',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: '#667eea'
+                    pointRadius: 5,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: colors.secondary,
+                    pointBorderWidth: 3,
+                    pointHoverRadius: 7,
+                    pointHoverBorderWidth: 4
                 }]
             },
-            options: {
-                ...commonOptions,
-                plugins: {
-                    ...commonOptions.plugins,
-                    legend: { display: false }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            font: { size: 12, weight: '600' },
-                            color: '#4a5568'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            font: { size: 12, weight: '600' },
-                            color: '#4a5568',
-                            stepSize: 1
-                        }
-                    }
-                }
-            }
+            options: baseChartOptions
         });
 
-        // Average Rating per Event Bar Chart
-        new Chart(document.getElementById('averageRatingChart').getContext('2d'), {
+        // D. Average Rating Per Event (Bar)
+        new Chart(document.getElementById('averageRatingChart'), {
             type: 'bar',
             data: {
                 labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AverageRatingPerEvent.Keys)),
                 datasets: [{
-                    label: 'Average Rating',
+                    label: 'Rating',
                     data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AverageRatingPerEvent.Values)),
-                    backgroundColor: 'rgba(79, 172, 254, 0.8)',
-                    borderColor: '#4facfe',
-                    borderWidth: 2,
+                    backgroundColor: colors.info,
                     borderRadius: 8,
-                    hoverBackgroundColor: '#43e97b'
+                    barPercentage: 0.6,
+                    hoverBackgroundColor: colors.primary
                 }]
             },
             options: {
-                ...commonOptions,
-                plugins: {
-                    ...commonOptions.plugins,
-                    legend: { display: false },
-                    tooltip: {
-                        ...commonOptions.plugins.tooltip,
-                        callbacks: {
-                            label: ctx => `Rating: ${ctx.raw.toFixed(1)} ⭐`
-                        }
-                    }
-                },
+                ...baseChartOptions,
                 scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            font: { size: 12, weight: '600' },
-                            color: '#4a5568'
-                        }
-                    },
+                    ...baseChartOptions.scales,
                     y: {
-                        beginAtZero: true,
+                        ...baseChartOptions.scales.y,
                         max: 5,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)',
-                            drawBorder: false
-                        },
                         ticks: {
-                            font: { size: 12, weight: '600' },
-                            color: '#4a5568',
-                            stepSize: 1
+                            ...baseChartOptions.scales.y.ticks,
+                            stepSize: 1,
+                            callback: function(value) {
+                                return value + ' ⭐';
+                            }
                         }
                     }
                 }
