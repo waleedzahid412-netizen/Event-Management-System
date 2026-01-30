@@ -93,32 +93,7 @@ namespace Event_Management_System.Services.Implementations
             await _eventrepo.SaveChangesAsync();
             return true;
         }
-        public async Task<bool> SendCancelEventEmailToTheParticipantsAsync(int eventid, string cancelreason)
-        {
-            var eventdetails = await _eventrepo.GetEventDetailsByIdAsync(eventid);
-            if (eventdetails == null)
-            {
-                return false;
-            }
-            var uniqueEmails = eventdetails.Registrations
-                              .Where(r => r.User != null && !string.IsNullOrEmpty(r.User.Email))
-                              .Select(r => r.User.Email)
-                              .Distinct()
-                              .ToList();
-            try
-            {
-                foreach (var email in uniqueEmails)
-                {
-                    await _emailService.SendEventCancellationEmailAsync(email, eventdetails, cancelreason);
-                }
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+ 
         public async Task<List<Event>> GetEventsByOrganizerAsync(int organizerId, string status)
         {
             if (status == "upcoming")

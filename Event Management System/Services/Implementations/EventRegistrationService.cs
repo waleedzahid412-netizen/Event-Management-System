@@ -1,8 +1,10 @@
 ﻿using Event_Management_System.DTOs;
+using Event_Management_System.Jobs;
 using Event_Management_System.Models.Entities;
 using Event_Management_System.Repositories.Interfaces;
 using Event_Management_System.Services.Interfaces;
 using Event_Management_System.ViewModels;
+using Hangfire;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Event_Management_System.Services.Implementations
@@ -28,16 +30,16 @@ namespace Event_Management_System.Services.Implementations
         }
         public async Task<bool> RegisterCustomerAsync(int userId, EventRegistrationDTO model, string userEmail)
         {
-            // 1️⃣ Load event
+
             var ev = await _eventService.GetCustomerEventDetailsAsync(model.EventId);
             if (ev == null)
                 return false;
 
-            // 2️⃣ Check available seats
+
             if (ev.AvailableSeats < model.NumberOfTickets)
                 throw new InvalidOperationException("Not enough available seats for the event.");
 
-            // 3️⃣ Begin transaction
+
             var transaction = await _eventRepo.BeginTransactionAsync();
             try
             {
@@ -54,29 +56,27 @@ namespace Event_Management_System.Services.Implementations
                         TicketNumber = Guid.NewGuid().ToString().Substring(0, 8).ToUpper()
                     });
                 }
-
-                // 5️⃣ Add registrations to DB
                 await _registrationRepo.AddRegistrationAsync(registrations);
                 var even =await _eventRepo.GetEventDetailsForCustomerByIdAsync(model.EventId);
                 if (even == null) {
                     throw new Exception("Event is mull");
                 }
-                // 6️⃣ Update event available seats
+
                 even.AvailableSeats -= model.NumberOfTickets;
 
-                // 7️⃣ Save all changes
+
                 await _eventRepo.UpdateAsync(even);
                 await _registrationRepo.SaveChangesAsync();
                 await _eventRepo.CommitTransactionAsync(transaction);
 
-                // 8️⃣ Generate PDF receipt
-                var registrationDetails = await _registrationRepo.GetRegistrationsForUserEventAsync(userId, model.EventId);
-                var result = await _paymentService.CreateCustomerPaymentReceiptAsync(userId, ev, registrationDetails);
-                var pdfBytes = result.pdfBytes;
 
-
-                // 9️⃣ Send confirmation email
-                await _emailService.SendConfirmationEmailAsync(userEmail, ev, registrationDetails, pdfBytes, "Receipt.pdf");
+                BackgroundJob.Enqueue<RegistrationEmailJob>(
+                    job => job.SendReceiptAndEmailAsync(
+                        userId,
+                        model.EventId,
+                        userEmail
+                    )
+                );
 
                 return true;
             }

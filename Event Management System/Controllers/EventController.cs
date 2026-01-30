@@ -1,9 +1,11 @@
 ﻿using Event_Management_System.DTOs;
+using Event_Management_System.Jobs;
 using Event_Management_System.Models.Entities;
 using Event_Management_System.Models.Enums;
 using Event_Management_System.Services.Implementations;
 using Event_Management_System.Services.Interfaces;
 using Event_Management_System.ViewModels;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -109,19 +111,13 @@ namespace Event_Management_System.Controllers
                     return View(dto);
                 }
 
-                var emailSent = await _eventService
-                    .SendCancelEventEmailToTheParticipantsAsync(dto.EventId, dto.CancelReason);
+                BackgroundJob.Enqueue<EventJob>(
+                    job => job.SendCancelEventEmails(dto.EventId, dto.CancelReason)
+                );
 
-                if (!emailSent)
-                {
-                    TempData["Warning"] =
-                        "Event cancelled, but some participants could not be notified.";
-                }
-                else
-                {
-                    TempData["Success"] =
-                        "Event cancelled successfully and participants have been notified.";
-                }
+
+                TempData["Success"] =
+                    "Event cancelled successfully. Emails will be sent shortly.";
 
                 return RedirectToAction("Dashboard");
             }

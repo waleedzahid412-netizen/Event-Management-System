@@ -1,4 +1,5 @@
 ﻿using Event_Management_System.Configuration;
+using Event_Management_System.Jobs;
 using Event_Management_System.Models.Entities;
 using Event_Management_System.Repositories.Implementations;
 using Event_Management_System.Repositories.Interfaces;
@@ -6,6 +7,7 @@ using Event_Management_System.Services.Implementations;
 using Event_Management_System.Services.Interfaces;
 using EventManagement.Configuration;
 using EventManagement.Data;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +56,14 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IOrganizerApplicationService, OrganizerApplicationService>();
 builder.Services.AddScoped<IAdminAnalyticsRepository, AdminAnalyticsRepository>();
 builder.Services.AddHostedService<EventStatusBackgroundService>();
+builder.Services.AddHangfire(x =>
+    x.UseSqlServerStorage(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
+
+builder.Services.AddHangfireServer();
+builder.Services.AddScoped<EventJob>();
 
 
 
@@ -112,6 +122,13 @@ builder.Services.AddAuthentication("Bearer")
     });
 
 var app = builder.Build();
+// 🔥 Apply pending EF Core migrations automatically (Local + Azure)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -122,6 +139,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 
+app.UseHangfireDashboard("/hangfire");
 
 app.UseHttpsRedirection();
 app.UseRouting();

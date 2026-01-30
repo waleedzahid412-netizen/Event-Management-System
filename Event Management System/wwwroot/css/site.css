@@ -22,11 +22,11 @@ body {
     align-items: center;
 }
 
-    .navbar-brand img {
-        height: 45px;
-        margin-right: 10px;
-        filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.3));
-    }
+.navbar-brand img {
+    height: 45px;
+    margin-right: 10px;
+    filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.3));
+}
 
 .navbar-nav {
     gap: 8px;
@@ -43,46 +43,46 @@ body {
     letter-spacing: 0.3px;
 }
 
-    /* Elegant glow effect on hover */
-    .nav-link:hover {
-        color: #ffffff !important;
-        background: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.4), 0 0 30px rgba(212, 175, 55, 0.2);
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-    }
+/* Elegant glow effect on hover */
+.nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4), 0 0 30px rgba(212, 175, 55, 0.2);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
 
-    /* Active/Current page styling */
-    .nav-link.active {
-        background: rgba(212, 175, 55, 0.15);
-        color: #ffd700 !important;
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-    }
+/* Active/Current page styling */
+.nav-link.active {
+    background: rgba(212, 175, 55, 0.15);
+    color: #ffd700 !important;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
 
-    /* Underline animation */
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: 5px;
-        left: 50%;
-        width: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #d4af37, transparent);
-        transform: translateX(-50%);
-        transition: width 0.3s ease;
-    }
+/* Underline animation */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
 
-    .nav-link:hover::after {
-        width: 70%;
-    }
+.nav-link:hover::after {
+    width: 70%;
+}
 
 .navbar-toggler {
     border: 2px solid rgba(212, 175, 55, 0.5);
     padding: 8px 12px;
 }
 
-    .navbar-toggler:focus {
-        box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
-    }
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+}
 
 .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(212, 175, 55, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
@@ -96,17 +96,17 @@ body {
     text-align: center;
 }
 
-    .demo-content h1 {
-        font-size: 3rem;
-        font-weight: 700;
-        color: #1a1a2e;
-        margin-bottom: 20px;
-    }
+.demo-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+}
 
-    .demo-content p {
-        font-size: 1.3rem;
-        color: #666;
-    }
+.demo-content p {
+    font-size: 1.3rem;
+    color: #666;
+}
 
 @media (max-width: 768px) {
     .navbar-nav {
@@ -123,19 +123,22 @@ body {
         font-size: 2rem;
     }
 }
+
 /* Authentication Container */
 .auth-container {
     background-color: aqua;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-height: 50vh; /* adjust as needed */
+    min-height: 50vh;
+    /* adjust as needed */
     padding: 20px;
 }
 
 .auth-box {
-    background-color:aqua;
-    margin-top: 30px; /* spacing from top */
+    background-color: aqua;
+    margin-top: 30px;
+    /* spacing from top */
 }
 
 .auth-title {
@@ -144,12 +147,15 @@ body {
     color: #1a1a2e;
     margin-bottom: 25px;
 }
+
 .auth-main-title {
     font-size: 3rem;
     font-weight: 700;
     color: #1a1a2e;
-    text-align: center; /* horizontally center text */
-    margin: 40px 0 20px 0; /* spacing above and below */
+    text-align: center;
+    /* horizontally center text */
+    margin: 40px 0 20px 0;
+    /* spacing above and below */
 }
 
 .auth-subtitle {
@@ -207,16 +213,16 @@ body {
     .auth-box {
         padding: 40px 30px;
     }
-    
+
     .auth-title {
         font-size: 1.6rem;
     }
-    
+
     .auth-buttons {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .btn-auth {
         width: 100%;
     }

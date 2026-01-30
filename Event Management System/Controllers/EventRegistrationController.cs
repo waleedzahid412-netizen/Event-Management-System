@@ -60,7 +60,7 @@ namespace Event_Management_System.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return Content(ex.Message); // e.g., "Not enough available seats"
+                return Content(ex.Message); 
             }
             catch (Exception)
             {

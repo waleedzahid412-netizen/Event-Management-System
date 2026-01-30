@@ -9,7 +9,7 @@ namespace Event_Management_System.Services.Interfaces
     {
         public  Task<bool> UpdateEventStatus(EventStatus status, int eventid);
         Task CreateEventAsync(CreateEventDTO dto, int organizerId);
-        Task<bool> SendCancelEventEmailToTheParticipantsAsync(int eventid, string cancelreason);
+
         Task<OrganizerEventDetailsDTO> GetOrganizerEventDetailsAsync(int eventId);
         Task<List<Event>> GetEventsByOrganizerAsync(int organizerId, string status);
         public  Task<EventDetailsVM> GetCustomerEventDetailsAsync(int id);
