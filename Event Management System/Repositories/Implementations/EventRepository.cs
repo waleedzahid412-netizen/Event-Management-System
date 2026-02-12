@@ -154,5 +154,12 @@ namespace Event_Management_System.Repositories.Implementations
             _context.Events.Update(ev);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Event>> GetRecommendedEventsByIdsAsync(List<int> eventIds)
+        {
+            return await _context.Events
+                .Where(e => eventIds.Contains(e.EventId))
+                .ToListAsync();
+        }
     }
 }

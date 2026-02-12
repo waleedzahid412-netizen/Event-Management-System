@@ -56,6 +56,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IOrganizerApplicationService, OrganizerApplicationService>();
 builder.Services.AddScoped<IAdminAnalyticsRepository, AdminAnalyticsRepository>();
 builder.Services.AddHostedService<EventStatusBackgroundService>();
+builder.Services.AddHttpClient<IRecommendationService, RecommendationService>();
 builder.Services.AddHangfire(x =>
     x.UseSqlServerStorage(
         builder.Configuration.GetConnectionString("DefaultConnection")
@@ -68,6 +69,8 @@ builder.Services.AddScoped<EventJob>();
 
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<RecommendationApiSettings>(
+    builder.Configuration.GetSection("RecommendationApi"));
 
 
 builder.Services.AddTransient<IEmailService, EmailService>();
@@ -126,7 +129,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+
 }
 
 

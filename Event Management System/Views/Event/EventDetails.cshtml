@@ -1,31 +1,38 @@
-﻿@model Event_Management_System.DTOs.OrganizerEventDetailsDTO
+﻿@model Event_Management_System.ViewModels.EventDetailsPageViewModel
 
 @{
     ViewData["Title"] = "Event Details";
 }
 
-<!-- Page Header -->
-<div class="organizer-details-hero">
+<!-- Modern Header with Glassmorphism -->
+<div class="modern-hero">
+    <div class="hero-background"></div>
     <div class="container">
-        <div class="hero-content-organizer">
-            <div class="breadcrumb-nav">
-                <a asp-controller="Organizer" asp-action="MyEvents" class="breadcrumb-link">
-                    <i class="bi bi-arrow-left"></i>
-                    Back to My Events
-                </a>
-            </div>
-            <div class="event-header-info">
-                <div class="event-title-section">
-                    <h1 class="organizer-event-title">@Model.Title</h1>
-                    <div class="event-badges">
-                        <span class="badge-organizer category">
-                            <i class="bi bi-tag-fill"></i>
-                            @Model.CategoryName
-                        </span>
-                        <span class="badge-organizer seats">
-                            <i class="bi bi-people-fill"></i>
-                            @Model.AvailableSeats / @Model.TotalSeats Available
-                        </span>
+        <div class="hero-content">
+            <a asp-controller="Organizer" asp-action="MyEvents" class="back-link">
+                <i class="bi bi-arrow-left-circle-fill"></i>
+                <span>Back to Events</span>
+            </a>
+            <div class="hero-title-area">
+                <span class="category-pill">
+                    <i class="bi bi-tag-fill"></i>
+                    @Model.Event.CategoryName
+                </span>
+                <h1 class="hero-title">@Model.Event.Title</h1>
+                <div class="hero-meta">
+                    <div class="meta-item">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span>@Model.Event.Location</span>
+                    </div>
+                    <div class="meta-divider"></div>
+                    <div class="meta-item">
+                        <i class="bi bi-calendar-event"></i>
+                        <span>@Model.Event.StartDate.ToString("MMM dd, yyyy")</span>
+                    </div>
+                    <div class="meta-divider"></div>
+                    <div class="meta-item seats-indicator">
+                        <i class="bi bi-people-fill"></i>
+                        <span>@Model.Event.AvailableSeats / @Model.Event.TotalSeats Available</span>
                     </div>
                 </div>
             </div>
@@ -33,872 +40,1270 @@
     </div>
 </div>
 
-<div class="container my-5">
-    <div class="row g-4">
-        <!-- Left Column: Event Details -->
-        <div class="col-lg-7">
-            <!-- Cover Image Section -->
-            <div class="organizer-card cover-section">
-                <div class="cover-image-wrapper">
-                    <img src="@Model.CoverImageUrl" class="cover-image-org" alt="@Model.Title" />
-                    <div class="cover-overlay">
-                        <div class="cover-info">
-                            <h3 class="cover-event-title">@Model.Title</h3>
-                            <p class="cover-location">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                @Model.Location
-                            </p>
-                        </div>
-                    </div>
+<div class="container main-container">
+    <!-- Event Showcase Card -->
+    <div class="event-showcase-card">
+        <div class="row g-0">
+            <!-- Cover Image -->
+            <div class="col-lg-5">
+                <div class="showcase-image-wrapper">
+                    <img src="@Model.Event.CoverImageUrl" class="showcase-image" alt="@Model.Event.Title" />
+                    <div class="image-gradient"></div>
                 </div>
+            </div>
 
-                <!-- Event Overview -->
-                <div class="card-content">
-                    <div class="section-header-org">
-                        <div class="section-icon-org">
+            <!-- Event Info -->
+            <div class="col-lg-7">
+                <div class="showcase-content">
+                    <div class="content-section">
+                        <h3 class="section-heading">
                             <i class="bi bi-info-circle-fill"></i>
-                        </div>
-                        <h4 class="section-title-org">Event Overview</h4>
-                    </div>
-                    <p class="event-description-org">@Model.Description</p>
-                </div>
-            </div>
-
-            <!-- Event Details Grid -->
-            <div class="organizer-card">
-                <div class="section-header-org">
-                    <div class="section-icon-org">
-                        <i class="bi bi-calendar-check-fill"></i>
-                    </div>
-                    <h4 class="section-title-org">Event Information</h4>
-                </div>
-
-                <div class="details-grid">
-                    <div class="detail-item-org">
-                        <div class="detail-icon-org">
-                            <i class="bi bi-calendar-event"></i>
-                        </div>
-                        <div class="detail-content-org">
-                            <span class="detail-label-org">Start Date</span>
-                            <span class="detail-value-org">@Model.StartDate.ToString("MMMM dd, yyyy")</span>
-                        </div>
+                            About This Event
+                        </h3>
+                        <p class="event-description">@Model.Event.Description</p>
                     </div>
 
-                    <div class="detail-item-org">
-                        <div class="detail-icon-org">
-                            <i class="bi bi-calendar-x"></i>
-                        </div>
-                        <div class="detail-content-org">
-                            <span class="detail-label-org">End Date</span>
-                            <span class="detail-value-org">@Model.EndDate.ToString("MMMM dd, yyyy")</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-item-org">
-                        <div class="detail-icon-org">
-                            <i class="bi bi-ticket-perforated-fill"></i>
-                        </div>
-                        <div class="detail-content-org">
-                            <span class="detail-label-org">Total Seats</span>
-                            <span class="detail-value-org">@Model.TotalSeats</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-item-org">
-                        <div class="detail-icon-org">
-                            <i class="bi bi-ticket-detailed-fill"></i>
-                        </div>
-                        <div class="detail-content-org">
-                            <span class="detail-label-org">Available Seats</span>
-                            <span class="detail-value-org">@Model.AvailableSeats</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-item-org">
-                        <div class="detail-icon-org">
-                            <i class="bi bi-geo-alt-fill"></i>
-                        </div>
-                        <div class="detail-content-org">
-                            <span class="detail-label-org">Location</span>
-                            <span class="detail-value-org">@Model.Location</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-item-org">
-                        <div class="detail-icon-org progress-icon">
-                            <i class="bi bi-graph-up"></i>
-                        </div>
-                        <div class="detail-content-org">
-                            <span class="detail-label-org">Booking Progress</span>
-                            @{
-                                var bookedSeats = Model.TotalSeats - Model.AvailableSeats;
-                                var progressPercent = ((double)bookedSeats / Model.TotalSeats) * 100;
-                            }
-                            <div class="progress-bar-org">
-                                <div class="progress-fill-org" style="width: @progressPercent%"></div>
+                    <div class="content-section">
+                        <h3 class="section-heading">
+                            <i class="bi bi-calendar-check-fill"></i>
+                            Event Details
+                        </h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <div class="info-icon start">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                                <div class="info-text">
+                                    <span class="info-label">Start Date</span>
+                                    <span class="info-value">@Model.Event.StartDate.ToString("MMM dd, yyyy")</span>
+                                </div>
                             </div>
-                            <span class="progress-text">@bookedSeats of @Model.TotalSeats seats booked (@progressPercent.ToString("F0")%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            @if (User.IsInRole("Organizer"))
-            {
-                <!-- Action Buttons -->
-                <div class="organizer-card actions-section">
-                    <div class="section-header-org">
-                        <div class="section-icon-org">
-                            <i class="bi bi-gear-fill"></i>
-                        </div>
-                        <h4 class="section-title-org">Manage Event</h4>
-                    </div>
-
-                    <div class="action-buttons-grid">
-                        <a asp-controller="Organizer"
-                           asp-action="EditEvent"
-                           asp-route-id="@Model.EventId"
-                           class="action-button-org edit">
-                            <i class="bi bi-pencil-square"></i>
-                            <div>
-                                <strong>Edit Event</strong>
-                                <small>Update event details</small>
+                            <div class="info-card">
+                                <div class="info-icon end">
+                                    <i class="bi bi-calendar-x"></i>
+                                </div>
+                                <div class="info-text">
+                                    <span class="info-label">End Date</span>
+                                    <span class="info-value">@Model.Event.EndDate.ToString("MMM dd, yyyy")</span>
+                                </div>
                             </div>
-                        </a>
-
-                        <a asp-controller="Organizer"
-                           asp-action="ViewEventParticipants"
-                           asp-route-id="@Model.EventId"
-                           class="action-button-org participants">
-                            <i class="bi bi-people-fill"></i>
-                            <div>
-                                <strong>View Participants</strong>
-                                <small>See registered attendees</small>
+                            <div class="info-card">
+                                <div class="info-icon capacity">
+                                    <i class="bi bi-ticket-perforated-fill"></i>
+                                </div>
+                                <div class="info-text">
+                                    <span class="info-label">Total Capacity</span>
+                                    <span class="info-value">@Model.Event.TotalSeats Seats</span>
+                                </div>
                             </div>
-                        </a>
-                    </div>
-                </div>
-            }
-        </div>
-
-        <!-- Right Column: Venue Gallery -->
-        <div class="col-lg-5">
-            <div class="organizer-card venue-section sticky-venue">
-                <div class="section-header-org">
-                    <div class="section-icon-org venue">
-                        <i class="bi bi-building"></i>
-                    </div>
-                    <h4 class="section-title-org">Venue Gallery</h4>
-                </div>
-
-                @if (Model.VenueImages != null && Model.VenueImages.Any())
-                {
-                    <div id="venueCarousel" class="carousel slide venue-carousel-org" data-bs-ride="carousel">
-                        <!-- Indicators -->
-                        <div class="carousel-indicators-custom">
-                            @for (int i = 0; i < Model.VenueImages.Count; i++)
-                            {
-                                <button type="button"
-                                        data-bs-target="#venueCarousel"
-                                        data-bs-slide-to="@i"
-                                        class="@(i == 0 ? "active" : "")"
-                                        aria-current="@(i == 0 ? "true" : "false")"
-                                        aria-label="Slide @(i + 1)"></button>
-                            }
+                            <div class="info-card">
+                                <div class="info-icon available">
+                                    <i class="bi bi-ticket-detailed-fill"></i>
+                                </div>
+                                <div class="info-text">
+                                    <span class="info-label">Available</span>
+                                    <span class="info-value">@Model.Event.AvailableSeats Seats</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Images -->
-                        <div class="carousel-inner">
-                            @for (int i = 0; i < Model.VenueImages.Count; i++)
-                            {
-                                <div class="carousel-item @(i == 0 ? "active" : "")">
-                                    <img src="@Model.VenueImages[i]"
-                                         class="venue-image-org"
-                                         alt="Venue Image @(i + 1)" />
-                                    <div class="carousel-caption-custom">
-                                        <p>Venue View @(i + 1) of @Model.VenueImages.Count</p>
+                        @{
+                            var bookedSeats = Model.Event.TotalSeats - Model.Event.AvailableSeats;
+                            var progressPercent = ((double)bookedSeats / Model.Event.TotalSeats) * 100;
+                        }
+                        <div class="booking-progress">
+                            <div class="progress-header">
+                                <span class="progress-label">Booking Progress</span>
+                                <span class="progress-percentage">@progressPercent.ToString("F0")%</span>
+                            </div>
+                            <div class="modern-progress-bar">
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: @progressPercent%">
+                                        <div class="progress-glow"></div>
                                     </div>
                                 </div>
-                            }
-                        </div>
-
-                        <!-- Controls -->
-                        <button class="carousel-control-prev" type="button" data-bs-target="#venueCarousel" data-bs-slide="prev">
-                            <div class="carousel-control-icon">
-                                <i class="bi bi-chevron-left"></i>
                             </div>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#venueCarousel" data-bs-slide="next">
-                            <div class="carousel-control-icon">
-                                <i class="bi bi-chevron-right"></i>
+                            <div class="progress-stats">
+                                <span><strong>@bookedSeats</strong> Booked</span>
+                                <span><strong>@Model.Event.AvailableSeats</strong> Remaining</span>
                             </div>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-
-                    <!-- Image Count -->
-                    <div class="image-count-badge">
-                        <i class="bi bi-images"></i>
-                        @Model.VenueImages.Count @(Model.VenueImages.Count == 1 ? "Image" : "Images")
-                    </div>
-                }
-                else
-                {
-                    <div class="no-venue-images">
-                        <i class="bi bi-image"></i>
-                        <p>No venue images uploaded yet</p>
-                        <small>Add images to showcase your venue</small>
-                    </div>
-                }
-            </div>
-
-            <!-- Quick Stats Card -->
-            <div class="organizer-card stats-card">
-                <div class="section-header-org">
-                    <div class="section-icon-org stats">
-                        <i class="bi bi-bar-chart-fill"></i>
-                    </div>
-                    <h4 class="section-title-org">Quick Stats</h4>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-item-org">
-                        <div class="stat-icon-org booked">
-                            <i class="bi bi-check-circle-fill"></i>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-number">@(Model.TotalSeats - Model.AvailableSeats)</span>
-                            <span class="stat-label">Booked</span>
                         </div>
                     </div>
 
-                    <div class="stat-item-org">
-                        <div class="stat-icon-org available">
-                            <i class="bi bi-ticket-perforated"></i>
+                    @if (User.IsInRole("Organizer"))
+                    {
+                        <div class="action-buttons">
+                            <a asp-controller="Organizer" asp-action="EditEvent" asp-route-id="@Model.Event.EventId" class="btn-action edit">
+                                <i class="bi bi-pencil-square"></i>
+                                <span>Edit Event</span>
+                            </a>
+                            <a asp-controller="Organizer" asp-action="ViewEventParticipants" asp-route-id="@Model.Event.EventId" class="btn-action participants">
+                                <i class="bi bi-people-fill"></i>
+                                <span>View Participants</span>
+                            </a>
                         </div>
-                        <div class="stat-info">
-                            <span class="stat-number">@Model.AvailableSeats</span>
-                            <span class="stat-label">Available</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-item-org">
-                        <div class="stat-icon-org total">
-                            <i class="bi bi-grid-3x3-gap-fill"></i>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-number">@Model.TotalSeats</span>
-                            <span class="stat-label">Total Capacity</span>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Venue Gallery -->
+    @if (Model.Event.VenueImages != null && Model.Event.VenueImages.Any())
+    {
+        <div class="venue-gallery-card">
+            <div class="card-header-modern">
+                <div class="header-icon venue">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div>
+                    <h3 class="card-title-modern">Venue Gallery</h3>
+                    <p class="card-subtitle">Explore the event location</p>
+                </div>
+            </div>
+
+            <div id="venueCarousel" class="carousel slide modern-carousel" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Event.VenueImages.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@Model.Event.VenueImages[i]" class="modern-venue-image" alt="Venue @(i + 1)" />
+                            <div class="image-counter">@(i + 1) / @Model.Event.VenueImages.Count</div>
+                        </div>
+                    }
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#venueCarousel" data-bs-slide="prev">
+                    <div class="modern-control-btn">
+                        <i class="bi bi-chevron-left"></i>
+                    </div>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#venueCarousel" data-bs-slide="next">
+                    <div class="modern-control-btn">
+                        <i class="bi bi-chevron-right"></i>
+                    </div>
+                </button>
+
+                <div class="carousel-indicators modern-indicators">
+                    @for (int i = 0; i < Model.Event.VenueImages.Count; i++)
+                    {
+                        <button type="button" data-bs-target="#venueCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"></button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- SIMILAR EVENTS - LINKEDIN SHOWCASE SECTION -->
+    @if (Model.SimilarEvents.Any())
+    {
+        <div class="recommendations-section">
+            <!-- Feature Explanation Banner -->
+            <div class="feature-banner">
+                <div class="banner-icon">
+                    <i class="bi bi-lightbulb-fill"></i>
+                </div>
+                <div class="banner-content">
+                    <h2 class="banner-title">Smart Event Recommendations</h2>
+                    <p class="banner-description">Based on "<strong>@Model.Event.CategoryName</strong>" category, our AI suggests these similar events you might enjoy</p>
+                </div>
+                <div class="banner-badge">
+                    <i class="bi bi-stars"></i>
+                    AI-Powered
+                </div>
+            </div>
+
+            <!-- Connection Indicator -->
+            <div class="connection-flow">
+                <div class="flow-item current-event">
+                    <div class="flow-icon">
+                        <i class="bi bi-eye-fill"></i>
+                    </div>
+                    <div class="flow-text">
+                        <span class="flow-label">You're viewing</span>
+                        <span class="flow-value">@Model.Event.Title</span>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                    <span class="arrow-label">Recommends</span>
+                </div>
+
+                <div class="flow-item recommended-events">
+                    <div class="flow-icon">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <div class="flow-text">
+                        <span class="flow-label">Similar Events</span>
+                        <span class="flow-value">@Model.SimilarEvents.Count Events Found</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Similar Events Grid -->
+            <div class="recommendations-grid">
+                @foreach (var ev in Model.SimilarEvents)
+                {
+                    <div class="recommendation-card">
+                        <div class="recommendation-badge">
+                            <i class="bi bi-patch-check-fill"></i>
+                            <span>Recommended</span>
+                        </div>
+
+                        <a asp-controller="Event" asp-action="EventDetails" asp-route-id="@ev.EventId" class="card-link">
+                            <div class="card-image-container">
+                                <img src="@ev.CoverImageUrl" class="card-image" alt="@ev.Title" />
+                                <div class="card-overlay"></div>
+                                <div class="availability-badge">
+                                    <i class="bi bi-people-fill"></i>
+                                    <span>@ev.AvailableSeats / @ev.TotalSeats</span>
+                                </div>
+                            </div>
+
+                            <div class="card-body-modern">
+                                <h4 class="card-title-event">@ev.Title</h4>
+
+                                <div class="card-details">
+                                    <div class="detail-row">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span>@ev.Location</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <i class="bi bi-calendar-event"></i>
+                                        <span>@ev.StartDate.ToString("MMM dd, yyyy")</span>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer-action">
+                                    <span class="view-btn">
+                                        View Event
+                                        <i class="bi bi-arrow-right-circle-fill"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <!-- Feature Highlight Footer -->
+            <div class="feature-footer">
+                <div class="footer-icon">
+                    <i class="bi bi-diagram-3-fill"></i>
+                </div>
+                <p class="footer-text">
+                    Our recommendation engine analyzes event categories, dates, and locations to suggest relevant events
+                </p>
+            </div>
+        </div>
+    }
 </div>
 
 <style>
-    /* Hero Section */
-    .organizer-details-hero {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem 0 3rem;
-        position: relative;
-        overflow: hidden;
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --success-gradient: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);
+        --warning-gradient: linear-gradient(135deg, #F2C94C 0%, #F2994A 100%);
+        --danger-gradient: linear-gradient(135deg, #EB5757 0%, #C92A2A 100%);
+        --glass-bg: rgba(255, 255, 255, 0.95);
+        --glass-border: rgba(255, 255, 255, 0.3);
+        --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+        --shadow-xl: 0 25px 80px rgba(0, 0, 0, 0.15);
     }
 
-        .organizer-details-hero::before {
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* Modern Hero Section */
+    .modern-hero {
+        position: relative;
+        padding: 3rem 0 4rem;
+        overflow: hidden;
+        margin-bottom: 3rem;
+    }
+
+    .hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--primary-gradient);
+        z-index: 0;
+    }
+
+        .hero-background::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none"/><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
-            opacity: 0.3;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.4;
         }
 
-    .hero-content-organizer {
+    .hero-content {
         position: relative;
         z-index: 2;
-        color: white;
     }
 
-    .breadcrumb-nav {
-        margin-bottom: 1.5rem;
-    }
-
-    .breadcrumb-link {
+    .back-link {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        color: rgba(255, 255, 255, 0.9);
+        color: white;
         text-decoration: none;
         font-weight: 600;
-        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
         transition: all 0.3s ease;
     }
 
-        .breadcrumb-link:hover {
-            color: white;
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
             transform: translateX(-5px);
+            color: white;
         }
 
-        .breadcrumb-link i {
-            font-size: 1.1rem;
+        .back-link i {
+            font-size: 1.25rem;
         }
 
-    .event-title-section {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+    .hero-title-area {
+        color: white;
     }
 
-    .organizer-event-title {
-        font-size: 2.5rem;
+    .category-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-title {
+        font-size: 3rem;
         font-weight: 800;
-        margin: 0;
+        margin: 0 0 1.5rem 0;
         line-height: 1.2;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
-    .event-badges {
+    .hero-meta {
         display: flex;
+        align-items: center;
         gap: 1rem;
         flex-wrap: wrap;
     }
 
-    .badge-organizer {
-        display: inline-flex;
+    .meta-item {
+        display: flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+        .meta-item i {
+            font-size: 1.25rem;
+        }
+
+    .meta-divider {
+        width: 1px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .seats-indicator {
+        background: rgba(86, 204, 242, 0.3);
+        padding: 0.5rem 1rem;
         border-radius: 50px;
-        font-weight: 700;
-        font-size: 0.95rem;
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-        .badge-organizer.category {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            color: white;
-        }
+    /* Main Container */
+    .main-container {
+        max-width: 1400px;
+        padding-bottom: 4rem;
+    }
 
-        .badge-organizer.seats {
-            background: rgba(72, 187, 120, 0.3);
-            backdrop-filter: blur(10px);
-            color: white;
-        }
-
-        .badge-organizer i {
-            font-size: 1.1rem;
-        }
-
-    /* Cards */
-    .organizer-card {
+    /* Event Showcase Card */
+    .event-showcase-card {
         background: white;
-        border-radius: 20px;
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-        border: 2px solid #e2e8f0;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
         margin-bottom: 2rem;
-        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    .card-content {
-        padding: 2rem;
-    }
-
-    /* Cover Image Section */
-    .cover-section {
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .cover-image-wrapper {
+    .showcase-image-wrapper {
         position: relative;
-        height: 350px;
+        height: 100%;
+        min-height: 500px;
         overflow: hidden;
     }
 
-    .cover-image-org {
+    .showcase-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .cover-overlay {
+    .image-gradient {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+    }
+
+    .showcase-content {
+        padding: 3rem;
+    }
+
+    .content-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 1.5rem;
+    }
+
+        .section-heading i {
+            color: #667eea;
+            font-size: 1.75rem;
+        }
+
+    .event-description {
+        font-size: 1.05rem;
+        line-height: 1.8;
+        color: #4a5568;
+        margin: 0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+        .info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+    .info-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+        .info-icon.start {
+            background: var(--success-gradient);
+        }
+
+        .info-icon.end {
+            background: var(--warning-gradient);
+        }
+
+        .info-icon.capacity {
+            background: var(--primary-gradient);
+        }
+
+        .info-icon.available {
+            background: var(--danger-gradient);
+        }
+
+    .info-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: #718096;
+        font-weight: 600;
+    }
+
+    .info-value {
+        font-size: 1.125rem;
+        color: #1a202c;
+        font-weight: 700;
+    }
+
+    /* Booking Progress */
+    .booking-progress {
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .progress-label {
+        font-weight: 700;
+        color: #2d3748;
+        font-size: 1rem;
+    }
+
+    .progress-percentage {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .modern-progress-bar {
+        margin-bottom: 1rem;
+    }
+
+    .progress-track {
+        height: 12px;
+        background: #e2e8f0;
+        border-radius: 50px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--primary-gradient);
+        border-radius: 50px;
+        position: relative;
+        transition: width 0.6s ease;
+    }
+
+    .progress-glow {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 50px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5));
+        animation: shimmer 2s infinite;
+    }
+
+    @@keyframes shimmer {
+        0%, 100% {
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .progress-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #718096;
+    }
+
+        .progress-stats strong {
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .btn-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+        .btn-action i {
+            font-size: 1.25rem;
+        }
+
+        .btn-action.edit {
+            background: var(--warning-gradient);
+            color: white;
+        }
+
+            .btn-action.edit:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(242, 201, 76, 0.4);
+            }
+
+        .btn-action.participants {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+            .btn-action.participants:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(86, 204, 242, 0.4);
+            }
+
+    /* Venue Gallery */
+    .venue-gallery-card {
+        background: white;
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 2rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header-modern {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .header-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+        .header-icon.venue {
+            background: var(--primary-gradient);
+        }
+
+    .card-title-modern {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #1a202c;
+        margin: 0;
+    }
+
+    .card-subtitle {
+        font-size: 0.95rem;
+        color: #718096;
+        margin: 0.25rem 0 0 0;
+    }
+
+    .modern-carousel {
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .modern-venue-image {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+    }
+
+    .image-counter {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        z-index: 2;
+    }
+
+    .modern-control-btn {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .carousel-control-prev:hover .modern-control-btn,
+    .carousel-control-next:hover .modern-control-btn {
+        background: white;
+        transform: scale(1.15);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .modern-indicators {
+        bottom: 1rem;
+    }
+
+        .modern-indicators button {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+            .modern-indicators button.active {
+                width: 30px;
+                border-radius: 5px;
+                background: white;
+            }
+
+    /* RECOMMENDATIONS SECTION - LINKEDIN SHOWCASE */
+    .recommendations-section {
+        margin-top: 4rem;
+    }
+
+    /* Feature Banner */
+    .feature-banner {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 24px;
+        padding: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .feature-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+    @@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+
+        50% {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+    }
+
+    .banner-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        flex-shrink: 0;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        z-index: 2;
+    }
+
+    .banner-content {
+        flex: 1;
+        position: relative;
+        z-index: 2;
+    }
+
+    .banner-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: white;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .banner-description {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.95);
+        margin: 0;
+        line-height: 1.6;
+    }
+
+        .banner-description strong {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+    .banner-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 1rem;
+        color: #667eea;
+        flex-shrink: 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 2;
+    }
+
+        .banner-badge i {
+            font-size: 1.25rem;
+            color: #f2c94c;
+        }
+
+    /* Connection Flow */
+    .connection-flow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        background: white;
+        padding: 2rem;
+        border-radius: 20px;
+        margin-bottom: 3rem;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        border: 2px solid #e2e8f0;
+    }
+
+    .flow-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem 1.75rem;
+        border-radius: 16px;
+        border: 2px solid #e2e8f0;
+    }
+
+        .flow-item.current-event {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-color: #cbd5e0;
+        }
+
+        .flow-item.recommended-events {
+            background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
+            border-color: #f2c94c;
+        }
+
+    .flow-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .flow-item.current-event .flow-icon {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .flow-item.recommended-events .flow-icon {
+        background: linear-gradient(135deg, #f2c94c 0%, #f2994a 100%);
+    }
+
+    .flow-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .flow-label {
+        font-size: 0.85rem;
+        color: #718096;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .flow-value {
+        font-size: 1.125rem;
+        color: #1a202c;
+        font-weight: 800;
+    }
+
+    .flow-arrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        color: #667eea;
+    }
+
+        .flow-arrow i {
+            font-size: 2rem;
+            animation: bounce-horizontal 2s ease-in-out infinite;
+        }
+
+    @@keyframes bounce-horizontal {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(10px);
+        }
+    }
+
+    .arrow-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #667eea;
+    }
+
+    /* Recommendations Grid */
+    .recommendations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .recommendation-card {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .recommendation-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #f2c94c 0%, #f2994a 100%);
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 0.85rem;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(242, 201, 76, 0.4);
+        border: 2px solid white;
+    }
+
+        .recommendation-badge i {
+            font-size: 1rem;
+        }
+
+    .card-link {
+        display: block;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        text-decoration: none;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+        .card-link:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.25);
+            border-color: #667eea;
+        }
+
+    .card-image-container {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+    }
+
+    .card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .card-link:hover .card-image {
+        transform: scale(1.1);
+    }
+
+    .card-overlay {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-        display: flex;
-        align-items: flex-end;
-        padding: 2rem;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
     }
 
-    .cover-info {
+    .availability-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(86, 204, 242, 0.95);
+        backdrop-filter: blur(10px);
         color: white;
-    }
-
-    .cover-event-title {
-        font-size: 2rem;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .cover-location {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 1.125rem;
-        margin: 0;
-        opacity: 0.95;
-    }
-
-        .cover-location i {
-            font-size: 1.25rem;
-        }
-
-    /* Section Headers */
-    .section-header-org {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .section-icon-org {
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-        flex-shrink: 0;
-    }
-
-        .section-icon-org.venue {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .section-icon-org.stats {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-        }
-
-        .section-icon-org.progress-icon {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        }
-
-    .section-title-org {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: #2d3748;
-        margin: 0;
-    }
-
-    /* Event Description */
-    .event-description-org {
-        font-size: 1.05rem;
-        line-height: 1.7;
-        color: #4a5568;
-        margin: 0;
-    }
-
-    /* Details Grid */
-    .details-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        padding: 2rem;
-    }
-
-    .detail-item-org {
-        display: flex;
-        gap: 1rem;
-        padding: 1.25rem;
-        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-        border-radius: 15px;
-        border-left: 4px solid #667eea;
-        transition: all 0.3s ease;
-    }
-
-        .detail-item-org:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        }
-
-    .detail-icon-org {
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-        flex-shrink: 0;
-    }
-
-    .detail-content-org {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex: 1;
-    }
-
-    .detail-label-org {
-        font-size: 0.875rem;
-        color: #718096;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-    }
-
-    .detail-value-org {
-        font-size: 1.125rem;
-        color: #2d3748;
-        font-weight: 800;
-    }
-
-    /* Progress Bar */
-    .progress-bar-org {
-        width: 100%;
-        height: 10px;
-        background: #e2e8f0;
-        border-radius: 50px;
-        overflow: hidden;
-        margin: 0.5rem 0;
-    }
-
-    .progress-fill-org {
-        height: 100%;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        border-radius: 50px;
-        transition: width 0.6s ease;
-    }
-
-    .progress-text {
-        font-size: 0.875rem;
-        color: #718096;
-        font-weight: 600;
-    }
-
-    /* Action Buttons */
-    .actions-section {
-        padding: 2rem;
-    }
-
-    .action-buttons-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-
-    .action-button-org {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1.5rem;
-        border-radius: 15px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-    }
-
-        .action-button-org i {
-            font-size: 2rem;
-            flex-shrink: 0;
-        }
-
-        .action-button-org strong {
-            display: block;
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .action-button-org small {
-            color: inherit;
-            opacity: 0.8;
-        }
-
-        .action-button-org.edit {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            color: #2d3748;
-        }
-
-            .action-button-org.edit:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
-            }
-
-        .action-button-org.participants {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-        }
-
-            .action-button-org.participants:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
-            }
-
-    /* Venue Section */
-    .venue-section {
-        padding: 2rem;
-    }
-
-    .sticky-venue {
-        position: sticky;
-        top: 100px;
-    }
-
-    .venue-carousel-org {
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1rem;
-    }
-
-    .venue-image-org {
-        width: 100%;
-        height: 400px;
-        object-fit: cover;
-    }
-
-    .carousel-indicators-custom {
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         z-index: 2;
     }
 
-        .carousel-indicators-custom button {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-            .carousel-indicators-custom button.active {
-                background: white;
-                width: 30px;
-                border-radius: 5px;
-            }
-
-    .carousel-caption-custom {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
-        padding: 2rem 1rem 1rem;
-        text-align: center;
+    .card-body-modern {
+        padding: 1.75rem;
     }
 
-        .carousel-caption-custom p {
-            margin: 0;
-            color: white;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
+    .card-title-event {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #1a202c;
+        margin: 0 0 1.25rem 0;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 
-    .carousel-control-icon {
-        width: 45px;
-        height: 45px;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 50%;
+    .card-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-row {
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 0.75rem;
+        color: #4a5568;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+        .detail-row i {
+            color: #667eea;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+    .card-footer-action {
+        padding-top: 1.25rem;
+        border-top: 2px dashed #e2e8f0;
+    }
+
+    .view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
         color: #667eea;
-        font-size: 1.5rem;
+        font-weight: 800;
+        font-size: 1rem;
         transition: all 0.3s ease;
     }
 
-    .carousel-control-prev:hover .carousel-control-icon,
-    .carousel-control-next:hover .carousel-control-icon {
-        background: white;
-        transform: scale(1.1);
-    }
-
-    .image-count-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-        padding: 0.75rem 1.25rem;
-        border-radius: 50px;
-        font-weight: 700;
-        color: #4a5568;
-        font-size: 0.95rem;
-    }
-
-        .image-count-badge i {
-            color: #667eea;
-            font-size: 1.1rem;
+        .view-btn i {
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
         }
 
-    .no-venue-images {
-        text-align: center;
-        padding: 4rem 2rem;
-        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-        border-radius: 15px;
-        color: #a0aec0;
-    }
-
-        .no-venue-images i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .no-venue-images p {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #718096;
-            margin-bottom: 0.5rem;
-        }
-
-        .no-venue-images small {
-            color: #a0aec0;
-        }
-
-    /* Stats Card */
-    .stats-card {
-        padding: 2rem;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    .card-link:hover .view-btn {
         gap: 1rem;
     }
 
-    .stat-item-org {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 1.25rem;
-        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-        border-radius: 15px;
-        transition: all 0.3s ease;
-    }
-
-        .stat-item-org:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        .card-link:hover .view-btn i {
+            transform: translateX(5px);
         }
 
-    .stat-icon-org {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
+    /* Feature Footer */
+    .feature-footer {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
+        gap: 1rem;
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 2px dashed #cbd5e0;
+    }
+
+    .footer-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--primary-gradient);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
         color: white;
     }
 
-        .stat-icon-org.booked {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        }
-
-        .stat-icon-org.available {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-        }
-
-        .stat-icon-org.total {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-    .stat-info {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .stat-number {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #2d3748;
-        line-height: 1;
-    }
-
-    .stat-label {
-        font-size: 0.875rem;
-        color: #718096;
-        font-weight: 600;
+    .footer-text {
+        font-size: 0.95rem;
+        color: #4a5568;
+        font-weight: 500;
+        margin: 0;
+        max-width: 600px;
+        text-align: center;
     }
 
     /* Responsive Design */
-    @@media (max-width: 991px) {
-        .organizer-event-title {
-            font-size: 2rem;
+    @@media (max-width: 1200px) {
+        .recommendations-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .hero-title {
+            font-size: 2.25rem;
         }
 
-        .sticky-venue {
-            position: static;
+        .showcase-image-wrapper {
+            min-height: 350px;
         }
 
-        .details-grid,
-        .action-buttons-grid,
-        .stats-grid {
+        .info-grid {
             grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            grid-template-columns: 1fr;
+        }
+
+        .connection-flow {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            transform: rotate(90deg);
+        }
+
+        .feature-banner {
+            flex-direction: column;
+            text-align: center;
         }
     }
 
     @@media (max-width: 768px) {
-        .organizer-details-hero {
-            padding: 1.5rem 0 2rem;
-        }
-
-        .organizer-event-title {
+        .hero-title {
             font-size: 1.75rem;
         }
 
-        .cover-image-wrapper {
-            height: 250px;
-        }
-
-        .cover-event-title {
+        .banner-title {
             font-size: 1.5rem;
         }
 
-        .venue-image-org {
-            height: 300px;
+        .showcase-content {
+            padding: 2rem;
         }
 
-        .details-grid,
-        .card-content,
-        .actions-section,
-        .venue-section,
-        .stats-card {
-            padding: 1.5rem;
+        .modern-venue-image {
+            height: 350px;
+        }
+
+        .recommendations-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-meta {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .meta-divider {
+            display: none;
         }
     }
 
     @@media (max-width: 576px) {
-        .event-badges {
-            flex-direction: column;
+        .showcase-image-wrapper {
+            min-height: 250px;
         }
 
-        .badge-organizer {
-            width: 100%;
-            justify-content: center;
+        .venue-gallery-card,
+        .event-showcase-card {
+            border-radius: 16px;
+        }
+
+        .modern-venue-image {
+            height: 250px;
+        }
+
+        .banner-badge {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
         }
     }
 </style>

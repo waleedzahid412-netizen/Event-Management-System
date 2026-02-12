@@ -183,5 +183,22 @@ namespace Event_Management_System.Services.Implementations
             return events;
 
         }
+
+        public async Task<List<OrganizerEventDetailsDTO>> GetRecommendedEventDetailsByIdsAsync(List<int> eventIds)
+        {
+            var events = await _eventrepo.GetRecommendedEventsByIdsAsync(eventIds);
+
+            return events.Select(e => new OrganizerEventDetailsDTO
+            {
+                EventId = e.EventId,
+                Title = e.Title,
+                CoverImageUrl = e.CoverImageUrl,
+                Location = e.Location,
+                StartDate = e.StartDate,
+                AvailableSeats = e.AvailableSeats,
+                TotalSeats = e.TotalSeats
+            }).ToList();
+        }
+
     }
 }

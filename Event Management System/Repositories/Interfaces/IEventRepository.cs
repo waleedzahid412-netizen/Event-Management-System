@@ -1,6 +1,7 @@
 ﻿using Event_Management_System.Models.Entities;
 using Event_Management_System.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Event_Management_System.Repositories.Interfaces
@@ -34,5 +35,7 @@ namespace Event_Management_System.Repositories.Interfaces
         public Task<int> UpcomingEventCount();
         public Task<IEnumerable <Event>> GetCompletedEventsAsync();
         public Task UpdateAsync(Event ev);
+        public  Task<List<Event>> GetRecommendedEventsByIdsAsync(List<int> eventIds);
+
     }
 }

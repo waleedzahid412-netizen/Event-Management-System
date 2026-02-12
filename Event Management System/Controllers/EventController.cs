@@ -20,12 +20,16 @@ namespace Event_Management_System.Controllers
         public readonly IPaymentService _paymentService;
         public readonly IEmailService _emailService;
         public readonly IAttendeeService _attendeeService;
-        public EventController(IEventCategoryService eventCategoryservice,  IEventService eventservice,IPaymentService paymentservice, IEmailService emailService,IAttendeeService attendeeService) { 
+        public readonly IRecommendationService _recommendationService;
+        public EventController(IEventCategoryService eventCategoryservice,  IEventService eventservice,
+            IPaymentService paymentservice, IEmailService emailService,
+            IAttendeeService attendeeService,IRecommendationService recommendationService) { 
         _eventCategoryService = eventCategoryservice;
         _eventService = eventservice;
         _paymentService = paymentservice;
         _emailService = emailService;
-            _attendeeService= attendeeService;
+        _attendeeService= attendeeService;
+        _recommendationService = recommendationService;
 
         }
         public IActionResult Index()
@@ -142,8 +146,38 @@ namespace Event_Management_System.Controllers
         [Authorize]
         public async Task<IActionResult> EventDetails(int id)
         {
-            var eventdetails = await _eventService.GetOrganizerEventDetailsAsync(id);
-            return View(eventdetails);
+            // 1️⃣ Get main event details
+            var eventDetails =
+                await _eventService.GetOrganizerEventDetailsAsync(id);
+
+            if (eventDetails == null)
+                return NotFound();
+
+            // 2️⃣ Call Recommendation Microservice
+            var recResponse =
+                await _recommendationService.GetRecommendationsAsync(
+                    eventDetails.EventId,
+                    topN: 4);
+
+            // Safety check (ML API may return nothing)
+            var recommendedIds = recResponse?.Recommendations?
+                .Select(r => r.EventId)
+                .ToList() ?? new List<int>();
+
+            // 3️⃣ Fetch full event info from DB (via repo → service)
+            var similarEvents = recommendedIds.Any()
+                ? await _eventService
+                    .GetRecommendedEventDetailsByIdsAsync(recommendedIds)
+                : new List<OrganizerEventDetailsDTO>();
+
+            // 4️⃣ Page ViewModel
+            var vm = new EventDetailsPageViewModel
+            {
+                Event = eventDetails,
+                SimilarEvents = similarEvents
+            };
+
+            return View(vm);
         }
         [Authorize]
 

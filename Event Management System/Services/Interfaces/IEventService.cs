@@ -18,6 +18,8 @@ namespace Event_Management_System.Services.Interfaces
         public  Task<List<Event>> BrowseEventAsync(int? categoryid);
         public  Task<List<Event>> GetEventByAttendeeId(int userid, int? categoryid, bool showrecommended);
         public Task<EventRegistrationVM?> GetEventRegistrationAsync(int id);
+        Task<List<OrganizerEventDetailsDTO>> GetRecommendedEventDetailsByIdsAsync(
+    List<int> eventIds);
 
 
     }
